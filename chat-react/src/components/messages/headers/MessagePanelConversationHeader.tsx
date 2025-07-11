@@ -1,19 +1,17 @@
-import { useContext } from 'react';
-import { FaPhoneAlt, FaVideo } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { RootState } from '../../../store';
-import { initiateCallState } from '../../../store/call/callSlice';
-import { selectConversationById } from '../../../store/conversationSlice';
-import { SenderEvents } from '../../../utils/constants';
-import { AuthContext } from '../../../utils/context/AuthContext';
-import { SocketContext } from '../../../utils/context/SocketContext';
-import { getRecipientFromConversation } from '../../../utils/helpers';
-import {
-  MessagePanelHeaderIcons,
-  MessagePanelHeaderStyle,
-} from '../../../utils/styles';
-import { CallInitiatePayload, CallType } from '../../../utils/types';
+import { useContext } from "react";
+import { FaPhoneAlt, FaVideo } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { RootState } from "../../../store";
+import { initiateCallState } from "../../../store/call/callSlice";
+import { selectConversationById } from "../../../store/conversationSlice";
+import { SenderEvents } from "../../../utils/constants";
+import { AuthContext } from "../../../utils/context/AuthContext";
+import { SocketContext } from "../../../utils/context/SocketContext";
+import { getRecipientFromConversation } from "../../../utils/helpers";
+import { MessagePanelHeaderIcons } from "../../../utils/styles";
+import { CallInitiatePayload, CallType } from "../../../utils/types";
+import { MessagePanelHeaderStyle } from "../../common/Message";
 
 export const MessagePanelConversationHeader = () => {
   const user = useContext(AuthContext).user!;
@@ -40,35 +38,35 @@ export const MessagePanelConversationHeader = () => {
     };
 
   const videoCallUser = async () => {
-    if (!recipient) return console.log('Recipient undefined');
-    socket.emit('onVideoCallInitiate', {
+    if (!recipient) return console.log("Recipient undefined");
+    socket.emit("onVideoCallInitiate", {
       conversationId: conversation!.id,
       recipientId: recipient.id,
     });
     const constraints = { video: true, audio: true };
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    const payload = buildCallPayloadParams(stream, 'video');
-    if (!payload) throw new Error('Video Call Payload is undefined.');
+    const payload = buildCallPayloadParams(stream, "video");
+    if (!payload) throw new Error("Video Call Payload is undefined.");
     dispatch(initiateCallState(payload));
   };
 
   const voiceCallUser = async () => {
-    if (!recipient) return console.log('Recipient undefined');
+    if (!recipient) return console.log("Recipient undefined");
     socket.emit(SenderEvents.VOICE_CALL_INITIATE, {
       conversationId: conversation!.id,
       recipientId: recipient.id,
     });
     const constraints = { video: false, audio: true };
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    const payload = buildCallPayloadParams(stream, 'audio');
-    if (!payload) throw new Error('Voice Call Payload is undefined.');
+    const payload = buildCallPayloadParams(stream, "audio");
+    if (!payload) throw new Error("Voice Call Payload is undefined.");
     dispatch(initiateCallState(payload));
   };
 
   return (
     <MessagePanelHeaderStyle>
       <div>
-        <span>{recipient?.username || 'User'}</span>
+        <span>{recipient?.username || "User"}</span>
       </div>
       <MessagePanelHeaderIcons>
         <FaPhoneAlt size={24} cursor="pointer" onClick={voiceCallUser} />

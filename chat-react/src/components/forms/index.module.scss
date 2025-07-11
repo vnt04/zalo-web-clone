@@ -46,7 +46,7 @@ form {
     background-color: #000;
   }
   &:checked + .radioLabel::before {
-    content: '\2714';
+    content: "\2714";
     color: rgb(193, 193, 193);
     background-color: #2b09ff;
     display: flex;
@@ -60,7 +60,7 @@ form {
   display: flex;
   align-items: center;
   &::before {
-    content: '';
+    content: "";
     width: 20px;
     height: 20px;
     border: 2px solid #2b09ff;

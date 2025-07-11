@@ -1,27 +1,21 @@
-import { ChatAdd } from 'akar-icons';
-import { useEffect, useState } from 'react';
-import { AiOutlineUsergroupAdd } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store';
+import { useEffect, useState } from "react";
+import { AiOutlineUserAdd, AiOutlineUsergroupAdd } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store";
 import {
   setContextMenuLocation,
   setSelectedGroup,
   toggleContextMenu,
-} from '../../store/groupSlice';
-import { SidebarContainerStyle } from '../../utils/styles';
-import {
-  ConversationSearchbar,
-  SidebarHeader,
-  SidebarStyle,
-  ScrollableContainer,
-} from '../../utils/styles';
-import { ContextMenuEvent, Group } from '../../utils/types';
-import { GroupSidebarContextMenu } from '../context-menus/GroupSidebarContextMenu';
-import { ConversationSidebarItem } from '../conversations/ConversationSidebarItem';
-import { ConversationTab } from '../conversations/ConversationTab';
-import { GroupSidebarItem } from '../groups/GroupSidebarItem';
-import { CreateConversationModal } from '../modals/CreateConversationModal';
-import { CreateGroupModal } from '../modals/CreateGroupModal';
+} from "../../store/groupSlice";
+import { ScrollableContainer } from "../../utils/styles";
+import { ContextMenuEvent, Group } from "../../utils/types";
+import { GroupSidebarContextMenu } from "../context-menus/GroupSidebarContextMenu";
+import { ConversationSidebarItem } from "../conversations/ConversationSidebarItem";
+import { GroupSidebarItem } from "../groups/GroupSidebarItem";
+import { CreateConversationModal } from "../modals/CreateConversationModal";
+import { CreateGroupModal } from "../modals/CreateGroupModal";
+import { SidebarHeader, SidebarStyle } from "../common/Sidebar";
+import { SearchInput } from "../common/Search";
 
 export const ConversationSidebar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -39,7 +33,7 @@ export const ConversationSidebar = () => {
 
   const onGroupContextMenu = (event: ContextMenuEvent, group: Group) => {
     event.preventDefault();
-    console.log('Group Context Menu');
+    console.log("Group Context Menu");
     console.log(group);
     dispatch(toggleContextMenu(true));
     dispatch(setContextMenuLocation({ x: event.pageX, y: event.pageY }));
@@ -48,29 +42,29 @@ export const ConversationSidebar = () => {
 
   useEffect(() => {
     const handleResize = (e: UIEvent) => dispatch(toggleContextMenu(false));
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
     const handleClick = () => dispatch(toggleContextMenu(false));
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
   }, []);
 
   return (
     <>
-      {showModal && conversationType === 'private' && (
+      {showModal && conversationType === "private" && (
         <CreateConversationModal setShowModal={setShowModal} />
       )}
-      {showModal && conversationType === 'group' && (
+      {showModal && conversationType === "group" && (
         <CreateGroupModal setShowModal={setShowModal} />
       )}
       <SidebarStyle>
         <SidebarHeader>
-          <ConversationSearchbar placeholder="Search for Conversations" />
-          {conversationType === 'private' ? (
-            <ChatAdd
+          <SearchInput placeholder="Tìm kiếm" />
+          {/* {conversationType === "private" ? (
+            <AiOutlineUserAdd
               size={30}
               cursor="pointer"
               onClick={() => setShowModal(true)}
@@ -81,12 +75,23 @@ export const ConversationSidebar = () => {
               cursor="pointer"
               onClick={() => setShowModal(true)}
             />
-          )}
+          )} */}
+          <AiOutlineUserAdd
+            size={30}
+            cursor="pointer"
+            onClick={() => setShowModal(true)}
+          />
+          <AiOutlineUsergroupAdd
+            size={30}
+            cursor="pointer"
+            onClick={() => setShowModal(true)}
+          />
         </SidebarHeader>
-        <ConversationTab />
+        {/* usage => ConversationTab: This component display "Private" and "Group" tab */}
+        {/* <ConversationTab /> */}
         <ScrollableContainer>
-          <SidebarContainerStyle>
-            {conversationType === 'private'
+          <>
+            {conversationType === "private"
               ? conversations.map((conversation) => (
                   <ConversationSidebarItem
                     key={conversation.id}
@@ -101,7 +106,7 @@ export const ConversationSidebar = () => {
                   />
                 ))}
             {showGroupContextMenu && <GroupSidebarContextMenu />}
-          </SidebarContainerStyle>
+          </>
         </ScrollableContainer>
         <footer></footer>
       </SidebarStyle>

@@ -1,9 +1,10 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
-import { CharacterLimit, MessageInputContainer } from '../../utils/styles';
-import { MessageTextField } from '../inputs/MessageTextField';
-import { FaceVeryHappy } from 'akar-icons';
-import styles from './index.module.scss';
-import { MessageAttachmentActionIcon } from './MessageAttachmentActionIcon';
+import { Dispatch, FC, SetStateAction, useState } from "react";
+import { CharacterLimit } from "../../utils/styles";
+import { MessageTextField } from "../inputs/MessageTextField";
+import { FaceVeryHappy } from "akar-icons";
+import styles from "./index.module.scss";
+import { MessageAttachmentActionIcon } from "./MessageAttachmentActionIcon";
+import { MessageInputContainer } from "../common/Message";
 
 type Props = {
   content: string;

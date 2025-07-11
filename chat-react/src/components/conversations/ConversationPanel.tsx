@@ -1,4 +1,4 @@
-import { ConversationChannelPageStyle } from '../../utils/styles';
+import { ConversationChannelPageStyle } from "../common/Conversation";
 
 export const ConversationPanel = () => {
   return (

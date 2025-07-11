@@ -1,6 +1,6 @@
-import styled, { css } from 'styled-components';
-import { Theme } from '../themes';
-import { fadeInUpwards } from './keyframes';
+import styled, { css } from "styled-components";
+import { Theme } from "../themes";
+import { fadeInUpwards } from "./keyframes";
 import {
   CharacterLimitProps,
   ContextMenuProps,
@@ -11,12 +11,12 @@ import {
   MessageItemContentProps,
   PageProps,
   SidebarItemProps,
-} from './styleTypes';
+} from "./styleTypes";
 
 export const SIDEBAR_WIDTH = 400;
 
 export const InputField = styled.input`
-  font-family: 'Inter';
+  font-family: "Inter";
   outline: none;
   border: none;
   background-color: inherit;
@@ -33,7 +33,7 @@ export const InputField = styled.input`
 `;
 
 export const InputContainer = styled.div<InputContainerProps>`
-  background-color: ${(prop) => prop.backgroundColor || '#131313'};
+  background-color: ${(prop) => prop.backgroundColor || "#131313"};
   padding: 12px 16px;
   border-radius: 10px;
   width: 100%;
@@ -71,7 +71,7 @@ export const Button = styled.button`
   width: 100%;
   outline: none;
   border: none;
-  font-family: 'Inter';
+  font-family: "Inter";
   font-size: 16px;
   background-color: #2b09ff;
   color: #fff;
@@ -94,7 +94,7 @@ export const Button = styled.button`
 `;
 
 export const Page = styled.div<PageProps>`
-  background-color: #1a1a1a;
+  background-color: white;
   height: 100%;
   width: 100%;
   display: ${(props) => props.display};
@@ -207,7 +207,7 @@ export const ModalContentBodyStyle = styled.div`
 `;
 
 export const TextField = styled.textarea`
-  font-family: 'Inter';
+  font-family: "Inter";
   outline: none;
   border: none;
   background-color: inherit;
@@ -325,7 +325,7 @@ export const MessageInputContainer = styled.div<MessageInputContainerProps>`
   padding: 18px 32px;
   display: flex;
   gap: 20px;
-  align-items: ${({ isMultiLine }) => (isMultiLine ? 'top' : 'center')};
+  align-items: ${({ isMultiLine }) => (isMultiLine ? "top" : "center")};
   position: relative;
 `;
 
@@ -339,7 +339,7 @@ export const MessageInput = styled.input`
   outline: none;
   border: none;
   color: #454545;
-  font-family: 'Inter';
+  font-family: "Inter";
   box-sizing: border-box;
   font-size: 18px;
   width: 100%;
@@ -434,7 +434,7 @@ export const EditMessageInputField = styled.input`
   border: none;
   background-color: #222;
   color: #bababa;
-  font-family: 'Inter';
+  font-family: "Inter";
   box-sizing: border-box;
   font-size: 15px;
   padding: 18px 22px;
@@ -706,7 +706,6 @@ export const UserSidebarScrollableContainer = styled(ScrollableContainer)`
 
 export const UserSidebarFooter = styled.footer`
   padding: 18px 0;
-
 `;
 
 export const ConversationSearchbar = styled.input`
@@ -717,7 +716,7 @@ export const ConversationSearchbar = styled.input`
   border: none;
   outline: none;
   font-size: 14px;
-  font-family: 'Inter';
+  font-family: "Inter";
   border-radius: 5px;
   box-sizing: border-box;
 `;
@@ -731,7 +730,7 @@ export const UserSidebarItemStyle = styled.div<SidebarItemProps>`
   justify-content: center;
   padding: 20px 18px;
   box-sizing: border-box;
-  background-color: ${({ active }) => active && '#1e1e1e'};
+  background-color: ${({ active }) => active && "#1e1e1e"};
   position: relative;
 `;
 
@@ -850,7 +849,7 @@ export const CharacterLimit = styled.span<CharacterLimitProps>`
   font-size: 14px;
   font-weight: 500;
   color: ${({ atMaxLength }) =>
-    atMaxLength ? '#ff0000' : 'rgb(129, 129, 129)'};
+    atMaxLength ? "#ff0000" : "rgb(129, 129, 129)"};
 `;
 
 export const MessageAttachmentContainerStyle = styled.div`
@@ -990,7 +989,7 @@ export const AvatarUploadContainer = styled.div<{ url?: string }>`
       ? css`
           transition: 1s background ease;
           background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-            url('${url}') no-repeat center;
+            url("${url}") no-repeat center;
           opacity: 100%;
           transition: 300ms opacity ease;
           background-size: cover;
@@ -1003,7 +1002,7 @@ export const AvatarUploadContainer = styled.div<{ url?: string }>`
         `};
   &::before {
     background-color: none;
-    content: 'Change Avatar';
+    content: "Change Avatar";
     width: 100%;
     height: 150px;
     display: flex;

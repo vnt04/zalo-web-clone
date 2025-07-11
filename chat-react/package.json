@@ -8,6 +8,7 @@
 		"@reduxjs/toolkit": "^1.8.5",
 		"akar-icons": "^1.9.20",
 		"axios": "^0.27.2",
+		"classnames": "^2.5.1",
 		"date-fns": "^2.29.2",
 		"peerjs": "^1.4.7",
 		"react": "^18.2.0",
@@ -48,16 +49,16 @@
 		]
 	},
 	"devDependencies": {
-		"@types/axios": "^0.14.0",
-		"@types/jest": "^29.5.12",
-		"@types/node": "^22.5.2",
-		"@types/styled-components": "^5.1.26",
-		"@vitejs/plugin-react": "^4.3.1",
-		"vite": "^5.4.2",
 		"@testing-library/jest-dom": "^5.14.1",
 		"@testing-library/react": "^13.0.0",
 		"@testing-library/user-event": "^13.2.1",
+		"@types/axios": "^0.14.0",
+		"@types/jest": "^29.5.12",
+		"@types/node": "^22.5.2",
 		"@types/react": "^18.0.0",
-		"@types/react-dom": "^18.0.0"
+		"@types/react-dom": "^18.0.0",
+		"@types/styled-components": "^5.1.26",
+		"@vitejs/plugin-react": "^4.3.1",
+		"vite": "^5.4.2"
 	}
 }

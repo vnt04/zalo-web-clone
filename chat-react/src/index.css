@@ -1,3 +1,66 @@
+:root {
+  --background: #ffffff;
+  --secondary-background: #f0efef;
+  --foreground: #0d0e1a;
+  --card: #ffffff;
+  --card-foreground: #0d0e1a;
+  --popover: #ffffff;
+  --popover-foreground: #0d0e1a;
+  --primary: #206be7;
+  --primary-light: #edf6ff;
+  --primary-foreground: #f8fafc;
+  --secondary: #f0f4f8;
+  --secondary-foreground: #0e172a;
+  --muted: #f0f4f8;
+  --muted-foreground: #67738b;
+  --accent: #f0f4f8;
+  --accent-foreground: #0e172a;
+  --destructive: #ed2b2b;
+  --destructive-foreground: #f8fafc;
+  --border: #7e7f81;
+  --input: #e0e6ef;
+  --text: #6b7280;
+  --ring: #0d0e1a;
+  --radius: 0.5rem; /* Đây là đơn vị độ dài, không phải màu */
+  --sidebar-background: #fafafa;
+  --sidebar-foreground: #3f4044;
+  --sidebar-primary: #18181a;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #f0f1f3;
+  --sidebar-accent-foreground: #18181a;
+  --sidebar-border: #e2e6ec;
+  --sidebar-ring: #4b8ed1;
+}
+.dark {
+  --background: #0d0e1a;
+  --foreground: #f8fafc;
+  --card: #0d0e1a;
+  --card-foreground: #f8fafc;
+  --popover: #0d0e1a;
+  --popover-foreground: #f8fafc;
+  --primary: #f8fafc;
+  --primary-foreground: #0e172a;
+  --secondary: #222d3e;
+  --secondary-foreground: #f8fafc;
+  --muted: #222d3e;
+  --muted-foreground: #99a1ae;
+  --accent: #222d3e;
+  --accent-foreground: #f8fafc;
+  --destructive: #721f1f;
+  --destructive-foreground: #f8fafc;
+  --border: #1d293b;
+  --input: #222d3e;
+  --ring: #d3dae8;
+  --sidebar-background: #18181a;
+  --sidebar-foreground: #f0f1f3;
+  --sidebar-primary: #1c64f2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #27282a;
+  --sidebar-accent-foreground: #f0f1f3;
+  --sidebar-border: #27282a;
+  --sidebar-ring: #4b8ed1;
+}
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
@@ -12,9 +75,9 @@ html,
 
 body,
 html {
-  background-color: #1a1a1a;
-  font-family: 'Inter';
-  color: #fff;
+  background-color: #ffffff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #000000;
 }
 
 h1 {

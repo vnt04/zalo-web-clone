@@ -1,0 +1,38 @@
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 32px;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 100ms ease;
+}
+
+.sidebarItem:hover {
+  background-color: var(--primary-light);
+}
+
+.sidebarItemSelected {
+  background-color: var(--primary-light);
+}
+
+.title {
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.details {
+  word-break: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.channelPage {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}

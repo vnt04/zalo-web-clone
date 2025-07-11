@@ -1,21 +1,17 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { AppDispatch, RootState } from '../../store';
-import { GroupMessageType, MessageType } from '../../utils/types';
-import { SelectedMessageContextMenu } from '../context-menus/SelectedMessageContextMenu';
-import { selectConversationMessage } from '../../store/messages/messageSlice';
-import { selectGroupMessage } from '../../store/groupMessageSlice';
-import { selectType } from '../../store/selectedSlice';
-import { MessageItemHeader } from './MessageItemHeader';
-import { MessageItemContainerBody } from './MessageItemContainerBody';
-import { useHandleClick, useKeydown } from '../../utils/hooks';
-import { UserAvatar } from '../users/UserAvatar';
-import {
-  MessageContainerStyle,
-  MessageItemContainer,
-  MessageItemDetails,
-} from '../../utils/styles';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { AppDispatch, RootState } from "../../store";
+import { GroupMessageType, MessageType } from "../../utils/types";
+import { SelectedMessageContextMenu } from "../context-menus/SelectedMessageContextMenu";
+import { selectConversationMessage } from "../../store/messages/messageSlice";
+import { selectGroupMessage } from "../../store/groupMessageSlice";
+import { selectType } from "../../store/selectedSlice";
+import { MessageItemHeader } from "./MessageItemHeader";
+import { MessageItemContainerBody } from "./MessageItemContainerBody";
+import { useHandleClick, useKeydown } from "../../utils/hooks";
+import { UserAvatar } from "../users/UserAvatar";
+import { MessageItemContainer } from "../../utils/styles";
 import {
   editMessageContent,
   resetMessageContainer,
@@ -23,9 +19,10 @@ import {
   setIsEditing,
   setSelectedMessage,
   toggleContextMenu,
-} from '../../store/messageContainerSlice';
-import { SystemMessage } from './system/SystemMessage';
-import { SystemMessageList } from './system/SystemMessageList';
+} from "../../store/messageContainerSlice";
+import { SystemMessage } from "./system/SystemMessage";
+import { SystemMessageList } from "./system/SystemMessageList";
+import { MessageContainerStyle, MessageItemDetails } from "../common/Message";
 
 export const MessageContainer = () => {
   const { id } = useParams();
@@ -41,7 +38,7 @@ export const MessageContainer = () => {
     (state: RootState) => state.messageContainer
   );
   const handleKeydown = (e: KeyboardEvent) =>
-    e.key === 'Escape' && dispatch(setIsEditing(false));
+    e.key === "Escape" && dispatch(setIsEditing(false));
   const handleClick = () => dispatch(toggleContextMenu(false));
 
   useKeydown(handleKeydown, [id]);
@@ -108,13 +105,14 @@ export const MessageContainer = () => {
         const node = e.target as HTMLDivElement;
         const scrollTopMax = node.scrollHeight - node.clientHeight;
         if (-scrollTopMax === node.scrollTop) {
-          console.log('');
+          console.log("");
         }
       }}
     >
       <>
+        {/* SystemMessageList: ??? */}
         <SystemMessageList />
-        {selectedType === 'private'
+        {selectedType === "private"
           ? conversationMessages?.messages.map(mapMessages)
           : groupMessages?.messages.map(mapMessages)}
       </>

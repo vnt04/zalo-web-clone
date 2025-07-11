@@ -1,16 +1,12 @@
-import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import { postLoginUser } from '../../../utils/api';
-import { SocketContext } from '../../../utils/context/SocketContext';
-import {
-  Button,
-  InputContainer,
-  InputField,
-  InputLabel,
-} from '../../../utils/styles';
-import { UserCredentialsParams } from '../../../utils/types';
-import styles from '../index.module.scss';
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { postLoginUser } from "../../../utils/api";
+import { SocketContext } from "../../../utils/context/SocketContext";
+import { Button } from "../../../utils/styles";
+import { UserCredentialsParams } from "../../../utils/types";
+import styles from "../index.module.scss";
+import { InputContainer, InputField, InputLabel } from "../../common/Input";
 
 export const LoginForm = () => {
   const {
@@ -22,14 +18,15 @@ export const LoginForm = () => {
   const socket = useContext(SocketContext);
 
   const onSubmit = async (data: UserCredentialsParams) => {
+    console.log("called");
     console.log(socket);
     console.log(socket.connected);
     try {
       await postLoginUser(data);
-      console.log('Success');
+      console.log("Success");
       socket.connect();
       console.log(socket.connected);
-      navigate('/conversations');
+      navigate("/conversations");
     } catch (err) {
       console.log(socket.connected);
       console.log(err);
@@ -43,7 +40,7 @@ export const LoginForm = () => {
         <InputField
           type="text"
           id="username"
-          {...register('username', { required: true })}
+          {...register("username", { required: true })}
         />
       </InputContainer>
       <InputContainer className={styles.loginFormPassword}>
@@ -51,7 +48,7 @@ export const LoginForm = () => {
         <InputField
           type="password"
           id="password"
-          {...register('password', { required: true })}
+          {...register("password", { required: true })}
         />
       </InputContainer>
       <Button>Login</Button>
