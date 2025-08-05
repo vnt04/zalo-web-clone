@@ -35,6 +35,7 @@ export class ConversationsService implements IConversationsService {
     return this.conversationRepository
       .createQueryBuilder('conversation')
       .leftJoinAndSelect('conversation.lastMessageSent', 'lastMessageSent')
+      .leftJoinAndSelect('lastMessageSent.author', 'lastMessageAuthor') // select author of lastMessageSent
       .leftJoinAndSelect('conversation.creator', 'creator')
       .leftJoinAndSelect('conversation.recipient', 'recipient')
       .leftJoinAndSelect('creator.peer', 'creatorPeer')

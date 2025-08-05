@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 20px 32px;
+  padding: 14px 24px;
   box-sizing: border-box;
   width: 100%;
   cursor: pointer;
@@ -10,10 +10,14 @@
 }
 
 .sidebarItem:hover {
-  background-color: var(--primary-light);
+  background-color: var(--hover);
 }
 
 .sidebarItemSelected {
+  background-color: var(--primary-light);
+}
+
+.sidebarItemSelected:hover {
   background-color: var(--primary-light);
 }
 
@@ -35,4 +39,5 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
+  border: solid 1px var(--border);
 }

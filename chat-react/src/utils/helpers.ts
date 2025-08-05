@@ -6,7 +6,7 @@ import {
   Person,
   PersonCross,
   Gear,
-} from 'akar-icons';
+} from "akar-icons";
 import {
   IoIosPerson,
   IoIosNotifications,
@@ -14,7 +14,7 @@ import {
   IoMdInfinite,
   IoMdColorPalette,
   IoMdVideocam,
-} from 'react-icons/io';
+} from "react-icons/io";
 import {
   Conversation,
   Friend,
@@ -25,7 +25,7 @@ import {
   User,
   UserContextMenuActionType,
   UserSidebarRouteType,
-} from './types';
+} from "./types";
 
 export const getRecipientFromConversation = (
   conversation?: Conversation,
@@ -38,12 +38,12 @@ export const getRecipientFromConversation = (
 
 export const getUserContextMenuIcon = (type: UserContextMenuActionType) => {
   switch (type) {
-    case 'kick':
-      return { icon: PersonCross, color: '#ff0000' };
-    case 'transfer_owner':
-      return { icon: Crown, color: '#FFB800' };
+    case "kick":
+      return { icon: PersonCross, color: "#ff0000" };
+    case "transfer_owner":
+      return { icon: Crown, color: "#FFB800" };
     default:
-      return { icon: Minus, color: '#7c7c7c' };
+      return { icon: Minus, color: "#7c7c7c" };
   }
 };
 
@@ -52,15 +52,15 @@ export const isGroupOwner = (user?: User, group?: Group) =>
 
 export const getUserSidebarIcon = (id: UserSidebarRouteType) => {
   switch (id) {
-    case 'conversations':
+    case "conversations":
       return ChatDots;
-    case 'friends':
+    case "friends":
       return Person;
-    case 'connections':
+    case "connections":
       return ArrowCycle;
-    case 'settings':
+    case "settings":
       return Gear;
-    case 'calls':
+    case "calls":
       return IoMdVideocam;
     default:
       return ChatDots;
@@ -69,15 +69,15 @@ export const getUserSidebarIcon = (id: UserSidebarRouteType) => {
 
 export const getSettingSidebarIcon = (id: SettingsSidebarRouteType) => {
   switch (id) {
-    case 'profile':
+    case "profile":
       return IoIosPerson;
-    case 'security':
+    case "security":
       return IoIosLock;
-    case 'notifications':
+    case "notifications":
       return IoIosNotifications;
-    case 'integrations':
+    case "integrations":
       return IoMdInfinite;
-    case 'appearance':
+    case "appearance":
       return IoMdColorPalette;
   }
 };
@@ -88,13 +88,13 @@ export const getFriendRequestDetails = (
 ): FriendRequestDetailsType =>
   user?.id === receiver.id
     ? {
-        status: 'Incoming Friend Request',
+        status: "Incoming Friend Request",
         displayName: `${sender.firstName} ${sender.lastName}`,
         user: sender,
         incoming: true,
       }
     : {
-        status: 'Outgoing Friend Request',
+        status: "Outgoing Friend Request",
         displayName: `${receiver.firstName} ${receiver.lastName}`,
         user: receiver,
         incoming: false,
@@ -107,3 +107,65 @@ export const getUserFriendInstance = (
   authenticatedUser?.id === selectedFriend?.sender.id
     ? selectedFriend?.receiver
     : selectedFriend?.sender;
+
+/**
+ * TH1: < 24h =>  giờ, phút, giây
+ * TH2: 24h < ... < 48h => Hôm qua
+ * TH3: 48h < ... < 7 days => x ngày
+ * TH4: 7 days < ...< current year => dd/mm
+ * TH5: < current year => dd/mm/yy
+ */
+export const getLastMessageSentTime = (rawDate: Date | string) => {
+  const date = new Date(rawDate);
+  if (isNaN(date.getTime())) return "";
+
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+
+  const diffSeconds = Math.floor(diffMs / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  const isSameYear = now.getFullYear() === date.getFullYear();
+
+  if (diffSeconds < 60) {
+    return `Vài giây`;
+  }
+
+  if (diffMinutes < 60) {
+    return `${diffMinutes} phút`;
+  }
+
+  if (diffHours < 24) {
+    return `${diffHours} giờ`;
+  }
+
+  if (diffHours < 48) {
+    return "Hôm qua";
+  }
+
+  if (diffDays < 7) {
+    return `${diffDays} ngày`;
+  }
+
+  if (isSameYear) {
+    return date.toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+  }
+
+  return date.toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
+};
+
+export const getMessageSentTime = (isoString: string) => {
+  const date = new Date(isoString);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};

@@ -1,10 +1,11 @@
-import { FC } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { RootState } from '../../../store';
-import { getUserSidebarIcon } from '../../../utils/helpers';
-import { IconBadge, UserSidebarItemStyle } from '../../../utils/styles';
-import { UserSidebarItemType } from '../../../utils/types';
+import { FC } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { RootState } from "../../../store";
+import { getUserSidebarIcon } from "../../../utils/helpers";
+import { UserSidebarItemType } from "../../../utils/types";
+import { UserSidebarItemStyle } from "./UserSidebarItemStyle";
+import { IconBadge } from "./IconBadge";
 
 type Props = {
   item: UserSidebarItemType;
@@ -21,7 +22,7 @@ export const UserSidebarItem: FC<Props> = ({ item }) => {
   const STROKE_WIDTH = 2;
 
   const isActive = () => {
-    if (pathname.includes('/groups') && item.id === 'conversations')
+    if (pathname.includes("/groups") && item.id === "conversations")
       return true;
     return pathname.includes(item.pathname);
   };
@@ -30,10 +31,14 @@ export const UserSidebarItem: FC<Props> = ({ item }) => {
       onClick={() => navigate(item.pathname)}
       active={isActive()}
     >
-      <Icon size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
-      {item.id === 'friends' && friendRequests.length > 0 && (
+      <Icon
+        size={ICON_SIZE}
+        strokeWidth={STROKE_WIDTH}
+        style={{ color: "white" }}
+      />
+      {item.id === "friends" && friendRequests.length > 0 && (
         <IconBadge>
-          {friendRequests.length > 9 ? '10+' : friendRequests.length}
+          {friendRequests.length > 9 ? "10+" : friendRequests.length}
         </IconBadge>
       )}
     </UserSidebarItemStyle>

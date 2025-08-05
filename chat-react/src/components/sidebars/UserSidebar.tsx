@@ -1,18 +1,17 @@
-import { useState, useContext } from 'react';
+import { useState, useContext } from "react";
+import { userSidebarItems } from "../../utils/constants";
+import { UserSidebarItem } from "./items/UserSidebarItem";
+import { AuthContext } from "../../utils/context/AuthContext";
+import { UpdatePresenceStatusModal } from "../modals/UpdatePresenceStatusModal";
+import { RiLogoutCircleLine } from "react-icons/ri";
+import { UserAvatar } from "../users/UserAvatar";
+import { logoutUser as logoutUserAPI } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
 import {
-  UserSidebarFooter,
   UserSidebarHeader,
   UserSidebarScrollableContainer,
   UserSidebarStyle,
-} from '../../utils/styles';
-import { userSidebarItems } from '../../utils/constants';
-import { UserSidebarItem } from './items/UserSidebarItem';
-import { AuthContext } from '../../utils/context/AuthContext';
-import { UpdatePresenceStatusModal } from '../modals/UpdatePresenceStatusModal';
-import { RiLogoutCircleLine } from 'react-icons/ri';
-import { UserAvatar } from '../users/UserAvatar';
-import { logoutUser as logoutUserAPI } from '../../utils/api';
-import { useNavigate } from 'react-router-dom';
+} from "../common/Sidebar";
 
 export const UserSidebar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -20,7 +19,7 @@ export const UserSidebar = () => {
   const navigate = useNavigate();
 
   const logoutUser = () => {
-    logoutUserAPI().finally(() => navigate('/login', { replace: true }));
+    logoutUserAPI().finally(() => navigate("/login", { replace: true }));
   };
 
   return (
@@ -31,14 +30,18 @@ export const UserSidebar = () => {
           <UserAvatar user={user!} onClick={() => setShowModal(true)} />
         </UserSidebarHeader>
         <UserSidebarScrollableContainer>
-          {userSidebarItems.map((item) => (
-            <UserSidebarItem item={item} />
+          {userSidebarItems.map((item, index) => (
+            <UserSidebarItem item={item} key={index} />
           ))}
         </UserSidebarScrollableContainer>
 
-        <UserSidebarFooter>
-          <RiLogoutCircleLine size={30} onClick={() => logoutUser()} />
-        </UserSidebarFooter>
+        <div style={{ padding: "18px 0" }}>
+          <RiLogoutCircleLine
+            size={30}
+            onClick={() => logoutUser()}
+            style={{ color: "white", cursor: "pointer" }}
+          />
+        </div>
       </UserSidebarStyle>
     </>
   );

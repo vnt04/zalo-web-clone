@@ -14,7 +14,6 @@ import { createMessage } from "../../utils/api";
 import { AuthContext } from "../../utils/context/AuthContext";
 import { getRecipientFromConversation } from "../../utils/helpers";
 import { useToast } from "../../utils/hooks/useToast";
-import { MessageTypingStatus } from "../../utils/styles";
 import { MessageAttachmentContainer } from "./attachments/MessageAttachmentContainer";
 import { MessageContainer } from "./MessageContainer";
 import { MessageInputField } from "./MessageInputField";
@@ -23,6 +22,7 @@ import {
   MessagePanelBody,
   MessagePanelFooter,
   MessagePanelStyle,
+  MessageTypingStatus,
 } from "../common/Message";
 
 type Props = {
@@ -65,7 +65,7 @@ export const MessagePanel: FC<Props> = ({
 
   const sendMessage = async () => {
     const trimmedContent = content.trim();
-    if (!routeId) return;
+    if (!routeId) return; // conversation id
     if (!trimmedContent && !attachments.length) return;
     const formData = new FormData();
     formData.append("id", routeId);
@@ -73,6 +73,7 @@ export const MessagePanel: FC<Props> = ({
     attachments.forEach((attachment) =>
       formData.append("attachments", attachment.file)
     );
+
     try {
       await createMessage(routeId, selectedType, formData);
       setContent("");
@@ -110,7 +111,7 @@ export const MessagePanel: FC<Props> = ({
           <MessageContainer />
         </MessagePanelBody>
         <MessageTypingStatus>
-          {isRecipientTyping ? `${recipient?.firstName} is typing...` : ""}
+          {isRecipientTyping ? `${recipient?.firstName} đang soạn tin ...` : ""}
         </MessageTypingStatus>
         <MessagePanelFooter>
           {attachments.length > 0 && <MessageAttachmentContainer />}

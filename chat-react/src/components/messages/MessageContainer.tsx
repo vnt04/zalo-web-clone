@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store";
@@ -7,11 +7,10 @@ import { SelectedMessageContextMenu } from "../context-menus/SelectedMessageCont
 import { selectConversationMessage } from "../../store/messages/messageSlice";
 import { selectGroupMessage } from "../../store/groupMessageSlice";
 import { selectType } from "../../store/selectedSlice";
-import { MessageItemHeader } from "./MessageItemHeader";
+// import { MessageItemHeader } from "./MessageItemHeader";
 import { MessageItemContainerBody } from "./MessageItemContainerBody";
 import { useHandleClick, useKeydown } from "../../utils/hooks";
 import { UserAvatar } from "../users/UserAvatar";
-import { MessageItemContainer } from "../../utils/styles";
 import {
   editMessageContent,
   resetMessageContainer,
@@ -20,12 +19,17 @@ import {
   setSelectedMessage,
   toggleContextMenu,
 } from "../../store/messageContainerSlice";
-import { SystemMessage } from "./system/SystemMessage";
 import { SystemMessageList } from "./system/SystemMessageList";
-import { MessageContainerStyle, MessageItemDetails } from "../common/Message";
+import {
+  MessageContainerStyle,
+  MessageItemContainer,
+  MessageItemDetails,
+} from "../common/Message";
+import { AuthContext } from "../../utils/context/AuthContext";
 
 export const MessageContainer = () => {
   const { id } = useParams();
+  const { user } = useContext(AuthContext);
   const dispatch = useDispatch<AppDispatch>();
   const conversationMessages = useSelector((state: RootState) =>
     selectConversationMessage(state, parseInt(id!))
@@ -70,35 +74,42 @@ export const MessageContainer = () => {
   ) => {
     const currentMessage = messages[index];
     const nextMessage = messages[index + 1];
+
+    const isOwnerMessage = user?.id === currentMessage.author.id;
     const showMessageHeader =
-      messages.length === index + 1 ||
-      currentMessage.author.id !== nextMessage.author.id;
+      !isOwnerMessage &&
+      (messages.length === index + 1 ||
+        currentMessage.author.id !== nextMessage.author.id);
+
     return (
       <MessageItemContainer
         key={message.id}
         onContextMenu={(e) => onContextMenu(e, message)}
+        isOwnerMessage={isOwnerMessage}
       >
         {showMessageHeader && <UserAvatar user={message.author} />}
         {showMessageHeader ? (
           <MessageItemDetails>
-            <MessageItemHeader message={message} />
+            {/* <MessageItemHeader message={message} /> */}
             <MessageItemContainerBody
               message={message}
               onEditMessageChange={onEditMessageChange}
-              padding="8px 0 0 0"
+              isOwnerMessage={isOwnerMessage}
             />
           </MessageItemDetails>
         ) : (
-          <MessageItemContainerBody
-            message={message}
-            onEditMessageChange={onEditMessageChange}
-            padding="0 0 0 70px"
-          />
+          <div style={{ margin: "0 0 0 65px" }}>
+            <MessageItemContainerBody
+              message={message}
+              onEditMessageChange={onEditMessageChange}
+              isOwnerMessage={isOwnerMessage}
+            />
+          </div>
         )}
       </MessageItemContainer>
     );
   };
-
+  console.log("message: ", conversationMessages);
   return (
     <MessageContainerStyle
       onScroll={(e) => {

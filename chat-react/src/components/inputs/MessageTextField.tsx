@@ -87,6 +87,8 @@ export const MessageTextField: FC<Props> = ({
 
   return (
     <MessageTextarea
+      name="messageTextarea"
+      id="messageTextarea"
       ref={ref}
       value={message}
       onChange={onMessageChange}

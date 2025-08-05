@@ -2,12 +2,12 @@ import React from "react";
 import classNames from "classnames";
 import styles from "./index.module.scss";
 
-interface MessagePanelStyleProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CommonProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
   children: React.ReactNode;
 }
 
-export const MessagePanelStyle: React.FC<MessagePanelStyleProps> = ({
+export const MessagePanelStyle: React.FC<CommonProps> = ({
   className,
   children,
   ...rest
@@ -19,15 +19,11 @@ export const MessagePanelStyle: React.FC<MessagePanelStyleProps> = ({
   );
 };
 
-interface MessagePanelHeaderStyleProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-  children: React.ReactNode;
-}
-
-export const MessagePanelHeaderStyle: React.FC<
-  MessagePanelHeaderStyleProps
-> = ({ className, children, ...rest }) => {
+export const MessagePanelHeaderStyle: React.FC<CommonProps> = ({
+  className,
+  children,
+  ...rest
+}) => {
   return (
     <div className={classNames(styles.messagePanelHeader, className)} {...rest}>
       {children}
@@ -35,12 +31,7 @@ export const MessagePanelHeaderStyle: React.FC<
   );
 };
 
-interface MessagePanelBodyProps extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-  children: React.ReactNode;
-}
-
-export const MessagePanelBody: React.FC<MessagePanelBodyProps> = ({
+export const MessagePanelBody: React.FC<CommonProps> = ({
   className,
   children,
   ...rest
@@ -52,13 +43,7 @@ export const MessagePanelBody: React.FC<MessagePanelBodyProps> = ({
   );
 };
 
-interface MessageContainerStyleProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-  children: React.ReactNode;
-}
-
-export const MessageContainerStyle: React.FC<MessageContainerStyleProps> = ({
+export const MessageContainerStyle: React.FC<CommonProps> = ({
   className,
   children,
   ...rest
@@ -73,12 +58,36 @@ export const MessageContainerStyle: React.FC<MessageContainerStyleProps> = ({
   );
 };
 
-interface MessageItemDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
+interface MessageItemContainerProps
+  extends React.HTMLAttributes<HTMLDivElement> {
+  isOwnerMessage: boolean;
   className?: string;
   children: React.ReactNode;
 }
 
-export const MessageItemDetails: React.FC<MessageItemDetailsProps> = ({
+export const MessageItemContainer: React.FC<MessageItemContainerProps> = ({
+  className,
+  isOwnerMessage = false,
+  children,
+  ...rest
+}) => {
+  return (
+    <div
+      className={classNames(
+        styles.messageItemContainer,
+        {
+          [styles.isOwnerMessage]: isOwnerMessage,
+        },
+        className
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const MessageItemDetails: React.FC<CommonProps> = ({
   className,
   children,
   ...rest
@@ -90,15 +99,11 @@ export const MessageItemDetails: React.FC<MessageItemDetailsProps> = ({
   );
 };
 
-interface MessageItemHeaderContainerProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-  children: React.ReactNode;
-}
-
-export const MessageItemHeaderContainer: React.FC<
-  MessageItemHeaderContainerProps
-> = ({ className, children, ...rest }) => {
+export const MessageItemHeaderContainer: React.FC<CommonProps> = ({
+  className,
+  children,
+  ...rest
+}) => {
   return (
     <div
       className={classNames(styles.messageItemHeaderContainer, className)}
@@ -109,22 +114,14 @@ export const MessageItemHeaderContainer: React.FC<
   );
 };
 
-interface MessageItemContentProps extends React.HTMLAttributes<HTMLDivElement> {
-  className?: string;
-  padding?: string;
-  children: React.ReactNode;
-}
-
-export const MessageItemContent: React.FC<MessageItemContentProps> = ({
+export const MessageTypingStatus: React.FC<CommonProps> = ({
   className,
-  padding,
   children,
   ...rest
 }) => {
   return (
     <div
-      className={classNames(styles.messageItemContent, className)}
-      style={{ padding }}
+      className={classNames(styles.messageTypingStatus, className)}
       {...rest}
     >
       {children}
@@ -132,12 +129,59 @@ export const MessageItemContent: React.FC<MessageItemContentProps> = ({
   );
 };
 
-interface MessagePanelFooterProps extends React.HTMLAttributes<HTMLElement> {
+export const MessageInputHeader: React.FC<CommonProps> = ({
+  className,
+  children,
+  ...rest
+}) => {
+  return (
+    <div className={classNames(styles.messageInputHeader, className)} {...rest}>
+      {children}
+    </div>
+  );
+};
+
+export const MessageInputBody: React.FC<CommonProps> = ({
+  className,
+  children,
+  ...rest
+}) => {
+  return (
+    <div className={classNames(styles.messageInputBody, className)} {...rest}>
+      {children}
+    </div>
+  );
+};
+
+interface MessageItemContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  isOwnerMessage: boolean;
   className?: string;
   children: React.ReactNode;
 }
 
-export const MessagePanelFooter: React.FC<MessagePanelFooterProps> = ({
+export const MessageItemContent: React.FC<MessageItemContentProps> = ({
+  isOwnerMessage = false,
+  className,
+  children,
+  ...rest
+}) => {
+  return (
+    <div
+      className={classNames(
+        styles.messageItemContent,
+        {
+          [styles.isOwnerMessage]: isOwnerMessage,
+        },
+        className
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const MessagePanelFooter: React.FC<CommonProps> = ({
   className,
   children,
   ...rest

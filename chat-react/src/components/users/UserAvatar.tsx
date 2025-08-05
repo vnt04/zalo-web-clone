@@ -1,8 +1,8 @@
-import { FC } from 'react';
-import { CDN_URL } from '../../utils/constants';
-import { UserAvatarContainer } from '../../utils/styles';
-import { User } from '../../utils/types';
-import defaultAvatar from '../../__assets__/default_avatar.jpg';
+import { FC } from "react";
+import { CDN_URL } from "../../utils/constants";
+import { User } from "../../utils/types";
+import defaultAvatar from "../../__assets__/default_avatar.jpg";
+import { UserAvatarContainer } from "../common/Sidebar";
 
 type Props = {
   user: User;

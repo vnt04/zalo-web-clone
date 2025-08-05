@@ -7,19 +7,22 @@
   --popover: #ffffff;
   --popover-foreground: #0d0e1a;
   --primary: #206be7;
-  --primary-light: #edf6ff;
+  --dark-primary: #063c93;
+  --primary-light: #dfeafd;
   --primary-foreground: #f8fafc;
   --secondary: #f0f4f8;
   --secondary-foreground: #0e172a;
   --muted: #f0f4f8;
   --muted-foreground: #67738b;
   --accent: #f0f4f8;
+  --hover: #f5f4f4;
   --accent-foreground: #0e172a;
   --destructive: #ed2b2b;
   --destructive-foreground: #f8fafc;
-  --border: #7e7f81;
+  --border: #b3b4b5;
   --input: #e0e6ef;
-  --text: #6b7280;
+  --text: #626874;
+  --name-text: #4f4f4f;
   --ring: #0d0e1a;
   --radius: 0.5rem; /* Đây là đơn vị độ dài, không phải màu */
   --sidebar-background: #fafafa;
@@ -78,6 +81,7 @@ html {
   background-color: #ffffff;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #000000;
+  font-size: 15px;
 }
 
 h1 {

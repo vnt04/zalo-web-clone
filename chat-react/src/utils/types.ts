@@ -44,6 +44,7 @@ export type Conversation = {
   recipient: User;
   createdAt: string;
   lastMessageSent: MessageType;
+  lastMessageSentAt: Date;
 };
 
 export type CreateConversationParams = {
@@ -133,7 +134,7 @@ export type EditMessagePayload = {
   content: string;
 };
 
-export type ConversationType = 'group' | 'private';
+export type ConversationType = "group" | "private";
 
 export type ConversationTypeData = {
   type: ConversationType;
@@ -178,7 +179,7 @@ export type Points = {
   y: number;
 };
 
-export type UserContextMenuActionType = 'kick' | 'transfer_owner' | 'profile';
+export type UserContextMenuActionType = "kick" | "transfer_owner" | "profile";
 export type ContextMenuItemType = {
   label: string;
   action: UserContextMenuActionType;
@@ -208,7 +209,7 @@ export type DragEvent = React.DragEvent<HTMLTextAreaElement>;
 export type ClipboardEvent = React.ClipboardEvent<HTMLTextAreaElement>;
 export type FormEvent = React.FormEvent<HTMLFormElement>;
 
-export type FriendRequestStatus = 'accepted' | 'pending' | 'rejected';
+export type FriendRequestStatus = "accepted" | "pending" | "rejected";
 
 export type Friend = {
   id: number;
@@ -225,7 +226,7 @@ export type FriendRequest = {
   status: FriendRequestStatus;
 };
 
-export type HandleFriendRequestAction = 'accept' | 'reject' | 'cancel';
+export type HandleFriendRequestAction = "accept" | "reject" | "cancel";
 
 export type CancelFriendRequestResponse = {
   id: number;
@@ -237,11 +238,11 @@ export type AcceptFriendRequestResponse = {
 };
 
 export type UserSidebarRouteType =
-  | 'conversations'
-  | 'friends'
-  | 'connections'
-  | 'settings'
-  | 'calls';
+  | "conversations"
+  | "friends"
+  | "connections"
+  | "settings"
+  | "calls";
 
 export type UserSidebarItemType = {
   id: UserSidebarRouteType;
@@ -249,11 +250,11 @@ export type UserSidebarItemType = {
 };
 
 export type SettingsSidebarRouteType =
-  | 'profile'
-  | 'security'
-  | 'notifications'
-  | 'integrations'
-  | 'appearance';
+  | "profile"
+  | "security"
+  | "notifications"
+  | "integrations"
+  | "appearance";
 
 export type SettingsItemType = {
   id: SettingsSidebarRouteType;
@@ -261,7 +262,7 @@ export type SettingsItemType = {
   pathname: string;
 };
 
-export type RateLimitType = 'group' | 'private';
+export type RateLimitType = "group" | "private";
 
 export type UpdateRateLimitPayload = {
   type: RateLimitType;
@@ -286,7 +287,7 @@ export type FriendRequestDetailsType = {
   incoming: boolean;
 };
 
-export type SystemMessageLevel = 'info' | 'warning' | 'error';
+export type SystemMessageLevel = "info" | "warning" | "error";
 export type SystemMessageType = {
   id: number;
   content: string;
@@ -297,7 +298,7 @@ export type UpdateStatusParams = {
   statusMessage: string;
 };
 
-export type SelectableTheme = 'dark' | 'light';
+export type SelectableTheme = "dark" | "light";
 
 export type CallPayload = {
   recipientId: number;
@@ -305,7 +306,7 @@ export type CallPayload = {
   caller: User;
 };
 
-export type HandleCallType = 'accept' | 'reject';
+export type HandleCallType = "accept" | "reject";
 
 export type AcceptedCallPayload = {
   acceptor: User;
@@ -327,7 +328,7 @@ export type CallInitiatePayload = {
   callType: CallType;
 };
 
-export type CallType = 'video' | 'audio';
+export type CallType = "video" | "audio";
 
 export type UpdateGroupDetailsPayload = {
   id: number;
@@ -335,7 +336,7 @@ export type UpdateGroupDetailsPayload = {
 };
 
 export enum UpdateGroupAction {
-  NEW_MESSAGE = 'newMessage',
+  NEW_MESSAGE = "newMessage",
 }
 
 export type UpdateGroupPayload = {

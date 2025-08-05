@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { FaPhoneAlt, FaVideo } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState } from "../../../store";
@@ -12,6 +11,9 @@ import { getRecipientFromConversation } from "../../../utils/helpers";
 import { MessagePanelHeaderIcons } from "../../../utils/styles";
 import { CallInitiatePayload, CallType } from "../../../utils/types";
 import { MessagePanelHeaderStyle } from "../../common/Message";
+import styles from "./index.module.scss";
+import { UserAvatar } from "../../users/UserAvatar";
+import { FiPhone, FiSearch, FiVideo } from "react-icons/fi";
 
 export const MessagePanelConversationHeader = () => {
   const user = useContext(AuthContext).user!;
@@ -24,6 +26,7 @@ export const MessagePanelConversationHeader = () => {
   );
 
   const recipient = getRecipientFromConversation(conversation, user);
+
   const buildCallPayloadParams = (
     stream: MediaStream,
     type: CallType
@@ -65,12 +68,14 @@ export const MessagePanelConversationHeader = () => {
 
   return (
     <MessagePanelHeaderStyle>
-      <div>
-        <span>{recipient?.username || "User"}</span>
+      <div className={styles.messagePanelHeader}>
+        <UserAvatar user={user} />
+        {`${recipient?.lastName} ${recipient?.firstName}` || "User"}
       </div>
       <MessagePanelHeaderIcons>
-        <FaPhoneAlt size={24} cursor="pointer" onClick={voiceCallUser} />
-        <FaVideo size={30} cursor="pointer" onClick={videoCallUser} />
+        <FiPhone size={20} cursor="pointer" onClick={voiceCallUser} />
+        <FiVideo size={24} cursor="pointer" onClick={videoCallUser} />
+        <FiSearch size={24} cursor="pointer" onClick={() => {}} />
       </MessagePanelHeaderIcons>
     </MessagePanelHeaderStyle>
   );
