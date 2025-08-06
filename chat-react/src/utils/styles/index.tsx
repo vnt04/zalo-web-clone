@@ -164,7 +164,7 @@ export const ConversationSidebarItemDetails = styled.div`
 export const OverlayStyle = styled.div`
   height: 100%;
   width: 100%;
-  background-color: #000000e3;
+  background-color: white;
   position: fixed;
   display: flex;
   top: 0;

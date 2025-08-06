@@ -1,14 +1,15 @@
-import styled, { css } from 'styled-components';
-import { slideDown, slideUp } from '../keyframes';
-import { SettingsSidebarItemProps, UserBannerProps } from '../styleTypes';
+import styled, { css } from "styled-components";
+import { slideDown, slideUp } from "../keyframes";
+import { SettingsSidebarItemProps, UserBannerProps } from "../styleTypes";
 
 export const SettingsSidebarStyle = styled.aside`
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 300px;
-  background-color: #111111;
+  background-color: white;
   flex: 0 0 auto;
+  border: solid 1px #b3b4b5;
 `;
 
 export const SettingsSidebarHeader = styled.header`
@@ -23,6 +24,7 @@ export const SettingsSidebarHeader = styled.header`
 
 export const SettingsSidebarItemContainer = styled.div``;
 
+// #f0efef : --secondary-background
 export const SettingsSidebarItemStyle = styled.div<SettingsSidebarItemProps>`
   padding: 10px 24px;
   cursor: pointer;
@@ -33,7 +35,7 @@ export const SettingsSidebarItemStyle = styled.div<SettingsSidebarItemProps>`
     user-select: none;
     padding: 14px;
     border-radius: 8px;
-    background-color: ${({ isActive }) => isActive && '#070707'};
+    background-color: ${({ isActive }) => isActive && "#f0efef"};
     & span {
       font-weight: 500;
     }
@@ -50,7 +52,7 @@ export const UserAvatarContainer = styled.div<{ url?: string }>`
       ? css`
           transition: 1s background ease;
           background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-            url('${url}') no-repeat center;
+            url("${url}") no-repeat center;
           opacity: 100%;
           transition: 300ms opacity ease;
           background-size: cover;
@@ -64,7 +66,7 @@ export const UserAvatarContainer = styled.div<{ url?: string }>`
   cursor: pointer;
   &::before {
     background-color: none;
-    content: 'Change Avatar';
+    content: "Change Avatar";
     width: 100%;
     height: 150px;
     display: flex;
@@ -90,7 +92,7 @@ export const SettingsProfileBanner = styled.div<UserBannerProps>`
       ? css`
           transition: 1s background ease;
           background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-            url('${backgroundUrl}') no-repeat center;
+            url("${backgroundUrl}") no-repeat center;
           opacity: 70%;
           transition: 300ms opacity ease;
           background-size: cover;
@@ -103,7 +105,7 @@ export const SettingsProfileBanner = styled.div<UserBannerProps>`
         `}
   &::before {
     background-color: none;
-    content: 'Change Banner';
+    content: "Change Banner";
     width: 100%;
     height: 300px;
     display: flex;
@@ -148,8 +150,11 @@ export const ProfileSection = styled.div`
   padding: 0 48px;
 `;
 
+// #f0efef : --secondary-background
+// #b3b4b5 : --border
 export const ProfileAboutSection = styled.div`
-  background-color: #111111;
+  background-color: #f0efef;
+  border: solid 1px #b3b4b5;
   width: 500px;
   padding: 32px;
   box-sizing: border-box;
@@ -170,8 +175,8 @@ export const ProfileDescriptionField = styled.textarea`
   background-color: inherit;
   outline: none;
   border: none;
-  color: #ffffff;
-  font-family: 'Inter';
+  color: #000000;
+  font-family: "Inter";
   box-sizing: border-box;
   font-size: 15px;
   font-weight: 500;

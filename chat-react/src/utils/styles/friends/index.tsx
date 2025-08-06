@@ -1,11 +1,11 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 import {
   FriendRequestItemIconProps,
   FriendsNavbarItemProps,
-} from '../styleTypes';
+} from "../styleTypes";
 
 export const FriendsPageStyle = styled.div`
-  background-color: #101010;
+  background-color: white;
   height: 100%;
   width: 100%;
 `;
@@ -50,7 +50,7 @@ type FriendListItemContainerProps = {
 };
 
 export const FriendListItemContainer = styled.div<FriendListItemContainerProps>`
-  opacity: ${({ online }) => !online && '0.2'};
+  opacity: ${({ online }) => !online && "0.2"};
   display: flex;
   align-items: center;
   gap: 20px;
@@ -122,6 +122,6 @@ export const FriendRequestItemIcon = styled.div<FriendRequestItemIconProps>`
   font-size: 24px;
   &:hover {
     background-color: #161616;
-    color: ${({ isAccept }) => (isAccept ? '#00ff04' : '#ff3a3a')};
+    color: ${({ isAccept }) => (isAccept ? "#00ff04" : "#ff3a3a")};
   }
 `;

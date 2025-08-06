@@ -69,7 +69,7 @@ export const MessagePanelConversationHeader = () => {
   return (
     <MessagePanelHeaderStyle>
       <div className={styles.messagePanelHeader}>
-        <UserAvatar user={user} />
+        <UserAvatar user={recipient!} />
         {`${recipient?.lastName} ${recipient?.firstName}` || "User"}
       </div>
       <MessagePanelHeaderIcons>

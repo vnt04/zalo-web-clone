@@ -48,14 +48,14 @@ export class UserProfileService implements IUserProfile {
   async updateBanner(file: Express.Multer.File) {
     console.log('Updating Banner');
     const key = generateUUIDV4();
-    await this.imageStorageService.upload({ key, file });
-    return key;
+    const banner_url = await this.imageStorageService.upload({ key, file });
+    return banner_url;
   }
 
   async updateAvatar(file: Express.Multer.File) {
     console.log('Updating Avatar');
     const key = generateUUIDV4();
-    await this.imageStorageService.upload({ key, file });
-    return key;
+    const avatar_url = await this.imageStorageService.upload({ key, file });
+    return avatar_url;
   }
 }

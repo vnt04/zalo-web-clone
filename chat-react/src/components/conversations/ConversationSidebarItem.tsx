@@ -40,7 +40,7 @@ export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
         onClick={() => navigate(`/conversations/${conversation.id}`)}
         selected={parseInt(id!) === conversation.id}
       >
-        <UserAvatar user={user!} />
+        <UserAvatar user={conversation.recipient} />
         <ConversationSidebarItemDetails>
           <div className={styles.conversationHeader}>
             <span className={styles.conversationName}>

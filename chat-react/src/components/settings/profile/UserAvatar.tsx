@@ -1,8 +1,8 @@
-import { Dispatch, FC, SetStateAction, useContext, useRef } from 'react';
-import { AuthContext } from '../../../utils/context/AuthContext';
-import { FileInput } from '../../../utils/styles/inputs/Textarea';
-import { UserAvatarContainer } from '../../../utils/styles/settings';
-import { DivMouseEvent, InputChangeEvent } from '../../../utils/types';
+import { Dispatch, FC, SetStateAction, useContext, useRef } from "react";
+import { AuthContext } from "../../../utils/context/AuthContext";
+import { FileInput } from "../../../utils/styles/inputs/Textarea";
+import { UserAvatarContainer } from "../../../utils/styles/settings";
+import { DivMouseEvent, InputChangeEvent } from "../../../utils/types";
 
 type Props = {
   avatarSource: string;
