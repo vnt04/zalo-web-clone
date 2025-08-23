@@ -1,31 +1,28 @@
-import React, { Dispatch, FC, useEffect, useState } from 'react';
-import {
-  Button,
-  InputContainer,
-  InputLabel,
-  TextField,
-} from '../../utils/styles';
-import styles from './index.module.scss';
-import { useDispatch } from 'react-redux';
-import { createConversationThunk } from '../../store/conversationSlice';
-import { User } from '../../utils/types';
-import { AppDispatch } from '../../store';
-import { useNavigate } from 'react-router-dom';
-import { useDebounce } from '../../utils/hooks/useDebounce';
-import { searchUsers } from '../../utils/api';
-import { RecipientResultContainer } from '../recipients/RecipientResultContainer';
-import { RecipientField } from '../recipients/RecipientField';
+import React, { Dispatch, FC, useEffect, useState } from "react";
+import { TextField } from "../../utils/styles";
+import { InputContainer, InputLabel } from "../common/Input";
+import { Button } from "../common/button";
+import styles from "./index.module.scss";
+import { useDispatch } from "react-redux";
+import { createConversationThunk } from "../../store/conversationSlice";
+import { User } from "../../utils/types";
+import { AppDispatch } from "../../store";
+import { useNavigate } from "react-router-dom";
+import { useDebounce } from "../../utils/hooks/useDebounce";
+import { searchUsers } from "../../utils/api";
+import { RecipientResultContainer } from "../recipients/RecipientResultContainer";
+import { RecipientField } from "../recipients/RecipientField";
 
 type Props = {
   setShowModal: Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [userResults, setUserResults] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User>();
   const [searching, setSearching] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const debouncedQuery = useDebounce(query, 1000);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -52,7 +49,7 @@ export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
       .unwrap()
       .then(({ data }) => {
         console.log(data);
-        console.log('done');
+        console.log("done");
         setShowModal(false);
         navigate(`/conversations/${data.id}`);
       })
@@ -62,7 +59,7 @@ export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
   const handleUserSelect = (user: User) => {
     setSelectedUser(user);
     setUserResults([]);
-    setQuery('');
+    setQuery("");
   };
 
   return (

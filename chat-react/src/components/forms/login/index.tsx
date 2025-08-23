@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { postLoginUser } from "../../../utils/api";
 import { SocketContext } from "../../../utils/context/SocketContext";
-import { Button } from "../../../utils/styles";
 import { UserCredentialsParams } from "../../../utils/types";
 import styles from "../index.module.scss";
 import { InputContainer, InputField, InputLabel } from "../../common/Input";
+import { Button } from "../../common/button";
 
 export const LoginForm = () => {
   const {
@@ -36,10 +36,11 @@ export const LoginForm = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <InputContainer>
-        <InputLabel htmlFor="username">Username</InputLabel>
+        <InputLabel htmlFor="username">Phone number (+84)</InputLabel>
         <InputField
           type="text"
           id="username"
+          placeholder="ex: 0123456789"
           {...register("username", { required: true })}
         />
       </InputContainer>
@@ -48,6 +49,7 @@ export const LoginForm = () => {
         <InputField
           type="password"
           id="password"
+          placeholder="************"
           {...register("password", { required: true })}
         />
       </InputContainer>

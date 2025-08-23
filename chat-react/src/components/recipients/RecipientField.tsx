@@ -1,7 +1,7 @@
-import { FC, Dispatch, SetStateAction } from 'react';
-import { InputContainer, InputLabel, InputField } from '../../utils/styles';
-import { User } from '../../utils/types';
-import { SelectedRecipientChip } from './SelectedRecipientChip';
+import { FC, Dispatch, SetStateAction } from "react";
+import { InputContainer, InputField, InputLabel } from "../common/Input";
+import { User } from "../../utils/types";
+import { SelectedRecipientChip } from "./SelectedRecipientChip";
 
 type Props = {
   selectedUser: User | undefined;

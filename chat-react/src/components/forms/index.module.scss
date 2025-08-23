@@ -13,7 +13,7 @@ form {
 .footerText {
   & :last-child {
     text-decoration: underline;
-    color: rgb(184, 184, 184);
+    color: var(--text);
   }
   margin: 10px 0;
   text-align: center;

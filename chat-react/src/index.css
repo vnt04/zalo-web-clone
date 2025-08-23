@@ -8,6 +8,7 @@
   --popover-foreground: #0d0e1a;
   --primary: #206be7;
   --dark-primary: #063c93;
+  --hover-primary: #3a1cff;
   --primary-light: #dfeafd;
   --primary-foreground: #f8fafc;
   --secondary: #f0f4f8;
@@ -18,7 +19,7 @@
   --hover: #f5f4f4;
   --accent-foreground: #0e172a;
   --destructive: #ed2b2b;
-  --destructive-foreground: #f8fafc;
+  --destructive-foreground: #f4f4f5;
   --border: #b3b4b5;
   --input: #e0e6ef;
   --text: #626874;

@@ -1,0 +1,28 @@
+.button {
+  width: 100%;
+  outline: none;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  background-color: var(--primary);
+  color: #fff;
+  border-radius: 10px;
+  padding: 25px 0;
+  font-weight: 500;
+  transition: background-color 250ms ease;
+
+  &:hover {
+    cursor: pointer;
+    background-color: var(--hover-primary);
+  }
+
+  &:active {
+    background-color: var(--primary);
+  }
+
+  &:disabled {
+    background-color: #4937bc7c;
+    color: #878787a2;
+    cursor: not-allowed;
+  }
+}

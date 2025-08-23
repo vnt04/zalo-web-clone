@@ -1,32 +1,27 @@
-import { Dispatch, FC, useEffect, useState } from 'react';
-import { GroupRecipientsField } from '../recipients/GroupRecipientsField';
-import {
-  InputContainer,
-  InputLabel,
-  TextField,
-  Button,
-  RecipientChipContainer,
-  InputField,
-} from '../../utils/styles';
-import styles from './index.module.scss';
-import { User } from '../../utils/types';
-import { useDebounce } from '../../utils/hooks/useDebounce';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { AppDispatch } from '../../store';
-import { searchUsers } from '../../utils/api';
-import { RecipientResultContainer } from '../recipients/RecipientResultContainer';
-import { SelectedGroupRecipientChip } from '../recipients/SelectedGroupRecipientChip';
-import { createGroupThunk } from '../../store/groupSlice';
+import { Dispatch, FC, useEffect, useState } from "react";
+import { GroupRecipientsField } from "../recipients/GroupRecipientsField";
+import { TextField, RecipientChipContainer } from "../../utils/styles";
+import { InputContainer, InputField, InputLabel } from "../common/Input";
+import { Button } from "../common/button";
+import styles from "./index.module.scss";
+import { User } from "../../utils/types";
+import { useDebounce } from "../../utils/hooks/useDebounce";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../store";
+import { searchUsers } from "../../utils/api";
+import { RecipientResultContainer } from "../recipients/RecipientResultContainer";
+import { SelectedGroupRecipientChip } from "../recipients/SelectedGroupRecipientChip";
+import { createGroupThunk } from "../../store/groupSlice";
 
 type Props = {
   setShowModal: Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const CreateGroupForm: FC<Props> = ({ setShowModal }) => {
-  const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
-  const [query, setQuery] = useState('');
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<User[]>([]);
   const [selectedRecipients, setSelectedRecipients] = useState<User[]>([]);
   const [searching, setSearching] = useState(false);
@@ -55,7 +50,7 @@ export const CreateGroupForm: FC<Props> = ({ setShowModal }) => {
       .unwrap()
       .then(({ data }) => {
         console.log(data);
-        console.log('done');
+        console.log("done");
         setShowModal(false);
         navigate(`/groups/${data.id}`);
       })

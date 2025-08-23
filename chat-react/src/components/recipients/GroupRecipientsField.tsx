@@ -1,10 +1,5 @@
-import { Dispatch, FC, SetStateAction } from 'react';
-import {
-  InputContainer,
-  InputField,
-  InputLabel,
-  RecipientChipContainer,
-} from '../../utils/styles';
+import { Dispatch, FC, SetStateAction } from "react";
+import { InputContainer, InputField, InputLabel } from "../common/Input";
 
 type Props = {
   setQuery: Dispatch<SetStateAction<string>>;

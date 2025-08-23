@@ -1,5 +1,5 @@
 .inputContainer {
-  background-color: hsl(var(--primary));
+  background-color: var(--destructive-foreground);
   padding: 12px 16px;
   border-radius: 10px;
   width: 100%;
@@ -8,18 +8,16 @@
 
 .inputLabel {
   display: block;
-  background-color: var(--muted-foreground);
+  font-weight: 600;
   font-size: 14px;
   margin: 4px 0;
 }
 
 .inputField {
-  font-family: "Inter", sans-serif;
   outline: none;
   border: none;
   background-color: inherit;
-  color: #fff;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 500;
   width: 100%;
   box-sizing: border-box;

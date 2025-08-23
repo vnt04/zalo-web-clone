@@ -1,15 +1,10 @@
-import { useState, useContext, Dispatch, SetStateAction, FC } from 'react';
-import { updateStatusMessage } from '../../../utils/api';
-import { AuthContext } from '../../../utils/context/AuthContext';
-import { useToast } from '../../../utils/hooks/useToast';
-import {
-  InputContainer,
-  InputContainerHeader,
-  InputField,
-  InputLabel,
-} from '../../../utils/styles';
-import { Button } from '../../../utils/styles/button';
-import styles from '../index.module.scss';
+import { useState, useContext, Dispatch, SetStateAction, FC } from "react";
+import { updateStatusMessage } from "../../../utils/api";
+import { AuthContext } from "../../../utils/context/AuthContext";
+import { useToast } from "../../../utils/hooks/useToast";
+import { InputContainerHeader } from "../../../utils/styles";
+import { InputContainer, InputField, InputLabel } from "../../common/Input";
+import styles from "../index.module.scss";
 
 type Props = {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -17,22 +12,22 @@ type Props = {
 
 export const UpdateUserStatusForm: FC<Props> = ({ setShowModal }) => {
   const { user } = useContext(AuthContext);
-  const { success, error } = useToast({ theme: 'dark' });
+  const { success, error } = useToast({ theme: "dark" });
   const [statusMessage, setStatusMessage] = useState(
-    user?.presence?.statusMessage || ''
+    user?.presence?.statusMessage || ""
   );
 
   const saveStatus = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Updating Status...');
+    console.log("Updating Status...");
     updateStatusMessage({ statusMessage })
       .then(() => {
-        success('Updated Status!');
+        success("Updated Status!");
         setShowModal(false);
       })
       .catch((err) => {
         console.log(err);
-        error('Failed to Update Status');
+        error("Failed to Update Status");
       });
   };
 
