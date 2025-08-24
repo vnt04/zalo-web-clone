@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, useEffect, useState } from "react";
 import { TextField } from "../../utils/styles";
 import { InputContainer, InputLabel } from "../common/Input";
-import { Button } from "../common/button";
+import { Button } from "../common/Button";
 import styles from "./index.module.scss";
 import { useDispatch } from "react-redux";
 import { createConversationThunk } from "../../store/conversationSlice";
@@ -76,7 +76,7 @@ export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
         />
       )}
       <section className={styles.message}>
-        <InputContainer backgroundColor="#161616">
+        <InputContainer>
           <InputLabel>Message (optional)</InputLabel>
           <TextField
             value={message}

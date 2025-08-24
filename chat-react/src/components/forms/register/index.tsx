@@ -7,7 +7,7 @@ import styles from "../index.module.scss";
 import { UsernameField } from "./UsernameField";
 import { NameField } from "./NameField";
 import { PasswordField } from "./PasswordField";
-import { Button } from "../../common/button";
+import { Button } from "../../common/Button";
 
 export const RegisterForm = () => {
   const {

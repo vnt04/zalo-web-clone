@@ -6,7 +6,7 @@ import { SocketContext } from "../../../utils/context/SocketContext";
 import { UserCredentialsParams } from "../../../utils/types";
 import styles from "../index.module.scss";
 import { InputContainer, InputField, InputLabel } from "../../common/Input";
-import { Button } from "../../common/button";
+import { Button } from "../../common/Button";
 
 export const LoginForm = () => {
   const {

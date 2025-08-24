@@ -1,17 +1,17 @@
-import { FC, useState } from 'react';
-import { MdClose } from 'react-icons/md';
-import { CDN_URL } from '../../../utils/constants';
-import { useKeydown } from '../../../utils/hooks';
-import { OverlayStyle } from '../../../utils/styles';
-import { GroupMessageType, MessageType } from '../../../utils/types';
-import styles from './index.module.scss';
+import { FC, useState } from "react";
+import { MdClose } from "react-icons/md";
+import { CDN_URL } from "../../../utils/constants";
+import { useKeydown } from "../../../utils/hooks";
+import { GroupMessageType, MessageType } from "../../../utils/types";
+import styles from "./index.module.scss";
+import { OverlayStyle } from "../../common/Modal";
 
 type Props = {
   message: MessageType | GroupMessageType;
 };
 export const MessageItemAttachmentContainer: FC<Props> = ({ message }) => {
   const [showOverlay, setShowOverlay] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
 
   const onClick = (key: string) => {
     setShowOverlay(true);
@@ -19,7 +19,7 @@ export const MessageItemAttachmentContainer: FC<Props> = ({ message }) => {
   };
 
   const handleKeydown = (e: KeyboardEvent) =>
-    e.key === 'Escape' && setShowOverlay(false);
+    e.key === "Escape" && setShowOverlay(false);
   useKeydown(handleKeydown);
 
   return (
@@ -30,7 +30,7 @@ export const MessageItemAttachmentContainer: FC<Props> = ({ message }) => {
             className={styles.closeIcon}
             onClick={() => setShowOverlay(false)}
           />
-          <img src={imageUrl} alt="overlay" style={{ maxHeight: '90%' }} />
+          <img src={imageUrl} alt="overlay" style={{ maxHeight: "90%" }} />
         </OverlayStyle>
       )}
       <div>
@@ -41,7 +41,7 @@ export const MessageItemAttachmentContainer: FC<Props> = ({ message }) => {
             width={300}
             alt={attachment.key}
             onClick={() => onClick(attachment.key)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           />
         ))}
       </div>

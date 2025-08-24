@@ -1,8 +1,8 @@
-import { Dispatch, FC, SetStateAction, useRef } from 'react';
-import { MdClose } from 'react-icons/md';
-import { ModalContainer, ModalContentBody, ModalHeader } from '.';
-import { OverlayStyle } from '../../utils/styles';
-import { UpdateUserStatusForm } from '../forms/status';
+import { Dispatch, FC, SetStateAction, useRef } from "react";
+import { MdClose } from "react-icons/md";
+import { ModalContainer, ModalContentBody, ModalHeader } from ".";
+import { UpdateUserStatusForm } from "../forms/status";
+import { OverlayStyle } from "../common/Modal";
 
 type Props = {
   setShowModal: Dispatch<SetStateAction<boolean>>;

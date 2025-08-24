@@ -15,7 +15,7 @@ export const RecipientField: FC<Props> = ({
   setSelectedUser,
 }) => (
   <section>
-    <InputContainer backgroundColor="#161616">
+    <InputContainer>
       <InputLabel>Recipient</InputLabel>
       {selectedUser ? (
         <SelectedRecipientChip

@@ -10,7 +10,7 @@ import { useBeforeUnload } from "../../utils/hooks";
 import { useToast } from "../../utils/hooks/useToast";
 import { Form } from "../../utils/styles";
 import { InputContainer, InputField, InputLabel } from "../common/Input";
-import { Button } from "../common/button";
+import { Button } from "../common/Button";
 import { FormEvent } from "../../utils/types";
 import { GroupAvatarUpload } from "../avatars/GroupAvatarUpload";
 
@@ -57,7 +57,7 @@ export const EditGroupForm = () => {
   return (
     <Form onSubmit={onSubmit} ref={formRef}>
       <GroupAvatarUpload setFile={setFile} />
-      <InputContainer backgroundColor="#161616">
+      <InputContainer>
         <InputLabel htmlFor="groupName">Group Name</InputLabel>
         <InputField
           id="groupName"

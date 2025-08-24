@@ -5,7 +5,7 @@ import { createFriendRequestThunk } from "../../store/friends/friendsThunk";
 import { useToast } from "../../utils/hooks/useToast";
 import styles from "./index.module.scss";
 import { InputContainer, InputField, InputLabel } from "../common/Input";
-import { Button } from "../common/button";
+import { Button } from "../common/Button";
 
 type Props = {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -34,7 +34,7 @@ export const SendFriendRequestForm: FC<Props> = ({ setShowModal }) => {
 
   return (
     <form className={styles.createConversationForm} onSubmit={onSubmit}>
-      <InputContainer backgroundColor="#161616">
+      <InputContainer>
         <InputLabel>Recipient</InputLabel>
         <InputField
           value={username}

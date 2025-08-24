@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { MoonLoader } from "react-spinners";
 import { Edit } from "akar-icons";
 import { UserBanner } from "../../components/settings/profile/UserBanner";
-import { OverlayStyle, Page } from "../../utils/styles";
+import { Page } from "../../utils/styles";
 import {
   ProfileAboutSection,
   ProfileAboutSectionHeader,
@@ -15,6 +15,7 @@ import { Button } from "../../utils/styles/button";
 import { updateUserProfile } from "../../utils/api";
 import { AuthContext } from "../../utils/context/AuthContext";
 import { UserAvatar } from "../../components/settings/profile/UserAvatar";
+import { OverlayStyle } from "../../components/common/Modal";
 
 export const SettingsProfilePage = () => {
   const { user, updateAuthUser } = useContext(AuthContext);

@@ -8,7 +8,7 @@ type Props = {
 export const GroupRecipientsField: FC<Props> = ({ setQuery }) => {
   return (
     <section>
-      <InputContainer backgroundColor="#161616">
+      <InputContainer>
         <InputLabel>Recipient</InputLabel>
         <InputField onChange={(e) => setQuery(e.target.value)} />
       </InputContainer>

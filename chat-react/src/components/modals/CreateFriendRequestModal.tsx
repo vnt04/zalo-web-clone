@@ -1,8 +1,8 @@
-import { FC, Dispatch, SetStateAction, useEffect, createRef } from 'react';
-import { MdClose } from 'react-icons/md';
-import { ModalContainer, ModalHeader, ModalContentBody } from '.';
-import { OverlayStyle } from '../../utils/styles';
-import { SendFriendRequestForm } from '../forms/SendFriendRequestForm';
+import { FC, Dispatch, SetStateAction, useEffect, createRef } from "react";
+import { MdClose } from "react-icons/md";
+import { ModalContainer, ModalHeader, ModalContentBody } from ".";
+import { SendFriendRequestForm } from "../forms/SendFriendRequestForm";
+import { OverlayStyle } from "../common/Modal";
 
 type Props = {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -15,15 +15,15 @@ export const CreateFriendRequestModal: FC<Props> = ({ setShowModal }) => {
   ) => {
     const { current } = ref;
     if (current === e.target) {
-      console.log('Close Modal');
+      console.log("Close Modal");
       setShowModal(false);
     }
   };
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) =>
-      e.key === 'Escape' && setShowModal(false);
-    window.addEventListener('keydown', handleKeydown);
-    return () => window.removeEventListener('keydown', handleKeydown);
+      e.key === "Escape" && setShowModal(false);
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
   }, []);
 
   return (

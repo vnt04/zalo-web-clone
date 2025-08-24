@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { addGroupRecipient } from "../../utils/api";
 import { useToast } from "../../utils/hooks/useToast";
 import { InputContainer, InputField, InputLabel } from "../common/Input";
-import { Button } from "../common/button";
+import { Button } from "../common/Button";
 import styles from "./index.module.scss";
 
 export const GroupRecipientAddForm = () => {
@@ -27,7 +27,7 @@ export const GroupRecipientAddForm = () => {
 
   return (
     <form className={styles.createConversationForm} onSubmit={onSubmit}>
-      <InputContainer backgroundColor="#161616">
+      <InputContainer>
         <InputLabel>Recipient</InputLabel>
         <InputField
           value={username}

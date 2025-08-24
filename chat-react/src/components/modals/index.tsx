@@ -1,9 +1,9 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren } from "react";
 import {
   ModalContainerStyle,
   ModalContentBodyStyle,
   ModalHeaderStyle,
-} from '../../utils/styles';
+} from "../common/Modal";
 
 export const ModalHeader: FC<PropsWithChildren> = ({ children }) => {
   return <ModalHeaderStyle>{children}</ModalHeaderStyle>;

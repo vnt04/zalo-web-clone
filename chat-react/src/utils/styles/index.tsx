@@ -102,51 +102,6 @@ export const ConversationSidebarItemDetails = styled.div`
   }
 `;
 
-export const OverlayStyle = styled.div`
-  height: 100%;
-  width: 100%;
-  background-color: white;
-  position: fixed;
-  display: flex;
-  top: 0;
-  left: 0;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-`;
-
-type ModalProps = Partial<{
-  showModal: boolean;
-}>;
-
-export const ModalContainerStyle = styled.div<ModalProps>`
-  position: relative;
-  background-color: #121212;
-  width: 650px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  animation: ${fadeInUpwards} 500ms ease;
-`;
-
-export const ModalHeaderStyle = styled.header`
-  width: 100%;
-  padding: 0 24px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 28px;
-  & h2 {
-    font-weight: 500;
-    margin: 0;
-  }
-`;
-
-export const ModalContentBodyStyle = styled.div`
-  padding: 24px;
-  position: relative;
-`;
-
 export const TextField = styled.textarea`
   font-family: "Inter";
   outline: none;
