@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
-import { MdClose } from "react-icons/md";
 import { CDN_URL } from "../../../utils/constants";
 import { useKeydown } from "../../../utils/hooks";
 import { GroupMessageType, MessageType } from "../../../utils/types";
 import styles from "./index.module.scss";
 import { OverlayStyle } from "../../common/Modal";
+import { CloseButton } from "../../common/Button";
 
 type Props = {
   message: MessageType | GroupMessageType;
@@ -26,7 +26,7 @@ export const MessageItemAttachmentContainer: FC<Props> = ({ message }) => {
     <>
       {showOverlay && (
         <OverlayStyle>
-          <MdClose
+          <CloseButton
             className={styles.closeIcon}
             onClick={() => setShowOverlay(false)}
           />

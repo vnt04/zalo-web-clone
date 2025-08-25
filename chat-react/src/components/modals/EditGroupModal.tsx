@@ -1,5 +1,4 @@
 import { createRef } from "react";
-import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { ModalContainer, ModalHeader, ModalContentBody } from ".";
 import { AppDispatch, RootState } from "../../store";
@@ -8,6 +7,7 @@ import { useKeydown } from "../../utils/hooks";
 import { DivMouseEvent } from "../../utils/types";
 import { EditGroupForm } from "../forms/EditGroupForm";
 import { OverlayStyle } from "../common/Modal";
+import { CloseButton } from "../common/Button";
 
 export const EditGroupModal = () => {
   const ref = createRef<HTMLDivElement>();
@@ -32,12 +32,12 @@ export const EditGroupModal = () => {
       <ModalContainer>
         <ModalHeader>
           <h2>Edit Group</h2>
-          <MdClose
+          <CloseButton
             size={32}
             onClick={() =>
               !isSavingChanges && dispatch(setShowEditGroupModal(false))
             }
-            cursor={isSavingChanges ? "not-allowed" : "pointer"}
+            // cursor={isSavingChanges ? "not-allowed" : "pointer"}
           />
         </ModalHeader>
         <ModalContentBody>

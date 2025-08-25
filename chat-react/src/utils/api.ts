@@ -72,6 +72,12 @@ export const createMessage = (
 export const postNewConversation = (data: CreateConversationParams) =>
   axiosClient.post<Conversation>(`/conversations`, data, config);
 
+export const getConversationByUsername = (username: string) =>
+  axiosClient.get<Conversation>(
+    `/conversations/by-username/${username}`,
+    config
+  );
+
 export const deleteMessage = ({ id, messageId }: DeleteMessageParams) =>
   axiosClient.delete<DeleteMessageResponse>(
     `/conversations/${id}/messages/${messageId}`,
@@ -97,7 +103,7 @@ export const postGroupMessage = ({ id, content }: CreateMessageParams) =>
   axiosClient.post(`/groups/${id}/messages`, { content }, config);
 
 export const searchUsers = (query: string) =>
-  axiosClient.get<User[]>(`/users/search?query=${query}`, config);
+  axiosClient.get<User>(`/users/search?query=${query}`, config);
 
 export const createGroup = (params: CreateGroupParams) =>
   axiosClient.post(`/groups`, params, config);

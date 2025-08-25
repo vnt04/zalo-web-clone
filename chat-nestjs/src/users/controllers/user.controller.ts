@@ -21,7 +21,7 @@ export class UsersController {
     console.log(query);
     if (!query)
       throw new HttpException('Provide a valid query', HttpStatus.BAD_REQUEST);
-    return this.userService.searchUsers(query);
+    return this.userService.searchUserByUsername(query);
   }
 
   @Get('check')

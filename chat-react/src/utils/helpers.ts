@@ -169,3 +169,8 @@ export const getMessageSentTime = (isoString: string) => {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 };
+
+export const isPhoneNumber = (phone: string): boolean => {
+  const regex = /^(?:\+84|0)(3|5|7|8|9)\d{8}$/;
+  return regex.test(phone);
+};

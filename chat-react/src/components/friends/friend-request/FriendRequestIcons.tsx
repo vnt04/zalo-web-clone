@@ -1,10 +1,11 @@
-import { FC } from 'react';
-import { MdCheck, MdClose } from 'react-icons/md';
-import { FriendRequestItemIcon } from '../../../utils/styles/friends';
+import { FC } from "react";
+import { MdCheck } from "react-icons/md";
+import { FriendRequestItemIcon } from "../../../utils/styles/friends";
 import {
   FriendRequestDetailsType,
   HandleFriendRequestAction,
-} from '../../../utils/types';
+} from "../../../utils/types";
+import { CloseButton } from "../../common/Button";
 
 type Props = {
   details: FriendRequestDetailsType;
@@ -20,7 +21,7 @@ export const FriendRequestIcons: FC<Props> = ({
       {details.incoming && (
         <FriendRequestItemIcon
           isAccept={true}
-          onClick={() => handleFriendRequest('accept')}
+          onClick={() => handleFriendRequest("accept")}
         >
           <MdCheck />
         </FriendRequestItemIcon>
@@ -28,11 +29,11 @@ export const FriendRequestIcons: FC<Props> = ({
       <FriendRequestItemIcon
         onClick={() =>
           details.incoming
-            ? handleFriendRequest('reject')
+            ? handleFriendRequest("reject")
             : handleFriendRequest()
         }
       >
-        <MdClose />
+        <CloseButton />
       </FriendRequestItemIcon>
     </div>
   );

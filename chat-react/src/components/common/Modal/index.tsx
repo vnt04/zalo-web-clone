@@ -2,9 +2,9 @@ import React, { forwardRef } from "react";
 import styles from "./index.module.scss";
 import classNames from "classnames";
 
-type ModalProps = {
+interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   showModal?: boolean;
-} & React.HTMLAttributes<HTMLDivElement>;
+}
 
 export const ModalContainerStyle: React.FC<
   React.PropsWithChildren<ModalProps>

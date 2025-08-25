@@ -1,13 +1,13 @@
-import { FC } from 'react';
+import { FC } from "react";
+import { User } from "../../utils/types";
 import {
   RecipientResultContainerStyle,
-  RecipientResultItem,
   RecipientScrollableItemContainer,
-} from '../../utils/styles';
-import { User } from '../../utils/types';
+} from ".";
+import { RecipientResultItem } from "./RecipientResultItem";
 
 type Props = {
-  userResults: User[];
+  userResults: User;
   handleUserSelect: (user: User) => void;
 };
 
@@ -18,14 +18,17 @@ export const RecipientResultContainer: FC<Props> = ({
   return (
     <RecipientResultContainerStyle>
       <RecipientScrollableItemContainer>
-        {userResults.map((user) => (
+        <div
+          style={{ fontWeight: "600", margin: "4px 0", color: "var(--text)" }}
+        >
+          Kết quả tìm thấy
+        </div>
+        {userResults && (
           <RecipientResultItem
-            key={user.id}
-            onClick={() => handleUserSelect(user)}
-          >
-            <span>{user.username}</span>
-          </RecipientResultItem>
-        ))}
+            user={userResults}
+            onClick={() => handleUserSelect(userResults)}
+          ></RecipientResultItem>
+        )}
       </RecipientScrollableItemContainer>
     </RecipientResultContainerStyle>
   );

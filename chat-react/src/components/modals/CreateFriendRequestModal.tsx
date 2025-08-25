@@ -3,6 +3,7 @@ import { MdClose } from "react-icons/md";
 import { ModalContainer, ModalHeader, ModalContentBody } from ".";
 import { SendFriendRequestForm } from "../forms/SendFriendRequestForm";
 import { OverlayStyle } from "../common/Modal";
+import { CloseButton } from "../common/Button";
 
 type Props = {
   setShowModal: Dispatch<SetStateAction<boolean>>;
@@ -31,7 +32,7 @@ export const CreateFriendRequestModal: FC<Props> = ({ setShowModal }) => {
       <ModalContainer>
         <ModalHeader>
           <h2>Send a Friend Request</h2>
-          <MdClose size={32} onClick={() => setShowModal(false)} />
+          <CloseButton size={32} onClick={() => setShowModal(false)} />
         </ModalHeader>
         <ModalContentBody>
           <SendFriendRequestForm setShowModal={setShowModal} />

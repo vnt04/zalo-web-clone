@@ -4,14 +4,14 @@ import { FriendsModule } from '../friends/friends.module';
 import { UsersModule } from '../users/users.module';
 import { Services } from '../utils/constants';
 import { isAuthorized } from '../utils/helpers';
-import { Conversation, Message } from '../utils/typeorm';
+import { Conversation, Message, User } from '../utils/typeorm';
 import { ConversationsController } from './conversations.controller';
 import { ConversationsService } from './conversations.service';
 import { ConversationMiddleware } from './middlewares/conversation.middleware';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Conversation, Message]),
+    TypeOrmModule.forFeature([Conversation, Message, User]),
     UsersModule,
     FriendsModule,
   ],

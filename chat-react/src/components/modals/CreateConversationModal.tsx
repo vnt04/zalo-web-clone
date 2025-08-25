@@ -1,8 +1,8 @@
 import { createRef, Dispatch, FC, useEffect } from "react";
 import { ModalContainer, ModalContentBody, ModalHeader } from ".";
 import { CreateConversationForm } from "../forms/CreateConversationForm";
-import { MdClose } from "react-icons/md";
 import { OverlayStyle } from "../common/Modal";
+import { CloseButton } from "../common/Button";
 
 type Props = {
   setShowModal: Dispatch<React.SetStateAction<boolean>>;
@@ -32,8 +32,8 @@ export const CreateConversationModal: FC<Props> = ({ setShowModal }) => {
     <OverlayStyle ref={ref} onClick={handleOverlayClick}>
       <ModalContainer>
         <ModalHeader>
-          <h2>Create a Conversation</h2>
-          <MdClose size={32} onClick={() => setShowModal(false)} />
+          <h2>Thêm bạn</h2>
+          <CloseButton size={24} onClick={() => setShowModal(false)} />
         </ModalHeader>
         <ModalContentBody>
           {/* <ConversationTypeForm type={type} setType={setType} /> */}

@@ -1,8 +1,8 @@
 import { createRef, Dispatch, FC, useEffect } from "react";
-import { MdClose } from "react-icons/md";
 import { ModalContainer, ModalHeader, ModalContentBody } from ".";
 import { GroupRecipientAddForm } from "../forms/GroupRecipientAddForm";
 import { OverlayStyle } from "../common/Modal";
+import { CloseButton } from "../common/Button";
 
 type Props = {
   showModal: boolean;
@@ -36,11 +36,7 @@ export const AddGroupRecipientModal: FC<Props> = ({
       <ModalContainer showModal={showModal}>
         <ModalHeader>
           <h2>Add Recipient</h2>
-          <MdClose
-            cursor="pointer"
-            size={32}
-            onClick={() => setShowModal(false)}
-          />
+          <CloseButton size={32} onClick={() => setShowModal(false)} />
         </ModalHeader>
         <ModalContentBody>
           <GroupRecipientAddForm />

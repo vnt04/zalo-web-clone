@@ -52,12 +52,10 @@ export class UserService implements IUserService {
     return this.userRepository.save(user);
   }
 
-  searchUsers(query: string) {
-    const statement = '(user.username LIKE :query)';
-    return this.userRepository
+  async searchUserByUsername(query: string) {
+    const user = await this.userRepository
       .createQueryBuilder('user')
-      .where(statement, { query: `%${query}%` })
-      .limit(10)
+      .where('user.username = :username', { username: query })
       .select([
         'user.username',
         'user.firstName',
@@ -66,6 +64,8 @@ export class UserService implements IUserService {
         'user.id',
         'user.profile',
       ])
-      .getMany();
+      .getOne();
+
+    return user || null;
   }
 }

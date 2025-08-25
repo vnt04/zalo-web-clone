@@ -1,6 +1,4 @@
 import React, { Dispatch, FC, useEffect, useState } from "react";
-import { TextField } from "../../utils/styles";
-import { InputContainer, InputLabel } from "../common/Input";
 import { Button } from "../common/Button";
 import styles from "./index.module.scss";
 import { useDispatch } from "react-redux";
@@ -8,10 +6,11 @@ import { createConversationThunk } from "../../store/conversationSlice";
 import { User } from "../../utils/types";
 import { AppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
-import { useDebounce } from "../../utils/hooks/useDebounce";
-import { searchUsers } from "../../utils/api";
+import { getConversationByUsername, searchUsers } from "../../utils/api";
 import { RecipientResultContainer } from "../recipients/RecipientResultContainer";
 import { RecipientField } from "../recipients/RecipientField";
+import { isPhoneNumber } from "../../utils/helpers";
+import { useToast } from "../../utils/hooks/useToast";
 
 type Props = {
   setShowModal: Dispatch<React.SetStateAction<boolean>>;
@@ -19,72 +18,72 @@ type Props = {
 
 export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
   const [query, setQuery] = useState("");
-  const [userResults, setUserResults] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User>();
+  const [userResult, setUserResult] = useState<User>();
   const [searching, setSearching] = useState(false);
-  const [message, setMessage] = useState("");
-  const debouncedQuery = useDebounce(query, 1000);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { error } = useToast({ theme: "dark" });
 
-  useEffect(() => {
-    if (debouncedQuery) {
+  const handleSearch = (query: string) => {
+    if (isPhoneNumber(query.trim())) {
       setSearching(true);
-      searchUsers(debouncedQuery)
+      searchUsers(query.trim())
         .then(({ data }) => {
           console.log(data);
-          setUserResults(data);
+          setUserResult(data);
         })
         .catch((err) => console.log(err))
         .finally(() => setSearching(false));
+    } else {
+      error("Số điện thoại không hợp lệ.");
     }
-  }, [debouncedQuery]);
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!message || !selectedUser) return;
-    return dispatch(
-      createConversationThunk({ username: selectedUser.username, message })
-    )
-      .unwrap()
-      .then(({ data }) => {
-        console.log(data);
-        console.log("done");
-        setShowModal(false);
-        navigate(`/conversations/${data.id}`);
-      })
-      .catch((err) => console.log(err));
   };
 
-  const handleUserSelect = (user: User) => {
-    setSelectedUser(user);
-    setUserResults([]);
-    setQuery("");
+  // const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   if (!selectedUser) return;
+  //   return dispatch(
+  //     createConversationThunk({ username: selectedUser.username, message: "" })
+  //   )
+  //     .unwrap()
+  //     .then(({ data }) => {
+  //       console.log(data);
+  //       console.log("done");
+  //       setShowModal(false);
+  //       navigate(`/conversations/${data.id}`);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  useEffect(() => {
+    if (!query) {
+      setUserResult(undefined);
+    }
+  }, [query]);
+
+  const handleUserSelect = async () => {
+    // find conversation between user & user result
+    if (!userResult?.username) return;
+    const result = await getConversationByUsername(userResult?.username);
+
+    // navigate to conversation with this user
+    setShowModal(false);
+    navigate(`conversations/${result.data.id}`);
   };
 
   return (
-    <form className={styles.createConversationForm} onSubmit={onSubmit}>
-      <RecipientField
-        selectedUser={selectedUser}
-        setQuery={setQuery}
-        setSelectedUser={setSelectedUser}
-      />
-      {!selectedUser && userResults.length > 0 && query && (
+    <form className={styles.createConversationForm}>
+      <RecipientField setQuery={setQuery} />
+      {userResult && query && (
         <RecipientResultContainer
-          userResults={userResults}
+          userResults={userResult}
           handleUserSelect={handleUserSelect}
         />
       )}
-      <section className={styles.message}>
-        <InputContainer>
-          <InputLabel>Message (optional)</InputLabel>
-          <TextField
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-        </InputContainer>
-      </section>
-      <Button>Create Conversation</Button>
+
+      <Button type="button" onClick={() => handleSearch(query)}>
+        Tìm kiếm
+      </Button>
     </form>
   );
 };

@@ -20,7 +20,7 @@ export class User {
   id: number;
 
   @Column({ unique: true })
-  username: string;
+  username: string; // => phone number ~ username
 
   @Column({ nullable: true })
   email: string;

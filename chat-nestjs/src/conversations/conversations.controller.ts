@@ -4,7 +4,9 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -49,8 +51,17 @@ export class ConversationsController {
     return this.conversationsService.getConversations(id);
   }
 
+  @Get('by-username/:username')
+  async getConversationByUsername(
+    @AuthUser() me: User,
+    @Param('username') username: string,
+  ) {
+    console.log('in by-username', username);
+    return this.conversationsService.getConversationByUsername(me, username);
+  }
+
   @Get(':id')
-  async getConversationById(@Param('id') id: number) {
+  async getConversationById(@Param('id', ParseIntPipe) id: number) {
     return this.conversationsService.findById(id);
   }
 }
