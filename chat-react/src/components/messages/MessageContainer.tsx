@@ -72,6 +72,7 @@ export const MessageContainer = () => {
     index: number,
     messages: MessageType[] | GroupMessageType[]
   ) => {
+    if (!message.content) return null;
     const currentMessage = messages[index];
     const nextMessage = messages[index + 1];
 

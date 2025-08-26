@@ -68,7 +68,7 @@ export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
 
     // navigate to conversation with this user
     setShowModal(false);
-    navigate(`conversations/${result.data.id}`);
+    navigate(`/conversations/${result.data.id}`);
   };
 
   return (

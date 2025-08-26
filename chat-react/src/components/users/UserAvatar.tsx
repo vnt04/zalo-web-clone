@@ -10,8 +10,7 @@ type Props = {
 
 export const UserAvatar: FC<Props> = ({ user, onClick }) => {
   const getProfilePicture = () => {
-    const { profile } = user;
-    return profile && profile.avatar ? profile.avatar : defaultAvatar;
+    return user?.profile?.avatar ?? defaultAvatar;
   };
 
   return (

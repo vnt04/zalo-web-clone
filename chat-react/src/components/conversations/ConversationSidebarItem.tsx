@@ -19,7 +19,9 @@ type Props = {
 };
 
 export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
-  console.log("name", conversation.lastMessageSent.author.firstName);
+  // check if this is a new conversation with no message before.
+  if (!conversation.lastMessageSent) return null;
+
   const MESSAGE_LENGTH_MAX = 50;
   const { id } = useParams();
   const { user } = useContext(AuthContext);
@@ -52,7 +54,7 @@ export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
           </div>
 
           <span className={styles.conversationLastMessage}>
-            {user?.id === conversation.lastMessageSent.author.id && (
+            {user?.id === conversation.lastMessageSent.author?.id && (
               <span>Bạn:</span>
             )}{" "}
             {lastMessageContent()}

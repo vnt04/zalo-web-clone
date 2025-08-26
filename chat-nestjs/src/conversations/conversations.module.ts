@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FriendsModule } from '../friends/friends.module';
 import { UsersModule } from '../users/users.module';
@@ -31,8 +36,9 @@ import { ConversationMiddleware } from './middlewares/conversation.middleware';
 })
 export class ConversationsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(isAuthorized, ConversationMiddleware)
-      .forRoutes('conversations/:id');
+    consumer.apply(isAuthorized, ConversationMiddleware).forRoutes({
+      path: 'conversations/:id',
+      method: RequestMethod.GET,
+    });
   }
 }

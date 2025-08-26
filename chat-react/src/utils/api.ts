@@ -73,8 +73,9 @@ export const postNewConversation = (data: CreateConversationParams) =>
   axiosClient.post<Conversation>(`/conversations`, data, config);
 
 export const getConversationByUsername = (username: string) =>
-  axiosClient.get<Conversation>(
-    `/conversations/by-username/${username}`,
+  axiosClient.post<Conversation>(
+    `/conversations/by-username`,
+    { username },
     config
   );
 

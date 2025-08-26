@@ -75,6 +75,7 @@ export class ConversationsService implements IConversationsService {
         { creator: { id: me.id }, recipient: { id: foundUser.id } },
         { creator: { id: foundUser.id }, recipient: { id: me.id } },
       ],
+      relations: ['creator', 'recipient'],
     });
 
     // 3. if conversation not found, create a new conversation
