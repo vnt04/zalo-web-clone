@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 import { Theme } from "../themes";
-import { fadeInUpwards } from "./keyframes";
 import {
   CharacterLimitProps,
   ContextMenuProps,

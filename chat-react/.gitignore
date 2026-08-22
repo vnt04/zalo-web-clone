@@ -10,6 +10,10 @@
 
 # production
 /build
+/dist
+
+# tsc -b incremental state
+*.tsbuildinfo
 
 # misc
 .DS_Store

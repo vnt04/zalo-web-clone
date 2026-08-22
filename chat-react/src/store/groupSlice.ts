@@ -148,20 +148,20 @@ export const groupsSlice = createSlice({
           console.log('Updating Group....');
         }
       })
-      .addCase(updateGroupOwnerThunk.fulfilled, (state, action) => {
+      .addCase(updateGroupOwnerThunk.fulfilled, (_state, _action) => {
         console.log('updateGroupOwnerThunk.fulfilled');
       })
-      .addCase(leaveGroupThunk.fulfilled, (state, action) => {
+      .addCase(leaveGroupThunk.fulfilled, (_state, _action) => {
         console.log('leaveGroupThunk.fulfilled');
       })
-      .addCase(updateGroupDetailsThunk.fulfilled, (state, action) => {
+      .addCase(updateGroupDetailsThunk.fulfilled, (_state, _action) => {
         console.log('updateGroupDetailsThunk.fulfilled');
       });
   },
 });
 
 const selectGroups = (state: RootState) => state.groups.groups;
-const selectGroupId = (state: RootState, id: number) => id;
+const selectGroupId = (_state: RootState, id: number) => id;
 
 export const selectGroupById = createSelector(
   [selectGroups, selectGroupId],

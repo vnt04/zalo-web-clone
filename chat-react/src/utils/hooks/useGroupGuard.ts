@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchGroupById, getConversationById } from '../api';
+import { fetchGroupById } from '../api';
 
 export function useGroupGuard() {
   const { id } = useParams();

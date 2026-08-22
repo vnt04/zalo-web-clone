@@ -11,7 +11,7 @@ export const MessageImageCanvas: FC<Props> = ({ file }) => {
     const image = new Image();
     console.log(URL.createObjectURL(file));
     image.src = URL.createObjectURL(file);
-    image.onload = (e) => {
+    image.onload = () => {
       console.log('image.onload');
       const { current: canvas } = canvasRef;
       if (!canvas) return;

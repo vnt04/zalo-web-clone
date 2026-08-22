@@ -21,7 +21,7 @@ export const SettingsProfilePage = () => {
   const { user, updateAuthUser } = useContext(AuthContext);
 
   const [avatarFile, setAvatarFile] = useState<File>();
-  const [avatarSource, setAvatarSource] = useState(user?.profile?.avatar || "");
+  const [avatarSource] = useState(user?.profile?.avatar || "");
   const [avatarSourceCopy, setAvatarSourceCopy] = useState(avatarSource);
 
   const [bannerSource, setBannerSource] = useState(user?.profile?.banner || "");

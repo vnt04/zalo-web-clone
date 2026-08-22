@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { slideDown, slideUp } from "../keyframes";
+import { slideUp } from "../keyframes";
 import { SettingsSidebarItemProps, UserBannerProps } from "../styleTypes";
 
 export const SettingsSidebarStyle = styled.aside`

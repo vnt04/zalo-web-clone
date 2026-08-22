@@ -98,7 +98,7 @@ export const groupMessagesSlice = createSlice({
 });
 
 const selectGroupMessages = (state: RootState) => state.groupMessages.messages;
-const selectGroupMessageId = (state: RootState, id: number) => id;
+const selectGroupMessageId = (_state: RootState, id: number) => id;
 
 export const selectGroupMessage = createSelector(
   [selectGroupMessages, selectGroupMessageId],

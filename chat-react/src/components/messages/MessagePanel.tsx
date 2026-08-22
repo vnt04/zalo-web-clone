@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import React, { FC, useContext, useState, useEffect } from "react";
+import { FC, useContext, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState } from "../../store";
