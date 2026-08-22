@@ -10,6 +10,7 @@ import { getRepository } from 'typeorm';
 import { WebsocketAdapter } from './gateway/gateway.adapter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { getCorsOrigins } from './utils/cors';
 
 async function bootstrap() {
   const { PORT, COOKIE_SECRET } = process.env;
@@ -18,7 +19,7 @@ async function bootstrap() {
   const adapter = new WebsocketAdapter(app);
   app.useWebSocketAdapter(adapter);
   app.setGlobalPrefix('api');
-  app.enableCors({ origin: ['http://localhost:3000'], credentials: true });
+  app.enableCors({ origin: getCorsOrigins(), credentials: true });
   app.useGlobalPipes(new ValidationPipe());
   app.set('trust proxy', 'loopback');
   app.use(

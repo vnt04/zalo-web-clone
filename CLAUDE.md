@@ -9,31 +9,64 @@ Zalo PC clone: realtime chat over WebSocket. A NestJS API + a React SPA in one r
 
 Package manager: **yarn** (both packages). Dependencies are not installed in a fresh clone.
 
-## Run it
+## Run it — docker (default)
 
 ```bash
-# API — serves on $PORT, must be 8001 (the SPA and CORS assume it)
+cp .env.example .env    # host ports and credentials for the whole stack
+docker compose up --build
+```
+
+Brings up MySQL, the API and the SPA together. SPA on `http://localhost:3100`, Swagger on
+`http://localhost:8001/api/docs`, MySQL published on `3307`. Those defaults dodge ports that other local stacks
+commonly hold (`3000`, `3306`); change them in `.env` and every service follows.
+
+Source is bind-mounted and both dev servers watch, so edits hot-reload. `node_modules` lives in a named volume, not on
+the host — **after changing `package.json` you must rebuild the volume**, or the container keeps the old dependencies:
+
+```bash
+docker compose down
+docker volume rm zalo-web-clone_api-node-modules   # or _web-node-modules
+docker compose up --build
+```
+
+`docker compose down -v` also drops `mysql-data`, i.e. the whole database.
+
+## Run it — native
+
+Still supported; needs a MySQL you provide yourself.
+
+```bash
+# API — serves on $PORT, must be 8001 (the SPA's .env.development assumes it)
 cd chat-nestjs && yarn install
 cp .env.example .env.development   # then fill in real values
 yarn start:dev                     # Swagger at http://localhost:8001/api/docs
 
-# SPA — port 3000 (hardcoded in vite.config.ts, and the API only CORS-allows :3000)
+# SPA — port 3000 unless WEB_PORT says otherwise
 cd chat-react && yarn install && yarn dev
 ```
 
-MySQL must be reachable with the `MYSQL_DB_*` credentials before the API will boot. TypeORM runs with
-`synchronize: true`, so the schema is created/altered from the entities on every start — there are no migrations.
+TypeORM runs with `synchronize: true`, so the schema is created/altered from the entities on every start — there are no
+migrations. Under docker the database is created for you; natively you must create it before the API will boot.
 
 ## Verification gates
 
 Run these before reporting work as done. Do not claim a check passed that you did not run.
 
-| Package | Command | Notes |
+Under docker, prefix with `docker compose exec api` / `docker compose exec web`.
+
+| Package | Command | State |
 |---|---|---|
-| chat-nestjs | `yarn lint` | eslint + prettier, `--fix` is on by default |
-| chat-nestjs | `yarn test` | jest, matches `src/**/*.spec.ts` |
-| chat-nestjs | `yarn build` | `nest build` |
-| chat-react | `yarn build` | `tsc -b && vite build` — **the only automated gate on the frontend** |
+| chat-nestjs | `yarn lint` | ✅ passes — eslint + prettier, `--fix` is on by default, 22 warnings are expected |
+| chat-nestjs | `yarn build` | ✅ passes — `nest build` |
+| chat-react | `yarn build` | ✅ passes — `tsc -b && vite build`, the only gate in that package |
+| chat-nestjs | `yarn test` | ❌ **already broken on `main`** |
+
+`yarn test` fails 9/9 suites and has done since before any current work — verified against a clean checkout of `main`.
+The specs build a `TestingModule` without providing the repository and `Services.*` tokens their subjects inject, so
+Nest cannot resolve the DI graph. Do not treat it as a regression you caused, and do not claim it passes.
+
+`chat-react` runs `strict`, `noUnusedLocals` and `noUnusedParameters`, so an unused import or an unused destructured
+setter fails the build. For a deliberately unused callback parameter, prefix it with `_` rather than deleting it.
 
 `chat-react` has **no test and no lint script**. Do not run `yarn test` there; it will fail. `src/__tests__/RegisterPage.spec.tsx`
 and `setupTests.ts` are leftovers from the pre-Vite Create React App setup — no runner is wired up to them.
@@ -73,8 +106,12 @@ Use `/api-endpoint` and `/socket-event` for guided versions of this.
 - **Two style systems coexist in the SPA**: `styled-components` (older code in `src/utils/styles/`) and SCSS Modules
   (`index.module.scss` next to the components). New UI follows the SCSS Module pattern; do not convert old code unasked.
 - **`chat-react/` carries both `yarn.lock` and `package-lock.json`.** Use yarn; treat `package-lock.json` as stale.
-- Secrets live in `chat-nestjs/.env.development` / `.env.production`, which are gitignored. Never print their contents or
-  commit them; add new variables to `.env.example` instead.
+- **`CORS_ORIGIN` only works from the real environment.** The `@WebSocketGateway` decorator in `src/gateway/gateway.ts`
+  is evaluated at import time, before `ConfigModule` reads `.env.development` — so a value set in that file reaches the
+  REST CORS but not the socket gateway. Docker passes it as a process env var, which both honour. Both call
+  `getCorsOrigins()` in `src/utils/cors.ts`.
+- Secrets live in `chat-nestjs/.env.development` / `.env.production` and the root `.env` (docker), all gitignored. Never
+  print their contents or commit them; add new variables to the matching `.env.example` instead.
 - `console.log` calls are scattered through existing controllers, services and slices. That is the current state of the
   repo, not a licence to add more — do not leave new debug logging behind.
 
