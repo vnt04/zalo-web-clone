@@ -1,7 +1,5 @@
-import { createRef, Dispatch, FC, useEffect, useState } from "react";
+import { createRef, Dispatch, FC, useEffect } from "react";
 import { ModalContainer, ModalContentBody, ModalHeader } from ".";
-import { MdClose } from "react-icons/md";
-import { ConversationType } from "../../utils/types";
 import { CreateGroupForm } from "../forms/CreateGroupForm";
 import { OverlayStyle } from "../common/Modal";
 import { CloseButton } from "../common/Button";
@@ -12,7 +10,6 @@ type Props = {
 
 export const CreateGroupModal: FC<Props> = ({ setShowModal }) => {
   const ref = createRef<HTMLDivElement>();
-  const [type, setType] = useState<ConversationType>("group");
 
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) =>

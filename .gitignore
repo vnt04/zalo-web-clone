@@ -2,6 +2,9 @@
 .claude/settings.local.json
 .claude/*.local.json
 
+# docker compose env — real credentials, never shared
+.env
+
 # OS / editor noise
 .DS_Store
 Thumbs.db

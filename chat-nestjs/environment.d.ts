@@ -6,5 +6,6 @@ declare namespace NodeJS {
     MYSQL_DB_PASSWORD?: string;
     MYSQL_DB_USERNAME?: string;
     COOKIE_SECRET: string;
+    CORS_ORIGIN?: string;
   }
 }

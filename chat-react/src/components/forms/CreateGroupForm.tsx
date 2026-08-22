@@ -22,9 +22,9 @@ export const CreateGroupForm: FC<Props> = ({ setShowModal }) => {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<User[]>([]);
+  const [userResult, setUserResult] = useState<User>();
   const [selectedRecipients, setSelectedRecipients] = useState<User[]>([]);
-  const [searching, setSearching] = useState(false);
+  const [, setSearching] = useState(false);
   const debouncedQuery = useDebounce(query, 1000);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export const CreateGroupForm: FC<Props> = ({ setShowModal }) => {
       searchUsers(debouncedQuery)
         .then(({ data }) => {
           console.log(data);
-          setResults(data);
+          setUserResult(data);
         })
         .catch((err) => console.log(err))
         .finally(() => setSearching(false));
@@ -73,9 +73,9 @@ export const CreateGroupForm: FC<Props> = ({ setShowModal }) => {
         ))}
       </RecipientChipContainer>
       <GroupRecipientsField setQuery={setQuery} />
-      {results.length > 0 && query && (
+      {userResult && query && (
         <RecipientResultContainer
-          userResults={results}
+          userResults={userResult}
           handleUserSelect={handleUserSelect}
         />
       )}

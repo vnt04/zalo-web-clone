@@ -17,7 +17,7 @@ export const GroupChannelPage = () => {
   const { id } = useParams();
   const socket = useContext(SocketContext);
   const dispatch = useDispatch<AppDispatch>();
-  const [isRecipientTyping, setIsRecipientTyping] = useState(false);
+  const [isRecipientTyping] = useState(false);
 
   const { showEditGroupModal } = useSelector(
     (state: RootState) => state.groups

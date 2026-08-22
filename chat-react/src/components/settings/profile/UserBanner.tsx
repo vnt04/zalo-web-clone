@@ -19,7 +19,7 @@ export const UserBanner: FC<Props> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
 
-  const onBannerClick = (e: DivMouseEvent) => fileInputRef.current?.click();
+  const onBannerClick = (_e: DivMouseEvent) => fileInputRef.current?.click();
   const onFileChange = (e: InputChangeEvent) => {
     const file = e.target.files?.item(0);
     setBannerSourceCopy(file ? URL.createObjectURL(file) : bannerSource);

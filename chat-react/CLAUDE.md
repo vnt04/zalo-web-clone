@@ -6,7 +6,7 @@ See the repo root `CLAUDE.md` for the cross-package contract.
 ## Commands
 
 ```bash
-yarn dev     # vite, port 3000 (do not change — the API CORS-allows only :3000)
+yarn dev     # vite, $WEB_PORT or 3000 — must stay in the API's CORS_ORIGIN allowlist
 yarn build   # tsc -b && vite build — the only automated check in this package
 yarn serve   # preview a build
 ```

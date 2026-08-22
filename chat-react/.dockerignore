@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+coverage
+.git
+.gitignore
+Dockerfile
+.dockerignore
+package-lock.json
+*.log
+.DS_Store
+.vscode
+.idea
+.env
+.env.*

@@ -14,6 +14,7 @@ import { IConversationsService } from '../conversations/conversations';
 import { IFriendsService } from '../friends/friends';
 import { IGroupService } from '../groups/interfaces/group';
 import { Services, WebsocketEvents } from '../utils/constants';
+import { getCorsOrigins } from '../utils/cors';
 import { AuthenticatedSocket } from '../utils/interfaces';
 import {
   Conversation,
@@ -36,7 +37,7 @@ import { IGatewaySessionManager } from './gateway.session';
 
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: getCorsOrigins(),
     credentials: true,
   },
   pingInterval: 10000,

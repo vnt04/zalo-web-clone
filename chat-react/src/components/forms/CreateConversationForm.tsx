@@ -1,10 +1,7 @@
 import React, { Dispatch, FC, useEffect, useState } from "react";
 import { Button } from "../common/Button";
 import styles from "./index.module.scss";
-import { useDispatch } from "react-redux";
-import { createConversationThunk } from "../../store/conversationSlice";
 import { User } from "../../utils/types";
-import { AppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { getConversationByUsername, searchUsers } from "../../utils/api";
 import { RecipientResultContainer } from "../recipients/RecipientResultContainer";
@@ -19,8 +16,7 @@ type Props = {
 export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
   const [query, setQuery] = useState("");
   const [userResult, setUserResult] = useState<User>();
-  const [searching, setSearching] = useState(false);
-  const dispatch = useDispatch<AppDispatch>();
+  const [, setSearching] = useState(false);
   const navigate = useNavigate();
   const { error } = useToast({ theme: "dark" });
 

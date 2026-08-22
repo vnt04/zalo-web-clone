@@ -47,7 +47,7 @@ export const conversationsSlice = createSlice({
         state.conversations = action.payload.data;
         state.loading = false;
       })
-      .addCase(fetchConversationsThunk.pending, (state, action) => {
+      .addCase(fetchConversationsThunk.pending, (state, _action) => {
         state.loading = true;
       })
       .addCase(createConversationThunk.fulfilled, (state, action) => {
@@ -59,7 +59,7 @@ export const conversationsSlice = createSlice({
 });
 
 const selectConversations = (state: RootState) => state.conversation.conversations;
-const selectConversationId = (state: RootState, id: number) => id;
+const selectConversationId = (_state: RootState, id: number) => id;
 
 export const selectConversationById = createSelector(
   [selectConversations, selectConversationId],

@@ -3,6 +3,7 @@ import { updateStatusMessage } from "../../../utils/api";
 import { AuthContext } from "../../../utils/context/AuthContext";
 import { useToast } from "../../../utils/hooks/useToast";
 import { InputContainerHeader } from "../../../utils/styles";
+import { Button } from "../../../utils/styles/button";
 import { InputContainer, InputField, InputLabel } from "../../common/Input";
 import styles from "../index.module.scss";
 

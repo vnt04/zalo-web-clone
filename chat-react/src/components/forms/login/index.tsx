@@ -9,11 +9,7 @@ import { InputContainer, InputField, InputLabel } from "../../common/Input";
 import { Button } from "../../common/Button";
 
 export const LoginForm = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UserCredentialsParams>();
+  const { register, handleSubmit } = useForm<UserCredentialsParams>();
   const navigate = useNavigate();
   const socket = useContext(SocketContext);
 

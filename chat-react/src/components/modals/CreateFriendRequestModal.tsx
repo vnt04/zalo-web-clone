@@ -1,5 +1,4 @@
 import { FC, Dispatch, SetStateAction, useEffect, createRef } from "react";
-import { MdClose } from "react-icons/md";
 import { ModalContainer, ModalHeader, ModalContentBody } from ".";
 import { SendFriendRequestForm } from "../forms/SendFriendRequestForm";
 import { OverlayStyle } from "../common/Modal";
