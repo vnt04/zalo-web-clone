@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { getCaptcha, postLoginUser } from "../../../utils/api";
 import { SocketContext } from "../../../utils/context/SocketContext";
+import { useToast } from "../../../utils/hooks/useToast";
 import { UserCredentialsParams } from "../../../utils/types";
 import { CaptchaField } from "./CaptchaField";
 import { PasswordField } from "./PasswordField";
@@ -18,6 +19,7 @@ export const LoginForm = () => {
   } = useForm<UserCredentialsParams>({ mode: "onChange" });
   const navigate = useNavigate();
   const socket = useContext(SocketContext);
+  const { success } = useToast();
   const [svg, setSvg] = useState("");
   const [error, setError] = useState("");
 
@@ -42,6 +44,7 @@ export const LoginForm = () => {
       await postLoginUser(data);
       socket.connect();
       navigate("/conversations");
+      success("Đăng nhập thành công!");
     } catch (err: any) {
       setError(messageFor(err?.response?.status));
       // Captcha dùng một lần — không lấy mã mới thì lần thử sau chắc chắn sai.
