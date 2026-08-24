@@ -5,6 +5,11 @@
 # docker compose env — real credentials, never shared
 .env
 
+# playwright / browser-automation artifacts
+.playwright-mcp/
+test-results/
+playwright-report/
+
 # OS / editor noise
 .DS_Store
 Thumbs.db
