@@ -12,6 +12,7 @@ export const RegisterForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid, isSubmitting },
   } = useForm<CreateUserParams>({ mode: "onChange" });
 
@@ -28,7 +29,7 @@ export const RegisterForm = () => {
     }
   };
 
-  const formFieldProps = { errors, register };
+  const formFieldProps = { errors, register, setError };
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
