@@ -19,6 +19,7 @@ import entities, {
   Group,
   GroupMessage,
   Message,
+  Peer,
   Profile,
   User,
 } from '../utils/typeorm';
@@ -90,6 +91,7 @@ async function findSeedUsers(connection: Connection): Promise<User[]> {
     .getRepository(User)
     .createQueryBuilder('user')
     .leftJoinAndSelect('user.profile', 'profile')
+    .leftJoinAndSelect('user.peer', 'peer')
     .where('user.phoneNumber IN (:...phoneNumbers)', { phoneNumbers })
     .getMany();
 }
@@ -170,12 +172,18 @@ async function reset(connection: Connection, seedUsers: User[]) {
     await connection.query(
       `DELETE FROM profiles WHERE id IN (${profileIds.join(',')})`,
     );
+
+  const peerIds = seedUsers
+    .map((user) => user.peer?.id)
+    .filter((id): id is string => Boolean(id));
+  if (peerIds.length) await connection.getRepository(Peer).delete(peerIds);
 }
 
 async function createUsers(connection: Connection): Promise<Map<string, User>> {
   const password = await hashPassword(SEED_PASSWORD);
   const userRepository = connection.getRepository(User);
   const profileRepository = connection.getRepository(Profile);
+  const peerRepository = connection.getRepository(Peer);
   const byPhone = new Map<string, User>();
 
   for (const person of people) {
@@ -189,6 +197,9 @@ async function createUsers(connection: Connection): Promise<Map<string, User>> {
         lastName: person.lastName,
         password,
         profile,
+        // AppPage dựng PeerJS từ user.peer.id nên thiếu bản ghi này là trang
+        // trắng ngay sau khi đăng nhập. UserService.createUser cũng tạo nó.
+        peer: peerRepository.create(),
       }),
     );
     byPhone.set(person.phoneNumber, user);
