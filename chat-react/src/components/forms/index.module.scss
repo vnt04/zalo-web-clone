@@ -2,31 +2,6 @@ form {
   width: 800px;
 }
 
-.nameFieldRow {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin: 8px 0;
-  gap: 8px;
-}
-
-.footerText {
-  & :last-child {
-    text-decoration: underline;
-    color: var(--text);
-  }
-  margin: 10px 0;
-  text-align: center;
-}
-
-.button {
-  margin: 8px 0;
-}
-
-.loginFormPassword {
-  margin: 8px 0;
-}
-
 .createConversationForm {
   display: flex;
   flex-direction: column;
@@ -82,11 +57,6 @@ form {
 
 .onboardingForm {
   width: 500px;
-}
-
-.passwordContainer {
-  display: flex;
-  align-items: center;
 }
 
 .updateUserStatusForm {

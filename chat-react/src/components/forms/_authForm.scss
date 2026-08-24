@@ -1,0 +1,106 @@
+// Giao diện dùng chung cho hai màn xác thực (đăng nhập / đăng ký) theo mẫu Zalo:
+// input gạch chân, màu chính #0068FF, nút mờ khi form chưa hợp lệ.
+
+$primary: #0068ff;
+$primary-muted: #a4cbff;
+$border: #e0e0e0;
+$text: #111;
+$placeholder: #b5b5b5;
+$danger: #d5313b;
+
+@mixin form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+}
+
+@mixin logo {
+  color: $primary;
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+}
+
+@mixin heading {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  color: $text;
+}
+
+@mixin field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid $border;
+  padding-bottom: 8px;
+
+  &:focus-within {
+    border-bottom-color: $primary;
+  }
+}
+
+@mixin country-code {
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: $text;
+}
+
+@mixin input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: transparent;
+
+  &::placeholder {
+    color: $placeholder;
+  }
+}
+
+@mixin icon-button {
+  display: flex;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #7589a3;
+}
+
+@mixin submit {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 22px;
+  background-color: $primary;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: $primary-muted;
+    cursor: not-allowed;
+  }
+}
+
+@mixin error {
+  color: $danger;
+  font-size: 13px;
+  text-align: center;
+}
+
+@mixin footer {
+  font-size: 14px;
+  text-align: center;
+  color: #666;
+
+  a {
+    color: $primary;
+    text-decoration: none;
+  }
+}

@@ -12,6 +12,12 @@
   @include auth.heading;
 }
 
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .field {
   @include auth.field;
 }
@@ -24,22 +30,27 @@
   @include auth.input;
 }
 
-.captchaImage svg {
-  display: block;
-  height: 32px;
-}
-
-.refresh,
 .passwordToggle {
   @include auth.icon-button;
+}
+
+.nameRow {
+  display: flex;
+  gap: 16px;
+
+  > * {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 .submit {
   @include auth.submit;
 }
 
-.error {
+.fieldError {
   @include auth.error;
+  text-align: left;
 }
 
 .footer {

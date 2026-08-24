@@ -1,33 +1,30 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { postRegisterUser } from "../../../utils/api";
+import { useToast } from "../../../utils/hooks/useToast";
 import { CreateUserParams } from "../../../utils/types";
-import { toast } from "react-toastify";
-import styles from "../index.module.scss";
-import { PhoneNumberField } from "./PhoneNumberField";
 import { NameField } from "./NameField";
 import { PasswordField } from "./PasswordField";
-import { Button } from "../../common/Button";
+import { PhoneNumberField } from "./PhoneNumberField";
+import styles from "./index.module.scss";
 
 export const RegisterForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<CreateUserParams>({ reValidateMode: "onBlur" });
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<CreateUserParams>({ mode: "onChange" });
 
   const navigate = useNavigate();
+  const { success, error } = useToast();
+
   const onSubmit = async (data: CreateUserParams) => {
-    console.log(data);
     try {
       await postRegisterUser(data);
       navigate("/login");
-      toast.clearWaitingQueue();
-      toast("Account created!", { type: "success", icon: true });
-    } catch (err) {
-      console.log(err);
-      toast.clearWaitingQueue();
-      toast("Error creating user", { type: "error", icon: true });
+      success("Tạo tài khoản thành công!");
+    } catch (err: any) {
+      error(messageFor(err?.response?.status));
     }
   };
 
@@ -35,16 +32,25 @@ export const RegisterForm = () => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <div className={styles.logo}>Zalo</div>
+      <div className={styles.heading}>Tạo tài khoản mới</div>
       <PhoneNumberField {...formFieldProps} />
       <NameField {...formFieldProps} />
       <PasswordField {...formFieldProps} />
-      <Button className={styles.button}>Create My Account</Button>
-      <div className={styles.footerText}>
-        <span>Already have an account? </span>
-        <Link to="/login">
-          <span>Login</span>
-        </Link>
+      <button className={styles.submit} disabled={!isValid || isSubmitting}>
+        Đăng ký
+      </button>
+      <div className={styles.footer}>
+        <span>Đã có tài khoản? </span>
+        <Link to="/login">Đăng nhập</Link>
       </div>
     </form>
   );
 };
+
+function messageFor(status?: number): string {
+  if (status === 400) return "Số điện thoại không hợp lệ";
+  if (status === 409) return "Số điện thoại đã được đăng ký";
+  if (status === 429) return "Bạn thử quá nhiều lần. Vui lòng đợi một lát";
+  return "Tạo tài khoản thất bại. Vui lòng thử lại";
+}
