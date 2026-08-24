@@ -63,8 +63,8 @@ export const MessagePanel: FC<Props> = ({
     };
   }, []);
 
-  const sendMessage = async () => {
-    const trimmedContent = content.trim();
+  const sendMessage = async (overrideContent?: string) => {
+    const trimmedContent = (overrideContent ?? content).trim();
     if (!routeId) return; // conversation id
     if (!trimmedContent && !attachments.length) return;
     const formData = new FormData();

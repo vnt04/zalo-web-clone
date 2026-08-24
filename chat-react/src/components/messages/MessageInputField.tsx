@@ -2,11 +2,17 @@ import { Dispatch, FC, SetStateAction, useState } from "react";
 import { CharacterLimit } from "../../utils/styles";
 import { MessageTextField } from "../inputs/MessageTextField";
 import styles from "./index.module.scss";
-import { MdOutlineEmojiEmotions } from "react-icons/md";
-import { IoSend } from "react-icons/io5";
-import { IoIosMore } from "react-icons/io";
-import { IoAttachOutline } from "react-icons/io5";
+import { BsCardText, BsEmojiSmile, BsLightningCharge } from "react-icons/bs";
 import { FaRegAddressCard } from "react-icons/fa";
+import { IoIosMore } from "react-icons/io";
+import { IoAttachOutline, IoSend } from "react-icons/io5";
+import {
+  MdCropFree,
+  MdKeyboardArrowDown,
+  MdOutlineEmojiEmotions,
+  MdOutlineImage,
+  MdOutlineTextFields,
+} from "react-icons/md";
 import { MessageAttachmentActionIcon } from "./MessageAttachmentActionIcon";
 import {
   MessageInputBody,
@@ -18,36 +24,71 @@ type Props = {
   content: string;
   setContent: Dispatch<SetStateAction<string>>;
   placeholderName: string;
-  sendMessage: () => void;
+  sendMessage: (overrideContent?: string) => void;
   sendTypingStatus: () => void;
 };
+
+const ICON_SIZE = 20;
+const MAX_LENGTH = 2048;
+// Nút thumbs-up của Zalo gửi thẳng biểu tượng này chứ không mở bảng emoji.
+const QUICK_REACTION = "👍";
 
 export const MessageInputField: FC<Props> = ({
   content,
   setContent,
+  placeholderName,
   sendMessage,
   sendTypingStatus,
 }) => {
-  const ICON_SIZE = 24;
-  const MAX_LENGTH = 2048;
   const [isMultiLine, setIsMultiLine] = useState(false);
   const atMaxLength = content.length === MAX_LENGTH;
+  const hasContent = content.trim().length > 0;
 
   return (
     <MessageInputContainer isMultiLine={isMultiLine}>
-      <MessageInputHeader>
-        <MdOutlineEmojiEmotions className={styles.icon} size={ICON_SIZE} />
+      <MessageInputHeader className={styles.toolbar}>
+        <button className={styles.toolbarButton} title="Sticker">
+          <MdOutlineEmojiEmotions size={ICON_SIZE} />
+        </button>
         <MessageAttachmentActionIcon />
-        <IoAttachOutline className={styles.icon} size={ICON_SIZE} />
-        <FaRegAddressCard className={styles.icon} size={ICON_SIZE} />
-        <IoIosMore className={styles.icon} size={ICON_SIZE} />
+        <button className={styles.toolbarButton} title="Gửi hình ảnh">
+          <MdOutlineImage size={ICON_SIZE} />
+        </button>
+        <button className={styles.toolbarButton} title="Đính kèm file">
+          <IoAttachOutline size={ICON_SIZE} />
+        </button>
+        <button className={styles.toolbarButton} title="Gửi danh thiếp">
+          <FaRegAddressCard size={ICON_SIZE} />
+        </button>
+        <button className={styles.toolbarButton} title="Chụp màn hình">
+          <MdCropFree size={ICON_SIZE} />
+          <MdKeyboardArrowDown size={14} />
+        </button>
+        <button className={styles.toolbarButton} title="Định dạng chữ">
+          <MdOutlineTextFields size={ICON_SIZE} />
+        </button>
+        <button className={styles.toolbarButton} title="Tin nhắn nhanh">
+          <BsLightningCharge size={ICON_SIZE} />
+        </button>
+        <button className={styles.toolbarButton} title="Danh thiếp">
+          <BsCardText size={ICON_SIZE} />
+        </button>
+        <button className={styles.toolbarButton} title="Thêm">
+          <IoIosMore size={ICON_SIZE} />
+        </button>
       </MessageInputHeader>
 
-      <hr />
-      <MessageInputBody>
-        <form onSubmit={sendMessage} className={styles.form}>
+      <MessageInputBody className={styles.inputRow}>
+        <form
+          className={styles.form}
+          onSubmit={(event) => {
+            event.preventDefault();
+            sendMessage();
+          }}
+        >
           <MessageTextField
             message={content}
+            placeholder={`Nhập @, tin nhắn tới ${placeholderName}`}
             setMessage={setContent}
             maxLength={MAX_LENGTH}
             setIsMultiLine={setIsMultiLine}
@@ -55,10 +96,28 @@ export const MessageInputField: FC<Props> = ({
             sendMessage={sendMessage}
           />
         </form>
-        <MessageInputHeader>
-          <MdOutlineEmojiEmotions className={styles.icon} size={ICON_SIZE} />
-          <IoSend className={styles.icon} size={ICON_SIZE} color="blue" />
-        </MessageInputHeader>
+        <div className={styles.inputActions}>
+          <button className={styles.toolbarButton} title="Biểu tượng cảm xúc">
+            <BsEmojiSmile size={ICON_SIZE} />
+          </button>
+          {hasContent ? (
+            <button
+              className={styles.sendButton}
+              title="Gửi"
+              onClick={() => sendMessage()}
+            >
+              <IoSend size={ICON_SIZE} />
+            </button>
+          ) : (
+            <button
+              className={styles.likeButton}
+              title="Gửi nhanh"
+              onClick={() => sendMessage(QUICK_REACTION)}
+            >
+              {QUICK_REACTION}
+            </button>
+          )}
+        </div>
       </MessageInputBody>
 
       {atMaxLength && (

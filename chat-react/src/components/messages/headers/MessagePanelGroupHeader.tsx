@@ -6,11 +6,9 @@ import { RootState, AppDispatch } from '../../../store';
 import { toggleSidebar } from '../../../store/groupRecipientsSidebarSlice';
 import { selectGroupById } from '../../../store/groupSlice';
 import { AuthContext } from '../../../utils/context/AuthContext';
-import {
-  MessagePanelHeaderStyle,
-  MessagePanelHeaderIcons,
-} from '../../../utils/styles';
+import { MessagePanelHeaderStyle } from '../../common/Message';
 import { AddGroupRecipientModal } from '../../modals/AddGroupRecipientModal';
+import styles from './index.module.scss';
 
 export const MessagePanelGroupHeader = () => {
   const [showModal, setShowModal] = useState(false);
@@ -29,23 +27,27 @@ export const MessagePanelGroupHeader = () => {
         />
       )}
       <MessagePanelHeaderStyle>
-        <div>
-          <span>{group?.title || 'Group'}</span>
+        <div className={styles.messagePanelHeader}>
+          <span className={styles.headerName}>{group?.title || 'Group'}</span>
         </div>
-        <MessagePanelHeaderIcons>
+        <div className={styles.headerActions}>
           {user?.id === group?.owner?.id && (
-            <PersonAdd
-              cursor="pointer"
-              size={30}
+            <button
+              className={styles.headerAction}
+              title="Thêm thành viên"
               onClick={() => setShowModal(true)}
-            />
+            >
+              <PersonAdd size={20} />
+            </button>
           )}
-          <PeopleGroup
-            cursor="pointer"
-            size={30}
+          <button
+            className={styles.headerAction}
+            title="Thành viên nhóm"
             onClick={() => dispatch(toggleSidebar())}
-          />
-        </MessagePanelHeaderIcons>
+          >
+            <PeopleGroup size={20} />
+          </button>
+        </div>
       </MessagePanelHeaderStyle>
     </>
   );

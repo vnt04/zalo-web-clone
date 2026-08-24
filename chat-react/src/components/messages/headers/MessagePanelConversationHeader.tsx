@@ -8,7 +8,6 @@ import { SenderEvents } from "../../../utils/constants";
 import { AuthContext } from "../../../utils/context/AuthContext";
 import { SocketContext } from "../../../utils/context/SocketContext";
 import { getRecipientFromConversation } from "../../../utils/helpers";
-import { MessagePanelHeaderIcons } from "../../../utils/styles";
 import { CallInitiatePayload, CallType } from "../../../utils/types";
 import { MessagePanelHeaderStyle } from "../../common/Message";
 import styles from "./index.module.scss";
@@ -70,13 +69,33 @@ export const MessagePanelConversationHeader = () => {
     <MessagePanelHeaderStyle>
       <div className={styles.messagePanelHeader}>
         <UserAvatar user={recipient!} />
-        {`${recipient?.lastName} ${recipient?.firstName}` || "User"}
+        <span className={styles.headerName}>
+          {`${recipient?.lastName} ${recipient?.firstName}`.trim() || "User"}
+        </span>
       </div>
-      <MessagePanelHeaderIcons>
-        <FiPhone size={20} cursor="pointer" onClick={voiceCallUser} />
-        <FiVideo size={24} cursor="pointer" onClick={videoCallUser} />
-        <FiSearch size={24} cursor="pointer" onClick={() => {}} />
-      </MessagePanelHeaderIcons>
+      <div className={styles.headerActions}>
+        <button
+          className={styles.headerAction}
+          title="Gọi thoại"
+          onClick={voiceCallUser}
+        >
+          <FiPhone size={20} />
+        </button>
+        <button
+          className={styles.headerAction}
+          title="Gọi video"
+          onClick={videoCallUser}
+        >
+          <FiVideo size={20} />
+        </button>
+        <button
+          className={styles.headerAction}
+          title="Tìm tin nhắn"
+          onClick={() => {}}
+        >
+          <FiSearch size={20} />
+        </button>
+      </div>
     </MessagePanelHeaderStyle>
   );
 };

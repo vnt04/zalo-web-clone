@@ -11,6 +11,7 @@ import { MessageTextarea } from "../common/Message";
 
 type Props = {
   message: string;
+  placeholder: string;
   setMessage: Dispatch<SetStateAction<string>>;
   maxLength: number;
   setIsMultiLine: Dispatch<SetStateAction<boolean>>;
@@ -20,6 +21,7 @@ type Props = {
 
 export const MessageTextField: FC<Props> = ({
   message,
+  placeholder,
   setMessage,
   maxLength,
   setIsMultiLine,
@@ -92,7 +94,7 @@ export const MessageTextField: FC<Props> = ({
       ref={ref}
       value={message}
       onChange={onMessageChange}
-      placeholder="Nhập tin nhắn vào đây"
+      placeholder={placeholder}
       maxLength={maxLength}
       onKeyDown={onKeyDown}
       onDrop={onDrop}
