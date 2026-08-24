@@ -11,6 +11,7 @@ import { MessageAttachment } from './entities/MessageAttachment';
 import { GroupMessageAttachment } from './entities/GroupMessageAttachment';
 import { UserPresence } from './entities/UserPresence';
 import { Peer } from './entities/Peer';
+import { ConversationState } from './entities/ConversationState';
 
 const entities = [
   User,
@@ -26,6 +27,7 @@ const entities = [
   GroupMessageAttachment,
   UserPresence,
   Peer,
+  ConversationState,
 ];
 
 export default entities;
@@ -44,4 +46,5 @@ export {
   GroupMessageAttachment,
   UserPresence,
   Peer,
+  ConversationState,
 };

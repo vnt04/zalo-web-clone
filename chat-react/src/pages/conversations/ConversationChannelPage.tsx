@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { MessagePanel } from "../../components/messages/MessagePanel";
 import { SocketContext } from "../../utils/context/SocketContext";
 import { AppDispatch } from "../../store";
+import { markConversationReadThunk } from "../../store/conversationSlice";
 import { editMessage } from "../../store/messages/messageSlice";
 import { fetchMessagesThunk } from "../../store/messages/messageThunk";
 import { ConversationChannelPageStyle } from "../../components/common/Conversation";
@@ -19,6 +20,7 @@ export const ConversationChannelPage = () => {
   useEffect(() => {
     const conversationId = parseInt(id!);
     dispatch(fetchMessagesThunk(conversationId));
+    dispatch(markConversationReadThunk(conversationId));
   }, [id]);
 
   useEffect(() => {

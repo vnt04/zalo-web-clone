@@ -4,6 +4,7 @@ import {
   AddGroupRecipientParams,
   CancelFriendRequestResponse,
   Conversation,
+  ConversationStateResponse,
   ConversationType,
   CreateConversationParams,
   CreateGroupParams,
@@ -22,6 +23,7 @@ import {
   GroupMessageType,
   MessageType,
   RemoveGroupRecipientParams,
+  UpdateConversationStateParams,
   UpdateGroupDetailsPayload,
   UpdateGroupOwnerParams,
   UpdateStatusParams,
@@ -47,6 +49,23 @@ export const getConversations = () =>
 
 export const getConversationById = (id: number) =>
   axiosClient.get<Conversation>(`/conversations/${id}`, config);
+
+export const postConversationRead = (id: number) =>
+  axiosClient.post<ConversationStateResponse>(
+    `/conversations/${id}/read`,
+    {},
+    config
+  );
+
+export const patchConversationState = ({
+  id,
+  ...params
+}: UpdateConversationStateParams) =>
+  axiosClient.patch<ConversationStateResponse>(
+    `/conversations/${id}/state`,
+    params,
+    config
+  );
 
 export const getConversationMessages = (conversationId: number) =>
   axiosClient.get<FetchMessagePayload>(

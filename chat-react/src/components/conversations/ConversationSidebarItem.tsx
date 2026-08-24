@@ -1,5 +1,9 @@
 import { useContext } from "react";
+import { BsBellSlashFill, BsPin, BsPinAngleFill } from "react-icons/bs";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { AppDispatch } from "../../store";
+import { updateConversationStateThunk } from "../../store/conversationSlice";
 import { AuthContext } from "../../utils/context/AuthContext";
 import {
   getLastMessageSentTime,
@@ -13,10 +17,13 @@ import {
   ConversationSidebarItemStyle,
 } from "../common/Conversation";
 import { UserAvatar } from "../users/UserAvatar";
+import classNames from "classnames";
 
 type Props = {
   conversation: Conversation;
 };
+
+const UNREAD_BADGE_MAX = 99;
 
 export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
   // check if this is a new conversation with no message before.
@@ -25,7 +32,11 @@ export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const recipient = getRecipientFromConversation(conversation, user);
+
+  const unreadCount = conversation.unreadCount ?? 0;
+  const hasUnread = unreadCount > 0;
 
   // Cắt chuỗi để lo phần tràn dòng, CSS ellipsis co theo bề rộng cột.
   const lastMessagePreview = () => {
@@ -35,26 +46,66 @@ export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
     return null;
   };
 
+  const togglePinned = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    dispatch(
+      updateConversationStateThunk({
+        id: conversation.id,
+        isPinned: !conversation.isPinned,
+      })
+    );
+  };
+
   return (
     <ConversationSidebarItemStyle
+      className={styles.itemRow}
       onClick={() => navigate(`/conversations/${conversation.id}`)}
       selected={parseInt(id!) === conversation.id}
     >
       <UserAvatar user={conversation.recipient} />
       <ConversationSidebarItemDetails>
         <div className={styles.conversationHeader}>
-          <span className={styles.conversationName}>
+          <span
+            className={classNames(
+              styles.conversationName,
+              hasUnread && styles.conversationNameUnread
+            )}
+          >
             {`${recipient?.lastName} ${recipient?.firstName}`}
           </span>
+          {conversation.isMuted && (
+            <BsBellSlashFill className={styles.conversationMuted} size={12} />
+          )}
           <span className={styles.conversationLastMessageTime}>
             {getLastMessageSentTime(conversation.lastMessageSentAt)}
           </span>
+          <button
+            className={styles.pinButton}
+            title={conversation.isPinned ? "Bỏ ghim hội thoại" : "Ghim hội thoại"}
+            onClick={togglePinned}
+          >
+            {conversation.isPinned ? <BsPinAngleFill /> : <BsPin />}
+          </button>
         </div>
 
-        <span className={styles.conversationLastMessage}>
-          {user?.id === conversation.lastMessageSent.author?.id && "Bạn: "}
-          {lastMessagePreview()}
-        </span>
+        <div className={styles.conversationPreviewRow}>
+          <span
+            className={classNames(
+              styles.conversationLastMessage,
+              hasUnread && styles.conversationLastMessageUnread
+            )}
+          >
+            {user?.id === conversation.lastMessageSent.author?.id && "Bạn: "}
+            {lastMessagePreview()}
+          </span>
+          {hasUnread && (
+            <span className={styles.unreadBadge}>
+              {unreadCount > UNREAD_BADGE_MAX
+                ? `${UNREAD_BADGE_MAX}+`
+                : unreadCount}
+            </span>
+          )}
+        </div>
       </ConversationSidebarItemDetails>
     </ConversationSidebarItemStyle>
   );

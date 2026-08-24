@@ -5,6 +5,7 @@ import {
   Inject,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -14,8 +15,10 @@ import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { Routes, Services } from '../utils/constants';
 import { AuthUser } from '../utils/decorators';
 import { User } from '../utils/typeorm';
+import { IConversationStatesService } from './conversation-states';
 import { IConversationsService } from './conversations';
 import { CreateConversationDto } from './dtos/CreateConversation.dto';
+import { UpdateConversationStateDto } from './dtos/UpdateConversationState.dto';
 
 @SkipThrottle()
 @Controller(Routes.CONVERSATIONS)
@@ -24,6 +27,8 @@ export class ConversationsController {
   constructor(
     @Inject(Services.CONVERSATIONS)
     private readonly conversationsService: IConversationsService,
+    @Inject(Services.CONVERSATION_STATES)
+    private readonly conversationStatesService: IConversationStatesService,
     private readonly events: EventEmitter2,
   ) {}
   @Get('test/endpoint/check')
@@ -64,5 +69,26 @@ export class ConversationsController {
   @Get(':id')
   async getConversationById(@Param('id', ParseIntPipe) id: number) {
     return this.conversationsService.findById(id);
+  }
+
+  @Post(':id/read')
+  async markAsRead(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.conversationStatesService.markAsRead(user, id);
+  }
+
+  @Patch(':id/state')
+  async updateConversationState(
+    @AuthUser() user: User,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateConversationStatePayload: UpdateConversationStateDto,
+  ) {
+    return this.conversationStatesService.updateState(
+      user,
+      id,
+      updateConversationStatePayload,
+    );
   }
 }

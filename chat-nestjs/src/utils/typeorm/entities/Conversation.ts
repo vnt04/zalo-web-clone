@@ -41,4 +41,10 @@ export class Conversation {
 
   @UpdateDateColumn({ name: 'updated_at' })
   lastMessageSentAt: Date;
+
+  // Không nằm trong bảng conversations: gắn thêm lúc trả danh sách cho một người
+  // cụ thể, lấy từ conversation_states. Xem ConversationStatesService.attachTo.
+  unreadCount?: number;
+  isPinned?: boolean;
+  isMuted?: boolean;
 }

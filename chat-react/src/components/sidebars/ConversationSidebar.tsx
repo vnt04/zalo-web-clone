@@ -17,9 +17,11 @@ import { CreateGroupModal } from "../modals/CreateGroupModal";
 import { SidebarHeader, SidebarStyle } from "../common/Sidebar";
 import { SearchBox } from "../common/Search";
 import styles from "./index.module.scss";
+import classNames from "classnames";
 
 export const ConversationSidebar = () => {
   const [showModal, setShowModal] = useState(false);
+  const [unreadOnly, setUnreadOnly] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const conversations = useSelector(
     (state: RootState) => state.conversation.conversations
@@ -31,6 +33,10 @@ export const ConversationSidebar = () => {
   const conversationType = useSelector(
     (state: RootState) => state.selectedConversationType.type
   );
+
+  const visibleConversations = unreadOnly
+    ? conversations.filter((conversation) => (conversation.unreadCount ?? 0) > 0)
+    : conversations;
 
   const onGroupContextMenu = (event: ContextMenuEvent, group: Group) => {
     event.preventDefault();
@@ -92,12 +98,26 @@ export const ConversationSidebar = () => {
             <AiOutlineUsergroupAdd size={20} />
           </button>
         </SidebarHeader>
-        {/* usage => ConversationTab: This component display "Private" and "Group" tab */}
-        {/* <ConversationTab /> */}
+        {conversationType === "private" && (
+          <div className={styles.tabs}>
+            <button
+              className={classNames(styles.tab, !unreadOnly && styles.tabActive)}
+              onClick={() => setUnreadOnly(false)}
+            >
+              Tất cả
+            </button>
+            <button
+              className={classNames(styles.tab, unreadOnly && styles.tabActive)}
+              onClick={() => setUnreadOnly(true)}
+            >
+              Chưa đọc
+            </button>
+          </div>
+        )}
         <ScrollableContainer>
           <>
             {conversationType === "private"
-              ? conversations.map((conversation) => (
+              ? visibleConversations.map((conversation) => (
                   <ConversationSidebarItem
                     key={conversation.id}
                     conversation={conversation}
@@ -110,6 +130,11 @@ export const ConversationSidebar = () => {
                     onContextMenu={onGroupContextMenu}
                   />
                 ))}
+            {conversationType === "private" &&
+              unreadOnly &&
+              visibleConversations.length === 0 && (
+                <p className={styles.emptyTab}>Không có hội thoại chưa đọc</p>
+              )}
             {showGroupContextMenu && <GroupSidebarContextMenu />}
           </>
         </ScrollableContainer>

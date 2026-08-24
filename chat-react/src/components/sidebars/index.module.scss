@@ -24,3 +24,40 @@
 .headerAction:hover {
   background-color: var(--zl-hover);
 }
+
+/* Dải tab "Tất cả / Chưa đọc" dưới ô tìm kiếm */
+.tabs {
+  display: flex;
+  gap: 20px;
+  padding: 0 16px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--zl-line);
+}
+
+.tab {
+  padding: 10px 0;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--zl-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--zl-text);
+}
+
+.tabActive {
+  color: var(--zl-blue);
+  border-bottom-color: var(--zl-blue);
+}
+
+.emptyTab {
+  margin: 24px 16px;
+  color: var(--zl-text-muted);
+  font-size: 13px;
+  text-align: center;
+}

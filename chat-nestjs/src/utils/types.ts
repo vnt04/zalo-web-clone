@@ -259,3 +259,15 @@ export type UpdateGroupDetailsParams = {
   title?: string;
   avatar?: Attachment;
 };
+
+export type UpdateConversationStateParams = {
+  isPinned?: boolean;
+  isMuted?: boolean;
+};
+
+export type ConversationStateResponse = {
+  conversationId: number;
+  lastReadAt: Date | null;
+  isPinned: boolean;
+  isMuted: boolean;
+};

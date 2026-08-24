@@ -46,6 +46,24 @@ export type Conversation = {
   createdAt: string;
   lastMessageSent: MessageType;
   lastMessageSentAt: Date;
+  // Trạng thái riêng của người đang đăng nhập, backend gắn thêm khi trả danh
+  // sách. Payload từ socket không có mấy trường này.
+  unreadCount?: number;
+  isPinned?: boolean;
+  isMuted?: boolean;
+};
+
+export type ConversationStateResponse = {
+  conversationId: number;
+  lastReadAt: string | null;
+  isPinned: boolean;
+  isMuted: boolean;
+};
+
+export type UpdateConversationStateParams = {
+  id: number;
+  isPinned?: boolean;
+  isMuted?: boolean;
 };
 
 export type CreateConversationParams = {

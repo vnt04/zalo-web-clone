@@ -19,6 +19,7 @@ import {
   GetConversationMessagesParams,
   UpdateConversationParams,
 } from '../utils/types';
+import { IConversationStatesService } from './conversation-states';
 import { IConversationsService } from './conversations';
 import { ConversationExistsException } from './exceptions/ConversationExists';
 import { ConversationNotFoundException } from './exceptions/ConversationNotFound';
@@ -35,10 +36,12 @@ export class ConversationsService implements IConversationsService {
     private readonly userService: IUserService,
     @Inject(Services.FRIENDS_SERVICE)
     private readonly friendsService: IFriendsService,
+    @Inject(Services.CONVERSATION_STATES)
+    private readonly conversationStatesService: IConversationStatesService,
   ) {}
 
   async getConversations(id: number): Promise<Conversation[]> {
-    return this.conversationRepository
+    const conversations = await this.conversationRepository
       .createQueryBuilder('conversation')
       .leftJoinAndSelect('conversation.lastMessageSent', 'lastMessageSent')
       .leftJoinAndSelect('lastMessageSent.author', 'lastMessageAuthor') // select author of lastMessageSent
@@ -52,6 +55,8 @@ export class ConversationsService implements IConversationsService {
       .orWhere('recipient.id = :id', { id })
       .orderBy('conversation.lastMessageSentAt', 'DESC')
       .getMany();
+
+    return this.conversationStatesService.attachTo(id, conversations);
   }
 
   async getConversationByPhoneNumber(
