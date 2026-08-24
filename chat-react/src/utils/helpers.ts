@@ -1,5 +1,5 @@
+import { format, isSameDay } from "date-fns";
 import {
-  ArrowCycle,
   ChatDots,
   Crown,
   Minus,
@@ -56,8 +56,6 @@ export const getUserSidebarIcon = (id: UserSidebarRouteType) => {
       return ChatDots;
     case "friends":
       return Person;
-    case "connections":
-      return ArrowCycle;
     case "settings":
       return Gear;
     case "calls":
@@ -161,6 +159,23 @@ export const getLastMessageSentTime = (rawDate: Date | string) => {
     month: "2-digit",
     year: "2-digit",
   });
+};
+
+/**
+ * Nhãn cho dải phân cách ngày giữa luồng tin: "Hôm nay", "Hôm qua", còn lại là
+ * dd/MM/yyyy.
+ */
+export const getMessageDayLabel = (rawDate: Date | string) => {
+  const date = new Date(rawDate);
+  if (isNaN(date.getTime())) return "";
+
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+
+  if (isSameDay(date, today)) return "Hôm nay";
+  if (isSameDay(date, yesterday)) return "Hôm qua";
+  return format(date, "dd/MM/yyyy");
 };
 
 export const getMessageSentTime = (isoString: string) => {

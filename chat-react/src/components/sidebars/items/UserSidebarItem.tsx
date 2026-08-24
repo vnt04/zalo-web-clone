@@ -18,7 +18,7 @@ export const UserSidebarItem: FC<Props> = ({ item }) => {
     (state: RootState) => state.friends.friendRequests
   );
   const Icon = getUserSidebarIcon(item.id);
-  const ICON_SIZE = 30;
+  const ICON_SIZE = 24;
   const STROKE_WIDTH = 2;
 
   const isActive = () => {

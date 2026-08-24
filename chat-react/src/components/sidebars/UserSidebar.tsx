@@ -12,6 +12,7 @@ import {
   UserSidebarScrollableContainer,
   UserSidebarStyle,
 } from "../common/Sidebar";
+import styles from "./index.module.scss";
 
 export const UserSidebar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -30,17 +31,27 @@ export const UserSidebar = () => {
           <UserAvatar user={user!} onClick={() => setShowModal(true)} />
         </UserSidebarHeader>
         <UserSidebarScrollableContainer>
-          {userSidebarItems.map((item, index) => (
-            <UserSidebarItem item={item} key={index} />
-          ))}
+          {userSidebarItems
+            .filter((item) => item.group === "primary")
+            .map((item) => (
+              <UserSidebarItem item={item} key={item.id} />
+            ))}
         </UserSidebarScrollableContainer>
 
-        <div style={{ padding: "18px 0" }}>
-          <RiLogoutCircleLine
-            size={30}
+        <div className={styles.railUtilityGroup}>
+          <div className={styles.railDivider} />
+          {userSidebarItems
+            .filter((item) => item.group === "utility")
+            .map((item) => (
+              <UserSidebarItem item={item} key={item.id} />
+            ))}
+          <button
+            className={styles.railLogout}
+            title="Đăng xuất"
             onClick={() => logoutUser()}
-            style={{ color: "white", cursor: "pointer" }}
-          />
+          >
+            <RiLogoutCircleLine size={24} />
+          </button>
         </div>
       </UserSidebarStyle>
     </>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store";
@@ -26,6 +26,10 @@ import {
   MessageItemDetails,
 } from "../common/Message";
 import { AuthContext } from "../../utils/context/AuthContext";
+import { getMessageDayLabel } from "../../utils/helpers";
+import styles from "./index.module.scss";
+import { isSameDay } from "date-fns";
+import classNames from "classnames";
 
 export const MessageContainer = () => {
   const { id } = useParams();
@@ -77,16 +81,28 @@ export const MessageContainer = () => {
     const nextMessage = messages[index + 1];
 
     const isOwnerMessage = user?.id === currentMessage.author.id;
+    // Danh sách xếp mới nhất trước và khung lật bằng column-reverse, nên
+    // nextMessage là tin CŨ hơn và nằm phía trên trong mắt người xem.
     const showMessageHeader =
       !isOwnerMessage &&
       (messages.length === index + 1 ||
         currentMessage.author.id !== nextMessage.author.id);
+    const startsGroup =
+      messages.length === index + 1 ||
+      currentMessage.author.id !== nextMessage.author.id;
+    const startsDay =
+      !nextMessage ||
+      !isSameDay(
+        new Date(currentMessage.createdAt),
+        new Date(nextMessage.createdAt)
+      );
 
     return (
+      <Fragment key={message.id}>
       <MessageItemContainer
-        key={message.id}
         onContextMenu={(e) => onContextMenu(e, message)}
         isOwnerMessage={isOwnerMessage}
+        className={classNames(startsGroup && styles.messageGroupStart)}
       >
         {showMessageHeader && <UserAvatar user={message.author} />}
         {showMessageHeader ? (
@@ -99,7 +115,7 @@ export const MessageContainer = () => {
             />
           </MessageItemDetails>
         ) : (
-          <div style={{ margin: "0 0 0 65px" }}>
+          <div className={isOwnerMessage ? undefined : styles.messageItemIndent}>
             <MessageItemContainerBody
               message={message}
               onEditMessageChange={onEditMessageChange}
@@ -108,9 +124,17 @@ export const MessageContainer = () => {
           </div>
         )}
       </MessageItemContainer>
+      {/* Dải ngày nằm sau tin trong DOM để hiện phía trên nó khi lật khung. */}
+      {startsDay && (
+        <div className={styles.messageDayDivider}>
+          <span className={styles.messageDayLabel}>
+            {getMessageDayLabel(currentMessage.createdAt)}
+          </span>
+        </div>
+      )}
+      </Fragment>
     );
   };
-  console.log("message: ", conversationMessages);
   return (
     <MessageContainerStyle
       onScroll={(e) => {

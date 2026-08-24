@@ -6,6 +6,7 @@ import { MessageItemAttachmentContainer } from "./attachments/MessageItemAttachm
 import { EditMessageContainer } from "./EditMessageContainer";
 import { MessageItemContent } from "../common/Message";
 import { getMessageSentTime } from "../../utils/helpers";
+import styles from "./index.module.scss";
 
 type Props = {
   message: MessageType | GroupMessageType;
@@ -30,9 +31,9 @@ export const MessageItemContainerBody: FC<Props> = ({
         </MessageItemContent>
       ) : (
         <MessageItemContent isOwnerMessage={isOwnerMessage}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+          <div className={styles.messageItemBody}>
             <span>{message.content || null}</span>
-            <span style={{ color: "var(--text)", fontSize: "14px" }}>
+            <span className={styles.messageItemTime}>
               {getMessageSentTime(message.createdAt) || null}
             </span>
           </div>

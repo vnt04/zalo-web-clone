@@ -259,13 +259,14 @@ export type AcceptFriendRequestResponse = {
 export type UserSidebarRouteType =
   | "conversations"
   | "friends"
-  | "connections"
   | "settings"
   | "calls";
 
 export type UserSidebarItemType = {
   id: UserSidebarRouteType;
   pathname: string;
+  // Zalo tách rail làm hai cụm: cụm chính ở trên, cụm tiện ích dưới đáy.
+  group: "primary" | "utility";
 };
 
 export type SettingsSidebarRouteType =

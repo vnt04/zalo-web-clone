@@ -93,3 +93,42 @@
 .likeButton:hover {
   background-color: var(--zl-hover);
 }
+
+/* --- Bong bóng tin nhắn ------------------------------------------------ */
+
+/* Tin nối tiếp cùng người thì không có avatar, thụt vào cho thẳng hàng với
+   những tin có avatar (avatar 50px + gap 12px). */
+.messageItemIndent {
+  margin-left: 62px;
+}
+
+/* Khoảng cách giữa hai cụm tin của hai người khác nhau. */
+.messageGroupStart {
+  margin-top: 12px;
+}
+
+.messageItemBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.messageItemTime {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--zl-text-muted);
+}
+
+/* Dải ngày ở giữa luồng tin, dạng viên thuốc như Zalo. */
+.messageDayDivider {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+}
+
+.messageDayLabel {
+  padding: 3px 12px;
+  border-radius: 12px;
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #5a6981;
+  font-size: 12px;
+}
