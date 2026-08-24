@@ -185,6 +185,9 @@ export const completeUserProfile = (data: FormData) =>
     },
   });
 
+export const getCaptcha = () =>
+  axiosClient.get<{ svg: string }>(`/auth/captcha`, config);
+
 export const checkPhoneNumberExists = (phoneNumber: string) =>
   axiosClient.get(`/users/check?phoneNumber=${phoneNumber}`, config);
 

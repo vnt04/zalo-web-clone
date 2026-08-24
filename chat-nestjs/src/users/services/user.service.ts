@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { hashPassword } from '../../utils/helpers';
+import { normalizePhone } from '../../utils/phone';
 import { Peer, User } from '../../utils/typeorm';
 import {
   CreateUserDetails,
@@ -18,14 +19,16 @@ export class UserService implements IUserService {
   ) {}
 
   async createUser(userDetails: CreateUserDetails) {
-    const existingUser = await this.userRepository.findOne({
-      phoneNumber: userDetails.phoneNumber,
-    });
+    const phoneNumber = normalizePhone(userDetails.phoneNumber);
+    if (!phoneNumber)
+      throw new HttpException('Invalid phone number', HttpStatus.BAD_REQUEST);
+    const existingUser = await this.userRepository.findOne({ phoneNumber });
     if (existingUser)
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
     const password = await hashPassword(userDetails.password);
     const peer = this.peerRepository.create();
-    const params = { ...userDetails, password, peer };
+    // phoneNumber đặt sau ...userDetails để ghi đè giá trị thô.
+    const params = { ...userDetails, phoneNumber, password, peer };
     const newUser = this.userRepository.create(params);
     return this.userRepository.save(newUser);
   }
@@ -42,10 +45,21 @@ export class UserService implements IUserService {
       'id',
     ];
     const selectionsWithPassword: (keyof User)[] = [...selections, 'password'];
-    return this.userRepository.findOne(params, {
+    // Cột phone_number luôn giữ dạng đã chuẩn hoá, nên mọi tra cứu theo SĐT
+    // cũng phải chuẩn hoá — nếu không, người gõ 0912345678 sẽ không ra
+    // tài khoản đã lưu 84912345678.
+    const criteria = this.normalizePhoneCriteria(params);
+    if (!criteria) return null;
+    return this.userRepository.findOne(criteria, {
       select: options?.selectAll ? selectionsWithPassword : selections,
       relations: ['profile', 'presence', 'peer'],
     });
+  }
+
+  private normalizePhoneCriteria(params: FindUserParams): FindUserParams {
+    if (!params.phoneNumber) return params;
+    const phoneNumber = normalizePhone(params.phoneNumber);
+    return phoneNumber ? { ...params, phoneNumber } : null;
   }
 
   async saveUser(user: User) {
@@ -53,9 +67,12 @@ export class UserService implements IUserService {
   }
 
   async searchUserByPhoneNumber(query: string) {
+    // Query khớp tuyệt đối, nên phải chuẩn hoá cả lúc tìm chứ không chỉ lúc ghi.
+    const phoneNumber = normalizePhone(query);
+    if (!phoneNumber) return null;
     const user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.phoneNumber = :phoneNumber', { phoneNumber: query })
+      .where('user.phoneNumber = :phoneNumber', { phoneNumber })
       .select([
         'user.phoneNumber',
         'user.firstName',

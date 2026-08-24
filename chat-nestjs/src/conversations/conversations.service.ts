@@ -33,7 +33,6 @@ export class ConversationsService implements IConversationsService {
     private readonly messageRepository: Repository<Message>,
     @Inject(Services.USERS)
     private readonly userService: IUserService,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
     @Inject(Services.FRIENDS_SERVICE)
     private readonly friendsService: IFriendsService,
   ) {}
@@ -59,9 +58,7 @@ export class ConversationsService implements IConversationsService {
     me: User,
     phoneNumber: string,
   ): Promise<Conversation> {
-    const foundUser = await this.userRepository.findOne({
-      where: { phoneNumber },
-    });
+    const foundUser = await this.userService.findUser({ phoneNumber });
 
     if (!foundUser) {
       throw new NotFoundException(

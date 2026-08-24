@@ -8,6 +8,7 @@ export type CreateUserParams = {
 export type UserCredentialsParams = {
   phoneNumber: string;
   password: string;
+  captcha: string;
 };
 
 export type Profile = {

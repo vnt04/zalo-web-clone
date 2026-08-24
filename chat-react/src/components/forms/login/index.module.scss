@@ -1,0 +1,102 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+}
+
+.logo {
+  color: #0068ff;
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.heading {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  color: #111;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+
+  &:focus-within {
+    border-bottom-color: #0068ff;
+  }
+}
+
+.countryCode {
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: #111;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  background: transparent;
+
+  &::placeholder {
+    color: #b5b5b5;
+  }
+}
+
+.captchaImage svg {
+  display: block;
+  height: 32px;
+}
+
+.refresh,
+.passwordToggle {
+  display: flex;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #7589a3;
+}
+
+.submit {
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 22px;
+  background-color: #0068ff;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #a4cbff;
+    cursor: not-allowed;
+  }
+}
+
+.error {
+  color: #d5313b;
+  font-size: 13px;
+  text-align: center;
+}
+
+.footer {
+  font-size: 14px;
+  text-align: center;
+  color: #666;
+
+  a {
+    color: #0068ff;
+    text-decoration: none;
+  }
+}
