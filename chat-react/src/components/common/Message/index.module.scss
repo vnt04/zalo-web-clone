@@ -3,6 +3,9 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
+  /* Co lại nhường chỗ cho panel thông tin bên phải. */
+  flex: 1 1 auto;
+  min-width: 0;
   //   background-color: ${({ theme }) => theme.messagePanel.backgroundColor};
 }
 

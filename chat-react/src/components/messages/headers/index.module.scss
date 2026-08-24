@@ -39,3 +39,10 @@
   background-color: var(--zl-hover);
   color: var(--zl-text);
 }
+
+/* Nút mở panel thông tin: sáng xanh khi panel đang mở, như Zalo. */
+.headerActionActive,
+.headerActionActive:hover {
+  background-color: var(--zl-blue-pale);
+  color: var(--zl-blue);
+}

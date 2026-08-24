@@ -166,3 +166,125 @@
 .itemRow:hover .conversationLastMessageTime {
   display: none;
 }
+
+/* --- Panel "Thông tin hội thoại" --------------------------------------- */
+
+.infoPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 344px;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-left: 1px solid var(--zl-line);
+}
+
+.infoHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--zl-line);
+}
+
+.infoHeaderTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--zl-text);
+}
+
+.infoScroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.infoIdentity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+}
+
+.infoName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--zl-text);
+}
+
+.infoSection {
+  padding: 12px 16px;
+  border-top: 8px solid var(--zl-surface);
+}
+
+.infoSectionTitle {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--zl-text);
+}
+
+.infoMediaGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.infoMediaItem {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.infoLinkList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoLink {
+  display: block;
+  color: var(--zl-blue);
+  font-size: 13px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.infoEmpty {
+  margin: 0;
+  color: var(--zl-text-muted);
+  font-size: 13px;
+}
+
+.infoToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--zl-text);
+  cursor: pointer;
+}
+
+.infoClose {
+  flex-shrink: 0;
+  padding: 12px;
+  border: none;
+  border-top: 1px solid var(--zl-line);
+  background: transparent;
+  color: var(--zl-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.infoClose:hover {
+  background-color: var(--zl-hover);
+}

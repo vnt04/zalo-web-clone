@@ -12,7 +12,9 @@ import { CallInitiatePayload, CallType } from "../../../utils/types";
 import { MessagePanelHeaderStyle } from "../../common/Message";
 import styles from "./index.module.scss";
 import { UserAvatar } from "../../users/UserAvatar";
-import { FiPhone, FiSearch, FiVideo } from "react-icons/fi";
+import { FiPhone, FiSearch, FiSidebar, FiVideo } from "react-icons/fi";
+import { toggleInfoPanel } from "../../../store/conversationInfoSlice";
+import classNames from "classnames";
 
 export const MessagePanelConversationHeader = () => {
   const user = useContext(AuthContext).user!;
@@ -22,6 +24,9 @@ export const MessagePanelConversationHeader = () => {
   const dispatch = useDispatch();
   const conversation = useSelector((state: RootState) =>
     selectConversationById(state, parseInt(id!))
+  );
+  const showInfoPanel = useSelector(
+    (state: RootState) => state.conversationInfo.showInfoPanel
   );
 
   const recipient = getRecipientFromConversation(conversation, user);
@@ -94,6 +99,16 @@ export const MessagePanelConversationHeader = () => {
           onClick={() => {}}
         >
           <FiSearch size={20} />
+        </button>
+        <button
+          className={classNames(
+            styles.headerAction,
+            showInfoPanel && styles.headerActionActive
+          )}
+          title="Thông tin hội thoại"
+          onClick={() => dispatch(toggleInfoPanel())}
+        >
+          <FiSidebar size={20} />
         </button>
       </div>
     </MessagePanelHeaderStyle>

@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { MessagePanel } from "../../components/messages/MessagePanel";
+import { ConversationInfoPanel } from "../../components/conversations/ConversationInfoPanel";
 import { SocketContext } from "../../utils/context/SocketContext";
-import { AppDispatch } from "../../store";
+import { AppDispatch, RootState } from "../../store";
 import { markConversationReadThunk } from "../../store/conversationSlice";
 import { editMessage } from "../../store/messages/messageSlice";
 import { fetchMessagesThunk } from "../../store/messages/messageThunk";
@@ -16,6 +17,9 @@ export const ConversationChannelPage = () => {
   const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>();
   const [isTyping, setIsTyping] = useState(false);
   const [isRecipientTyping, setIsRecipientTyping] = useState(false);
+  const showInfoPanel = useSelector(
+    (state: RootState) => state.conversationInfo.showInfoPanel
+  );
 
   useEffect(() => {
     const conversationId = parseInt(id!);
@@ -78,6 +82,7 @@ export const ConversationChannelPage = () => {
         sendTypingStatus={sendTypingStatus}
         isRecipientTyping={isRecipientTyping}
       ></MessagePanel>
+      {showInfoPanel && <ConversationInfoPanel />}
     </ConversationChannelPageStyle>
   );
 };
