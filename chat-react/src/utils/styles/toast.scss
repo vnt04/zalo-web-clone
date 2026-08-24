@@ -1,0 +1,52 @@
+@use "../../components/forms/authForm" as auth;
+
+// Toast theo mẫu Zalo: viên thuốc xanh thương hiệu trượt xuống từ giữa cạnh trên,
+// chỉ có chữ. Đây là stylesheet GLOBAL (không phải SCSS Module) vì phải ghi đè
+// class của react-toastify — tên class bị hash sẽ không khớp. Import sau
+// ReactToastify.css trong App.tsx để thứ tự nguồn cho phép ghi đè.
+
+$pill-bg: auth.$primary;
+$pill-text: #ffffff;
+
+:root {
+  --toastify-color-dark: #{$pill-bg};
+  --toastify-text-color-dark: #{$pill-text};
+  --toastify-toast-min-height: 0;
+  --toastify-toast-width: auto;
+}
+
+.Toastify__toast-container {
+  width: auto;
+  max-width: min(90vw, 480px);
+  padding: 0;
+
+  &--top-center {
+    top: 24px;
+  }
+}
+
+.Toastify__toast {
+  min-height: 0;
+  margin-bottom: 8px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background: $pill-bg;
+  color: $pill-text;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  box-shadow: 0 4px 16px rgba(auth.$primary, 0.28);
+}
+
+.Toastify__toast-body {
+  margin: 0;
+  padding: 0;
+}
+
+// Không ẩn icon / nút đóng / progress bar bằng CSS: ZALO_TOAST trong useToast đã
+// tắt chúng ở mức option nên react-toastify không render ra phần tử nào. Ẩn bằng
+// CSS sẽ giết luôn icon mà toast lời mời kết bạn cố ý truyền vào.
+.Toastify__toast-icon {
+  margin-inline-end: 10px;
+}

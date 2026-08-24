@@ -15,8 +15,9 @@ import { enableMapSet } from "immer";
 import { GroupChannelPage } from "./pages/group/GroupChannelPage";
 import { GroupPage } from "./pages/group/GroupPage";
 import { AppPage } from "./pages/AppPage";
-import { ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./utils/styles/toast.scss";
 import { ConversationPageGuard } from "./guards/ConversationPageGuard";
 import { GroupPageGuard } from "./guards/GroupPageGuard";
 import { FriendsLayoutPage } from "./pages/friends/FriendsLayoutPage";
@@ -86,7 +87,17 @@ function App() {
           </Route>
         </Route>
       </Routes>
-      <ToastContainer theme="dark" />
+      <ToastContainer
+        position="top-center"
+        transition={Slide}
+        autoClose={2500}
+        hideProgressBar
+        closeButton={false}
+        icon={false}
+        draggable={false}
+        newestOnTop
+        theme="dark"
+      />
     </AppWithProviders>
   );
 }
