@@ -4,3 +4,23 @@
   height: 2px;
   border: none;
 }
+
+/* Nút icon ở đầu cột danh sách hội thoại (thêm bạn / tạo nhóm) */
+.headerAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--zl-text);
+  cursor: pointer;
+}
+
+.headerAction:hover {
+  background-color: var(--zl-hover);
+}

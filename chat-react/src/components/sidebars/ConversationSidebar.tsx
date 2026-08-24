@@ -15,7 +15,8 @@ import { GroupSidebarItem } from "../groups/GroupSidebarItem";
 import { CreateConversationModal } from "../modals/CreateConversationModal";
 import { CreateGroupModal } from "../modals/CreateGroupModal";
 import { SidebarHeader, SidebarStyle } from "../common/Sidebar";
-import { SearchInput } from "../common/Search";
+import { SearchBox } from "../common/Search";
+import styles from "./index.module.scss";
 
 export const ConversationSidebar = () => {
   const [showModal, setShowModal] = useState(false);
@@ -62,7 +63,7 @@ export const ConversationSidebar = () => {
       )}
       <SidebarStyle>
         <SidebarHeader>
-          <SearchInput placeholder="Tìm kiếm" />
+          <SearchBox placeholder="Tìm kiếm" />
           {/* {conversationType === "private" ? (
             <AiOutlineUserAdd
               size={30}
@@ -76,16 +77,20 @@ export const ConversationSidebar = () => {
               onClick={() => setShowModal(true)}
             />
           )} */}
-          <AiOutlineUserAdd
-            size={30}
-            cursor="pointer"
+          <button
+            className={styles.headerAction}
+            title="Thêm bạn"
             onClick={() => setShowModal(true)}
-          />
-          <AiOutlineUsergroupAdd
-            size={30}
-            cursor="pointer"
+          >
+            <AiOutlineUserAdd size={20} />
+          </button>
+          <button
+            className={styles.headerAction}
+            title="Tạo nhóm chat"
             onClick={() => setShowModal(true)}
-          />
+          >
+            <AiOutlineUsergroupAdd size={20} />
+          </button>
         </SidebarHeader>
         {/* usage => ConversationTab: This component display "Private" and "Group" tab */}
         {/* <ConversationTab /> */}

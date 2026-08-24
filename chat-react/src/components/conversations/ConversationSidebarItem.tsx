@@ -22,45 +22,40 @@ export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
   // check if this is a new conversation with no message before.
   if (!conversation.lastMessageSent) return null;
 
-  const MESSAGE_LENGTH_MAX = 50;
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const recipient = getRecipientFromConversation(conversation, user);
-  const lastMessageContent = () => {
+
+  // Cắt chuỗi để lo phần tràn dòng, CSS ellipsis co theo bề rộng cột.
+  const lastMessagePreview = () => {
     const { lastMessageSent } = conversation;
-    if (lastMessageSent && lastMessageSent.content)
-      return lastMessageSent.content?.length >= MESSAGE_LENGTH_MAX
-        ? lastMessageSent.content?.slice(0, MESSAGE_LENGTH_MAX).concat("...")
-        : lastMessageSent.content;
+    if (lastMessageSent?.content) return lastMessageSent.content;
+    if (lastMessageSent?.attachments?.length) return "[Hình ảnh]";
     return null;
   };
 
   return (
-    <>
-      <ConversationSidebarItemStyle
-        onClick={() => navigate(`/conversations/${conversation.id}`)}
-        selected={parseInt(id!) === conversation.id}
-      >
-        <UserAvatar user={conversation.recipient} />
-        <ConversationSidebarItemDetails>
-          <div className={styles.conversationHeader}>
-            <span className={styles.conversationName}>
-              {`${recipient?.lastName} ${recipient?.firstName}`}
-            </span>
-            <span className={styles.conversationLastMessageTime}>
-              {getLastMessageSentTime(conversation.lastMessageSentAt)}
-            </span>
-          </div>
-
-          <span className={styles.conversationLastMessage}>
-            {user?.id === conversation.lastMessageSent.author?.id && (
-              <span>Bạn:</span>
-            )}{" "}
-            {lastMessageContent()}
+    <ConversationSidebarItemStyle
+      onClick={() => navigate(`/conversations/${conversation.id}`)}
+      selected={parseInt(id!) === conversation.id}
+    >
+      <UserAvatar user={conversation.recipient} />
+      <ConversationSidebarItemDetails>
+        <div className={styles.conversationHeader}>
+          <span className={styles.conversationName}>
+            {`${recipient?.lastName} ${recipient?.firstName}`}
           </span>
-        </ConversationSidebarItemDetails>
-      </ConversationSidebarItemStyle>
-    </>
+          <span className={styles.conversationLastMessageTime}>
+            {getLastMessageSentTime(conversation.lastMessageSentAt)}
+          </span>
+        </div>
+
+        <span className={styles.conversationLastMessage}>
+          {user?.id === conversation.lastMessageSent.author?.id && "Bạn: "}
+          {lastMessagePreview()}
+        </span>
+      </ConversationSidebarItemDetails>
+    </ConversationSidebarItemStyle>
   );
 };

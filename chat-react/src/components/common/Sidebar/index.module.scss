@@ -2,8 +2,9 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 400px;
+  width: 344px;
   background-color: var(--background);
+  border-right: 1px solid var(--zl-line);
   flex: 0 0 auto;
 
   @media (max-width: 800px) {
@@ -12,14 +13,14 @@
 }
 
 .sidebarHeader {
-  height: 90px;
-  padding: 10px 30px;
+  height: 60px;
+  padding: 0 16px;
   box-sizing: border-box;
   flex-shrink: 0;
-  border-bottom: 1px solid #49494925;
+  border-bottom: 1px solid var(--zl-line);
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 8px;
 }
 
 .userSidebarStyle {

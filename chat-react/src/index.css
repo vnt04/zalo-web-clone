@@ -65,6 +65,20 @@
   --sidebar-ring: #4b8ed1;
 }
 
+/* Bảng màu Zalo — dùng cho phần giao diện đang dựng lại theo Zalo thật.
+   Tách tiền tố --zl- để không đụng các biến cũ mà code hiện tại đang dùng. */
+:root {
+  --zl-blue: #0068ff;
+  --zl-blue-dark: #005ae0;
+  --zl-blue-pale: #e5efff;
+  --zl-blue-mist: #e8f1ff;
+  --zl-text: #081c36;
+  --zl-text-muted: #7589a3;
+  --zl-surface: #f0f2f5;
+  --zl-hover: #f1f2f5;
+  --zl-line: #e5e7eb;
+}
+
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;

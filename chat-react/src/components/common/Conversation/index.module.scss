@@ -1,8 +1,8 @@
 .sidebarItem {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 14px 24px;
+  gap: 12px;
+  padding: 10px 16px;
   box-sizing: border-box;
   width: 100%;
   cursor: pointer;
@@ -10,15 +10,15 @@
 }
 
 .sidebarItem:hover {
-  background-color: var(--hover);
+  background-color: var(--zl-hover);
 }
 
 .sidebarItemSelected {
-  background-color: var(--primary-light);
+  background-color: var(--zl-blue-pale);
 }
 
 .sidebarItemSelected:hover {
-  background-color: var(--primary-light);
+  background-color: var(--zl-blue-pale);
 }
 
 .title {
@@ -28,11 +28,11 @@
 }
 
 .details {
-  word-break: break-word;
   display: flex;
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  min-width: 0;
 }
 
 .channelPage {
