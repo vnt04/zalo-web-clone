@@ -4,7 +4,7 @@ import { CreateUserParams } from '../types';
 export type RegisterFormFieldProps = {
   register: UseFormRegister<CreateUserParams>;
   errors: FieldErrorsImpl<{
-    username: string;
+    phoneNumber: string;
     firstName: string;
     lastName: string;
     password: string;

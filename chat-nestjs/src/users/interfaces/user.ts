@@ -12,5 +12,5 @@ export interface IUserService {
     options?: FindUserOptions,
   ): Promise<User>;
   saveUser(user: User): Promise<User>;
-  searchUserByUsername(query: string): Promise<User>;
+  searchUserByPhoneNumber(query: string): Promise<User>;
 }

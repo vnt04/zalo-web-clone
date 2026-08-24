@@ -32,8 +32,8 @@ export class GroupService implements IGroupService {
 
   async createGroup(params: CreateGroupParams) {
     const { creator, title } = params;
-    const usersPromise = params.users.map((username) =>
-      this.userService.findUser({ username }),
+    const usersPromise = params.users.map((phoneNumber) =>
+      this.userService.findUser({ phoneNumber }),
     );
     const users = (await Promise.all(usersPromise)).filter((user) => user);
     users.push(creator);

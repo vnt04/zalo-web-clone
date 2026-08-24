@@ -55,18 +55,18 @@ export class ConversationsService implements IConversationsService {
       .getMany();
   }
 
-  async getConversationByUsername(
+  async getConversationByPhoneNumber(
     me: User,
-    username: string,
+    phoneNumber: string,
   ): Promise<Conversation> {
-    // 1. check if username has not found
-    console.log('in getConversationByUsername', username);
     const foundUser = await this.userRepository.findOne({
-      where: { username },
+      where: { phoneNumber },
     });
 
     if (!foundUser) {
-      throw new NotFoundException(`User with username: ${username} not found.`);
+      throw new NotFoundException(
+        `User with phoneNumber: ${phoneNumber} not found.`,
+      );
     }
 
     // 2. Find conversation between A & B
@@ -80,7 +80,7 @@ export class ConversationsService implements IConversationsService {
 
     // 3. if conversation not found, create a new conversation
     if (!conversation) {
-      conversation = await this.createConversation(me, { username });
+      conversation = await this.createConversation(me, { phoneNumber });
     }
 
     return conversation;
@@ -115,8 +115,8 @@ export class ConversationsService implements IConversationsService {
   }
 
   async createConversation(creator: User, params: CreateConversationParams) {
-    const { username } = params;
-    const recipient = await this.userService.findUser({ username });
+    const { phoneNumber } = params;
+    const recipient = await this.userService.findUser({ phoneNumber });
     if (!recipient) throw new UserNotFoundException();
     if (creator.id === recipient.id)
       throw new CreateConversationException(

@@ -12,21 +12,21 @@ import {
 import { Request } from 'express';
 
 export type CreateUserDetails = {
-  username: string;
+  phoneNumber: string;
   password: string;
   firstName: string;
   lastName: string;
 };
 
 export type ValidateUserDetails = {
-  username: string;
+  phoneNumber: string;
   password: string;
 };
 
 export type FindUserParams = Partial<{
   id: number;
   email: string;
-  username: string;
+  phoneNumber: string;
 }>;
 
 export type FindUserOptions = Partial<{
@@ -34,7 +34,7 @@ export type FindUserOptions = Partial<{
 }>;
 
 export type CreateConversationParams = {
-  username: string;
+  phoneNumber: string;
   // message: string;
 };
 
@@ -120,7 +120,7 @@ export type DeleteGroupMessageParams = {
 
 export type AddGroupRecipientParams = {
   id: number;
-  username: string;
+  phoneNumber: string;
   userId: number;
 };
 
@@ -163,7 +163,7 @@ export type CheckUserGroupParams = {
 
 export type CreateFriendParams = {
   user: User;
-  username: string;
+  phoneNumber: string;
 };
 
 export type FriendRequestStatus = 'accepted' | 'pending' | 'rejected';

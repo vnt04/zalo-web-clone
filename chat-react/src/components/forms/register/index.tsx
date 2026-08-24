@@ -4,7 +4,7 @@ import { postRegisterUser } from "../../../utils/api";
 import { CreateUserParams } from "../../../utils/types";
 import { toast } from "react-toastify";
 import styles from "../index.module.scss";
-import { UsernameField } from "./UsernameField";
+import { PhoneNumberField } from "./PhoneNumberField";
 import { NameField } from "./NameField";
 import { PasswordField } from "./PasswordField";
 import { Button } from "../../common/Button";
@@ -35,7 +35,7 @@ export const RegisterForm = () => {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <UsernameField {...formFieldProps} />
+      <PhoneNumberField {...formFieldProps} />
       <NameField {...formFieldProps} />
       <PasswordField {...formFieldProps} />
       <Button className={styles.button}>Create My Account</Button>

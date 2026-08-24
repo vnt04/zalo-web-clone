@@ -19,7 +19,7 @@ export class UserService implements IUserService {
 
   async createUser(userDetails: CreateUserDetails) {
     const existingUser = await this.userRepository.findOne({
-      username: userDetails.username,
+      phoneNumber: userDetails.phoneNumber,
     });
     if (existingUser)
       throw new HttpException('User already exists', HttpStatus.CONFLICT);
@@ -36,7 +36,7 @@ export class UserService implements IUserService {
   ): Promise<User> {
     const selections: (keyof User)[] = [
       'email',
-      'username',
+      'phoneNumber',
       'firstName',
       'lastName',
       'id',
@@ -52,12 +52,12 @@ export class UserService implements IUserService {
     return this.userRepository.save(user);
   }
 
-  async searchUserByUsername(query: string) {
+  async searchUserByPhoneNumber(query: string) {
     const user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.username = :username', { username: query })
+      .where('user.phoneNumber = :phoneNumber', { phoneNumber: query })
       .select([
-        'user.username',
+        'user.phoneNumber',
         'user.firstName',
         'user.lastName',
         'user.email',

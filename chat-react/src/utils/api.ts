@@ -72,10 +72,10 @@ export const createMessage = (
 export const postNewConversation = (data: CreateConversationParams) =>
   axiosClient.post<Conversation>(`/conversations`, data, config);
 
-export const getConversationByUsername = (username: string) =>
+export const getConversationByPhoneNumber = (phoneNumber: string) =>
   axiosClient.post<Conversation>(
-    `/conversations/by-username`,
-    { username },
+    `/conversations/by-phone-number`,
+    { phoneNumber },
     config
   );
 
@@ -129,8 +129,8 @@ export const editGroupMessage = ({
     config
   );
 
-export const addGroupRecipient = ({ id, username }: AddGroupRecipientParams) =>
-  axiosClient.post(`/groups/${id}/recipients`, { username }, config);
+export const addGroupRecipient = ({ id, phoneNumber }: AddGroupRecipientParams) =>
+  axiosClient.post(`/groups/${id}/recipients`, { phoneNumber }, config);
 
 export const removeGroupRecipient = ({
   id,
@@ -149,8 +149,8 @@ export const fetchFriends = () => axiosClient.get<Friend[]>("/friends", config);
 export const fetchFriendRequests = () =>
   axiosClient.get<FriendRequest[]>("/friends/requests", config);
 
-export const createFriendRequest = (username: string) =>
-  axiosClient.post<FriendRequest>("/friends/requests", { username }, config);
+export const createFriendRequest = (phoneNumber: string) =>
+  axiosClient.post<FriendRequest>("/friends/requests", { phoneNumber }, config);
 
 export const cancelFriendRequest = (id: number) =>
   axiosClient.delete<CancelFriendRequestResponse>(
@@ -185,8 +185,8 @@ export const completeUserProfile = (data: FormData) =>
     },
   });
 
-export const checkUsernameExists = (username: string) =>
-  axiosClient.get(`/users/check?username=${username}`, config);
+export const checkPhoneNumberExists = (phoneNumber: string) =>
+  axiosClient.get(`/users/check?phoneNumber=${phoneNumber}`, config);
 
 export const updateUserProfile = (data: FormData) =>
   axiosClient.patch<User>("/users/profiles", data, {

@@ -29,7 +29,7 @@ export const CallReceiveDialog = () => {
       <UserAvatar user={caller!} />
       <div className="content">
         <span>
-          {caller!.username} wants to {callType === 'audio' ? 'voice' : 'video'}{' '}
+          {caller!.phoneNumber} wants to {callType === 'audio' ? 'voice' : 'video'}{' '}
           call you
         </span>
       </div>

@@ -28,9 +28,9 @@ export class GroupRecipientsController {
   async addGroupRecipient(
     @AuthUser() { id: userId }: User,
     @Param('id', ParseIntPipe) id: number,
-    @Body() { username }: AddGroupRecipientDto,
+    @Body() { phoneNumber }: AddGroupRecipientDto,
   ) {
-    const params = { id, userId, username };
+    const params = { id, userId, phoneNumber };
     const response = await this.groupRecipientService.addGroupRecipient(params);
     this.eventEmitter.emit('group.user.add', response);
     return response;

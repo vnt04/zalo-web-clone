@@ -32,12 +32,12 @@ export const LoginForm = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <InputContainer>
-        <InputLabel htmlFor="username">Phone number (+84)</InputLabel>
+        <InputLabel htmlFor="phoneNumber">Phone number (+84)</InputLabel>
         <InputField
           type="text"
-          id="username"
+          id="phoneNumber"
           placeholder="ex: 0123456789"
-          {...register("username", { required: true })}
+          {...register("phoneNumber", { required: true })}
         />
       </InputContainer>
       <InputContainer className={styles.loginFormPassword}>

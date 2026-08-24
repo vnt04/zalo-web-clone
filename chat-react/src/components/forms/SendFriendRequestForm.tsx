@@ -12,14 +12,14 @@ type Props = {
 };
 
 export const SendFriendRequestForm: FC<Props> = ({ setShowModal }) => {
-  const [username, setUsername] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const { success, error } = useToast({ theme: "dark" });
 
   const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(createFriendRequestThunk(username))
+    dispatch(createFriendRequestThunk(phoneNumber))
       .unwrap()
       .then(() => {
         console.log("Success Friend Request");
@@ -37,11 +37,11 @@ export const SendFriendRequestForm: FC<Props> = ({ setShowModal }) => {
       <InputContainer>
         <InputLabel>Recipient</InputLabel>
         <InputField
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </InputContainer>
-      <Button style={{ margin: "10px 0" }} disabled={!username}>
+      <Button style={{ margin: "10px 0" }} disabled={!phoneNumber}>
         Send
       </Button>
     </form>

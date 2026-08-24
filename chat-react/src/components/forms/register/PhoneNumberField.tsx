@@ -1,26 +1,27 @@
 import { AxiosError } from "axios";
 import { FC } from "react";
-import { checkUsernameExists } from "../../../utils/api";
+import { checkPhoneNumberExists } from "../../../utils/api";
 import { InputContainerHeader, InputError } from "../../../utils/styles";
 import { RegisterFormFieldProps } from "../../../utils/types/form";
 import { InputContainer, InputField, InputLabel } from "../../common/Input";
 
-export const UsernameField: FC<RegisterFormFieldProps> = ({
+export const PhoneNumberField: FC<RegisterFormFieldProps> = ({
   register,
   errors,
 }) => {
-  console.log("Username Errors: ", errors.username);
   return (
     <InputContainer>
       <InputContainerHeader>
-        <InputLabel htmlFor="username">Phone number (+84)</InputLabel>
-        {errors.username && <InputError>{errors.username.message}</InputError>}
+        <InputLabel htmlFor="phoneNumber">Phone number (+84)</InputLabel>
+        {errors.phoneNumber && (
+          <InputError>{errors.phoneNumber.message}</InputError>
+        )}
       </InputContainerHeader>
       <InputField
         type="text"
-        id="username"
-        {...register("username", {
-          required: "Username is required",
+        id="phoneNumber"
+        {...register("phoneNumber", {
+          required: "Phone number is required",
           minLength: {
             value: 3,
             message: "Must be 3 characters long",
@@ -30,13 +31,13 @@ export const UsernameField: FC<RegisterFormFieldProps> = ({
             message: "Exceeds 16 characters",
           },
           validate: {
-            checkUsername: async (username: string) => {
+            checkPhoneNumber: async (phoneNumber: string) => {
               try {
-                await checkUsernameExists(username);
+                await checkPhoneNumberExists(phoneNumber);
               } catch (err) {
                 return (
                   (err as AxiosError).response?.status === 409 &&
-                  "Username already exists"
+                  "Phone number already exists"
                 );
               }
             },

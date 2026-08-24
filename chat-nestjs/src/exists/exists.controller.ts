@@ -40,7 +40,7 @@ export class ExistsController {
     const newConversation = await this.conversationsService.createConversation(
       user,
       {
-        username: recipient.username,
+        phoneNumber: recipient.phoneNumber,
       },
     );
     this.events.emit('conversation.create', newConversation);

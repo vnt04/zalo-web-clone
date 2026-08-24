@@ -20,7 +20,7 @@ export const fetchFriendRequestThunk = createAsyncThunk(
 
 export const createFriendRequestThunk = createAsyncThunk(
   'friends/requests/create',
-  (username: string) => createFriendRequestAPI(username)
+  (phoneNumber: string) => createFriendRequestAPI(phoneNumber)
 );
 
 
