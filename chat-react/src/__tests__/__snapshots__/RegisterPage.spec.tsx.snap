@@ -20,15 +20,15 @@ Object {
             >
               <label
                 class="sc-eCYdqJ iJfSQE"
-                for="username"
+                for="phoneNumber"
               >
-                Username
+                PhoneNumber
               </label>
             </div>
             <input
               class="sc-bczRLJ cMprEc"
-              id="username"
-              name="username"
+              id="phoneNumber"
+              name="phoneNumber"
               type="text"
             />
           </div>
@@ -135,15 +135,15 @@ Object {
           >
             <label
               class="sc-eCYdqJ iJfSQE"
-              for="username"
+              for="phoneNumber"
             >
-              Username
+              PhoneNumber
             </label>
           </div>
           <input
             class="sc-bczRLJ cMprEc"
-            id="username"
-            name="username"
+            id="phoneNumber"
+            name="phoneNumber"
             type="text"
           />
         </div>

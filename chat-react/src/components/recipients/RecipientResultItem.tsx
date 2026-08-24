@@ -18,7 +18,7 @@ export const RecipientResultItem: FC<Props> = ({ user, onClick }) => {
           {`${user?.lastName} ${user?.firstName}`}
         </span>
         <span className={styles.recipientResultItemPhoneNumber}>
-          (+84) {user?.username}
+          (+84) {user?.phoneNumber}
         </span>
       </div>
     </RecipientResultItemStyle>

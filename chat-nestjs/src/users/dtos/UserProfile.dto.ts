@@ -4,7 +4,7 @@ export class UserProfileDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(18)
-  username: string;
+  phoneNumber: string;
 
   @IsString()
   @MaxLength(200)

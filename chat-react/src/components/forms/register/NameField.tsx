@@ -1,46 +1,42 @@
 import { FC } from "react";
-import { InputContainerHeader, InputError } from "../../../utils/styles";
-import { InputContainer, InputField, InputLabel } from "../../common/Input";
 import { RegisterFormFieldProps } from "../../../utils/types/form";
-import styles from "../index.module.scss";
+import styles from "./index.module.scss";
 
-export const NameField: FC<RegisterFormFieldProps> = ({ register, errors }) => {
-  return (
-    <section className={styles.nameFieldRow}>
-      <InputContainer>
-        <InputContainerHeader>
-          <InputLabel htmlFor="firstName">First Name</InputLabel>
-          {errors.firstName && (
-            <InputError>{errors.firstName.message}</InputError>
-          )}
-        </InputContainerHeader>
-        <InputField
+export const NameField: FC<RegisterFormFieldProps> = ({ register, errors }) => (
+  <div className={styles.nameRow}>
+    <div className={styles.group}>
+      <div className={styles.field}>
+        <input
+          className={styles.input}
           type="text"
-          id="firstName"
-          {...register("firstName", {
-            required: "First Name is Required",
-            minLength: 2,
-            maxLength: 32,
-          })}
-        />
-      </InputContainer>
-      <InputContainer>
-        <InputContainerHeader>
-          <InputLabel htmlFor="lastName">Last Name</InputLabel>
-          {errors.lastName && (
-            <InputError>{errors.lastName.message}</InputError>
-          )}
-        </InputContainerHeader>
-        <InputField
-          type="text"
-          id="lastName"
+          placeholder="Họ"
+          autoComplete="family-name"
           {...register("lastName", {
-            required: "Last Name is Required",
-            minLength: 2,
-            maxLength: 32,
+            required: "Vui lòng nhập họ",
+            maxLength: { value: 32, message: "Tối đa 32 ký tự" },
           })}
         />
-      </InputContainer>
-    </section>
-  );
-};
+      </div>
+      {errors.lastName && (
+        <div className={styles.fieldError}>{errors.lastName.message}</div>
+      )}
+    </div>
+    <div className={styles.group}>
+      <div className={styles.field}>
+        <input
+          className={styles.input}
+          type="text"
+          placeholder="Tên"
+          autoComplete="given-name"
+          {...register("firstName", {
+            required: "Vui lòng nhập tên",
+            maxLength: { value: 32, message: "Tối đa 32 ký tự" },
+          })}
+        />
+      </div>
+      {errors.firstName && (
+        <div className={styles.fieldError}>{errors.firstName.message}</div>
+      )}
+    </div>
+  </div>
+);

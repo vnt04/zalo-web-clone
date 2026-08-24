@@ -1,0 +1,58 @@
+@use "../authForm" as auth;
+
+.form {
+  @include auth.form;
+}
+
+.logo {
+  @include auth.logo;
+}
+
+.heading {
+  @include auth.heading;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field {
+  @include auth.field;
+}
+
+.countryCode {
+  @include auth.country-code;
+}
+
+.input {
+  @include auth.input;
+}
+
+.passwordToggle {
+  @include auth.icon-button;
+}
+
+.nameRow {
+  display: flex;
+  gap: 16px;
+
+  > * {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.submit {
+  @include auth.submit;
+}
+
+.fieldError {
+  @include auth.error;
+  text-align: left;
+}
+
+.footer {
+  @include auth.footer;
+}

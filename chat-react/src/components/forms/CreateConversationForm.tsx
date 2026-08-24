@@ -3,7 +3,7 @@ import { Button } from "../common/Button";
 import styles from "./index.module.scss";
 import { User } from "../../utils/types";
 import { useNavigate } from "react-router-dom";
-import { getConversationByUsername, searchUsers } from "../../utils/api";
+import { getConversationByPhoneNumber, searchUsers } from "../../utils/api";
 import { RecipientResultContainer } from "../recipients/RecipientResultContainer";
 import { RecipientField } from "../recipients/RecipientField";
 import { isPhoneNumber } from "../../utils/helpers";
@@ -39,7 +39,7 @@ export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
   //   e.preventDefault();
   //   if (!selectedUser) return;
   //   return dispatch(
-  //     createConversationThunk({ username: selectedUser.username, message: "" })
+  //     createConversationThunk({ phoneNumber: selectedUser.phoneNumber, message: "" })
   //   )
   //     .unwrap()
   //     .then(({ data }) => {
@@ -59,8 +59,8 @@ export const CreateConversationForm: FC<Props> = ({ setShowModal }) => {
 
   const handleUserSelect = async () => {
     // find conversation between user & user result
-    if (!userResult?.username) return;
-    const result = await getConversationByUsername(userResult?.username);
+    if (!userResult?.phoneNumber) return;
+    const result = await getConversationByPhoneNumber(userResult?.phoneNumber);
 
     // navigate to conversation with this user
     setShowModal(false);

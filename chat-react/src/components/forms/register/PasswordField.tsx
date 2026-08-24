@@ -1,52 +1,44 @@
 import { FC, useState } from "react";
-import { InputContainerHeader, InputError } from "../../../utils/styles";
-import { InputContainer, InputField, InputLabel } from "../../common/Input";
+import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { RegisterFormFieldProps } from "../../../utils/types/form";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import styles from "../index.module.scss";
+import styles from "./index.module.scss";
 
 export const PasswordField: FC<RegisterFormFieldProps> = ({
   register,
   errors,
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <InputContainer>
-      <InputContainerHeader>
-        <InputLabel htmlFor="password">Password</InputLabel>
-        {errors.password && <InputError>{errors.password.message}</InputError>}
-      </InputContainerHeader>
-      <div className={styles.passwordContainer}>
-        <InputField
-          type={showPassword ? "text" : "password"}
-          id="password"
+    <div className={styles.group}>
+      <div className={styles.field}>
+        <input
+          className={styles.input}
+          type={isVisible ? "text" : "password"}
+          placeholder="Mật khẩu"
+          autoComplete="new-password"
           {...register("password", {
-            required: "Password is Required",
-            minLength: {
-              value: 8,
-              message: "Must be at least 8 characters",
-            },
-            maxLength: {
-              value: 32,
-              message: "Max characters is 32",
-            },
+            required: "Vui lòng nhập mật khẩu",
+            minLength: { value: 8, message: "Mật khẩu tối thiểu 8 ký tự" },
+            maxLength: { value: 32, message: "Mật khẩu tối đa 32 ký tự" },
           })}
         />
-        {showPassword ? (
-          <AiFillEyeInvisible
-            size={24}
-            onClick={() => setShowPassword(false)}
-            cursor="pointer"
-          />
-        ) : (
-          <AiFillEye
-            size={24}
-            onClick={() => setShowPassword(true)}
-            cursor="pointer"
-          />
-        )}
+        <button
+          type="button"
+          className={styles.passwordToggle}
+          onClick={() => setIsVisible(!isVisible)}
+          aria-label={isVisible ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+        >
+          {isVisible ? (
+            <MdVisibilityOff size={20} />
+          ) : (
+            <MdVisibility size={20} />
+          )}
+        </button>
       </div>
-    </InputContainer>
+      {errors.password && (
+        <div className={styles.fieldError}>{errors.password.message}</div>
+      )}
+    </div>
   );
 };

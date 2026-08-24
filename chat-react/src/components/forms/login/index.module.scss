@@ -1,0 +1,47 @@
+@use "../authForm" as auth;
+
+.form {
+  @include auth.form;
+}
+
+.logo {
+  @include auth.logo;
+}
+
+.heading {
+  @include auth.heading;
+}
+
+.field {
+  @include auth.field;
+}
+
+.countryCode {
+  @include auth.country-code;
+}
+
+.input {
+  @include auth.input;
+}
+
+.captchaImage svg {
+  display: block;
+  height: 32px;
+}
+
+.refresh,
+.passwordToggle {
+  @include auth.icon-button;
+}
+
+.submit {
+  @include auth.submit;
+}
+
+.error {
+  @include auth.error;
+}
+
+.footer {
+  @include auth.footer;
+}

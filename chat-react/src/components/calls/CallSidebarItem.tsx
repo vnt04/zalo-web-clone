@@ -19,7 +19,7 @@ export const CallSidebarItem: FC<Props> = ({ friend }) => {
       </div>
       <div>
         <div>
-          <span className="username">{user?.username}</span>
+          <span className="phoneNumber">{user?.phoneNumber}</span>
         </div>
         <div className="icons">
           <div className="icon">

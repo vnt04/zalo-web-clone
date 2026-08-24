@@ -9,12 +9,14 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response } from 'express';
 import { IUserService } from '../users/interfaces/user';
 import { Routes, Services } from '../utils/constants';
 import { AuthenticatedRequest } from '../utils/types';
 import { IAuthService } from './auth';
+import { CaptchaService } from './captcha.service';
 import { CreateUserDto } from './dtos/CreateUser.dto';
 import { AuthenticatedGuard, LocalAuthGuard } from './utils/Guards';
 
@@ -23,6 +25,7 @@ export class AuthController {
   constructor(
     @Inject(Services.AUTH) private authService: IAuthService,
     @Inject(Services.USERS) private userService: IUserService,
+    @Inject(Services.CAPTCHA) private captchaService: CaptchaService,
   ) {}
 
   @Post('register')
@@ -30,6 +33,13 @@ export class AuthController {
     return instanceToPlain(await this.userService.createUser(createUserDto));
   }
 
+  @Throttle(5, 60)
+  @Get('captcha')
+  getCaptcha(@Req() req: Request) {
+    return this.captchaService.generate(req.session);
+  }
+
+  @Throttle(5, 60)
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Res() res: Response) {

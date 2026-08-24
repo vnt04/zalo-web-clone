@@ -33,19 +33,19 @@ describe('RegisterPage', () => {
       name: 'Create My Account',
     });
     submitButton.click();
-    const usernameError = await screen.findByText('Username is required');
+    const phoneNumberError = await screen.findByText('PhoneNumber is required');
     const firstNameError = await screen.findByText('First Name is Required');
     const lastNameError = await screen.findByText('Last Name is Required');
     const passwordError = await screen.findByText('Password is Required');
     await waitFor(() => {
-      expect(usernameError).toBeInTheDocument();
+      expect(phoneNumberError).toBeInTheDocument();
     });
     expect(firstNameError).toBeInTheDocument();
     expect(lastNameError).toBeInTheDocument();
     expect(passwordError).toBeInTheDocument();
   });
 
-  it('should submit empty username field then remove error after typing and leaving focus', async () => {
+  it('should submit empty phoneNumber field then remove error after typing and leaving focus', async () => {
     render(
       <Router>
         <RegisterPage />
@@ -53,18 +53,18 @@ describe('RegisterPage', () => {
     );
     const submitButton = screen.getByRole('button');
     submitButton.click();
-    const usernameError = await screen.findByText('Username is required');
+    const phoneNumberError = await screen.findByText('PhoneNumber is required');
     await waitFor(() => {
-      expect(usernameError).toBeInTheDocument();
+      expect(phoneNumberError).toBeInTheDocument();
     });
-    const usernameField = await screen.findByLabelText('Username');
+    const phoneNumberField = await screen.findByLabelText('PhoneNumber');
     const firstNameField = await screen.findByLabelText('First Name');
-    expect(usernameField).toBeInTheDocument();
+    expect(phoneNumberField).toBeInTheDocument();
     expect(firstNameField).toBeInTheDocument();
-    userEvent.type(usernameField, 'helloworld');
+    userEvent.type(phoneNumberField, 'helloworld');
     userEvent.click(firstNameField);
     await waitForElementToBeRemoved(() =>
-      screen.queryByText('Username is required')
+      screen.queryByText('PhoneNumber is required')
     );
   });
 });

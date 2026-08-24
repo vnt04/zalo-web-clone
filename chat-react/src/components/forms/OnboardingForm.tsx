@@ -18,7 +18,7 @@ export const OnboardingForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLLabelElement>(null);
-  const [username, setUsername] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [about, setAbout] = useState('');
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,13 +48,13 @@ export const OnboardingForm = () => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(username, about);
+    console.log(phoneNumber, about);
     console.log(file);
     console.log(source);
     if (file) {
       const data = new FormData();
       data.append('file', file);
-      data.append('username', username);
+      data.append('phoneNumber', phoneNumber);
       data.append('about', about);
       console.log(data);
       return completeUserProfile(data)
@@ -66,16 +66,16 @@ export const OnboardingForm = () => {
   return (
     <form className={styles.onboardingForm} onSubmit={onSubmit}>
       <div>
-        <label className={styles.onboardingLabel} htmlFor="username">
-          Username
+        <label className={styles.onboardingLabel} htmlFor="phoneNumber">
+          Phone number
         </label>
       </div>
       <OnboardingInputField
-        id="username"
-        type="text"
-        placeholder="@yourusername"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
+        id="phoneNumber"
+        type="tel"
+        placeholder="+84…"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
       />
       <div onClick={handleClick}>
         <label className={styles.onboardingLabel} htmlFor="about">

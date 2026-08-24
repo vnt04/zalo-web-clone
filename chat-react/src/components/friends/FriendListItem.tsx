@@ -27,7 +27,7 @@ export const FriendListItem: FC<Props> = ({
     >
       <UserAvatar user={friendUserInstance} />
       <div className="friendDetails">
-        <span className="username">{friendUserInstance.username}</span>
+        <span className="phoneNumber">{friendUserInstance.phoneNumber}</span>
         {online && (
           <span className="status">
             {friendUserInstance.presence?.statusMessage}

@@ -63,7 +63,7 @@ export const FriendListItemContainer = styled.div<FriendListItemContainerProps>`
     display: flex;
     flex-direction: column;
     gap: 4px;
-    & .username {
+    & .phoneNumber {
       font-size: 18px;
       font-weight: 500;
     }

@@ -50,13 +50,15 @@ export class ConversationsController {
     return this.conversationsService.getConversations(id);
   }
 
-  @Post('by-username')
-  async getConversationByUsername(
+  @Post('by-phone-number')
+  async getConversationByPhoneNumber(
     @AuthUser() me: User,
-    @Body('username') username: string,
+    @Body('phoneNumber') phoneNumber: string,
   ) {
-    console.log('in by-username', username);
-    return this.conversationsService.getConversationByUsername(me, username);
+    return this.conversationsService.getConversationByPhoneNumber(
+      me,
+      phoneNumber,
+    );
   }
 
   @Get(':id')

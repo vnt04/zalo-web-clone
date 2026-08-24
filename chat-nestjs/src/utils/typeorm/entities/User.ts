@@ -19,8 +19,8 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true })
-  username: string; // => phone number ~ username
+  @Column({ unique: true, name: 'phone_number' })
+  phoneNumber: string;
 
   @Column({ nullable: true })
   email: string;

@@ -21,14 +21,14 @@ export class UsersController {
     console.log(query);
     if (!query)
       throw new HttpException('Provide a valid query', HttpStatus.BAD_REQUEST);
-    return this.userService.searchUserByUsername(query);
+    return this.userService.searchUserByPhoneNumber(query);
   }
 
   @Get('check')
-  async checkUsername(@Query('username') username: string) {
-    if (!username)
+  async checkPhoneNumber(@Query('phoneNumber') phoneNumber: string) {
+    if (!phoneNumber)
       throw new HttpException('Invalid Query', HttpStatus.BAD_REQUEST);
-    const user = await this.userService.findUser({ username });
+    const user = await this.userService.findUser({ phoneNumber });
     if (user) throw new UserAlreadyExists();
     return HttpStatus.OK;
   }

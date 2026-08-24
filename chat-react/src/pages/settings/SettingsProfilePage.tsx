@@ -101,7 +101,7 @@ export const SettingsProfilePage = () => {
               setAvatarSourceCopy={setAvatarSourceCopy}
               setAvatarFile={setAvatarFile}
             />
-            <span>@{user?.username}</span>
+            <span>@{user?.phoneNumber}</span>
           </SettingsProfileUserDetails>
           <ProfileAboutSection>
             <ProfileAboutSectionHeader>

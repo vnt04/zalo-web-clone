@@ -1,13 +1,14 @@
 export type CreateUserParams = {
-  username: string;
+  phoneNumber: string;
   firstName: string;
   lastName: string;
   password: string;
 };
 
 export type UserCredentialsParams = {
-  username: string;
+  phoneNumber: string;
   password: string;
+  captcha: string;
 };
 
 export type Profile = {
@@ -29,7 +30,7 @@ export type UserPeer = {
 
 export type User = {
   id: number;
-  username: string;
+  phoneNumber: string;
   email: string;
   firstName: string;
   lastName: string;
@@ -48,7 +49,7 @@ export type Conversation = {
 };
 
 export type CreateConversationParams = {
-  username: string;
+  phoneNumber: string;
   message: string;
 };
 
@@ -166,7 +167,7 @@ export type CreateGroupParams = {
 
 export type AddGroupRecipientParams = {
   id: number;
-  username: string;
+  phoneNumber: string;
 };
 
 export type RemoveGroupRecipientParams = {
