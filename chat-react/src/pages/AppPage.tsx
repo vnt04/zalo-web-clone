@@ -45,8 +45,9 @@ export const AppPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { peer, call, isReceivingCall, caller, connection, callType } =
-    useSelector((state: RootState) => state.call);
+  const { peer, call, isReceivingCall, caller, callType } = useSelector(
+    (state: RootState) => state.call
+  );
   const { info } = useToast({ theme: 'dark' });
   const { theme } = useSelector((state: RootState) => state.settings);
 
@@ -108,16 +109,12 @@ export const AppPage = () => {
   useVideoCall();
 
   useEffect(() => {
-    console.log('Registering all events for AppPage');
     socket.on('onFriendRequestCancelled', (payload: FriendRequest) => {
-      console.log('onFriendRequestCancelled');
-      console.log(payload);
       dispatch(removeFriendRequest(payload));
     });
     socket.on(
       'onFriendRequestAccepted',
       (payload: AcceptFriendRequestResponse) => {
-        console.log('onFriendRequestAccepted');
         dispatch(removeFriendRequest(payload.friendRequest));
         socket.emit('getOnlineFriends');
         info(
@@ -132,7 +129,6 @@ export const AppPage = () => {
     );
 
     socket.on('onFriendRequestRejected', (payload: FriendRequest) => {
-      console.log('onFriendRequestRejected');
       dispatch(removeFriendRequest(payload));
     });
 
@@ -154,12 +150,8 @@ export const AppPage = () => {
   useEffect(() => {
     if (!peer) return;
     peer.on('call', async (incomingCall) => {
-      console.log('Incoming Call!!!!!');
-      console.log(callType);
       const constraints = { video: callType === 'video', audio: true };
-      console.log(constraints);
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log('Receiving Call & Got Local Stream:', stream.id);
       incomingCall.answer(stream);
       dispatch(setLocalStream(stream));
       dispatch(setCall(incomingCall));
@@ -174,10 +166,8 @@ export const AppPage = () => {
     call.on('stream', (remoteStream) =>
       dispatch(setRemoteStream(remoteStream))
     );
-    call.on('close', () => console.log('call was closed'));
     return () => {
       call.off('stream');
-      call.off('close');
     };
   }, [call]);
 
@@ -188,32 +178,6 @@ export const AppPage = () => {
   useVoiceCallAccepted();
   useVoiceCallHangUp();
   useVoiceCallRejected();
-
-  useEffect(() => {
-    if (connection) {
-      console.log('connection is defined....');
-      if (connection) {
-        console.log('connection is defined...');
-        connection.on('open', () => {
-          console.log('connection was opened');
-        });
-        connection.on('error', () => {
-          console.log('an error has occured');
-        });
-        connection.on('data', (data) => {
-          console.log('data received', data);
-        });
-        connection.on('close', () => {
-          console.log('connection closed');
-        });
-      }
-      return () => {
-        connection?.off('open');
-        connection?.off('error');
-        connection?.off('data');
-      };
-    }
-  }, [connection]);
 
   return (
     <>

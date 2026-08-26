@@ -44,7 +44,6 @@ export class UserProfilesController {
     files: UserProfileFiles,
     @Body() updateUserProfileDto: UpdateUserProfileDto,
   ) {
-    console.log('Inside Users/Profiles Controller');
     const params: UpdateUserProfileParams = {};
     updateUserProfileDto.about && (params.about = updateUserProfileDto.about);
     files.banner && (params.banner = files.banner[0]);

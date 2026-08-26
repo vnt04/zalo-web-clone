@@ -13,20 +13,8 @@ export function useVoiceCallHangUp() {
   );
   useEffect(() => {
     socket.on(WebsocketEvents.VOICE_CALL_HANG_UP, () => {
-      console.log('received onVoiceCallHangUp');
-      localStream &&
-        localStream.getTracks().forEach((track) => {
-          console.log(localStream.id);
-          console.log('stopping local track: ', track);
-          track.stop();
-        });
-      console.log(remoteStream);
-      remoteStream &&
-        remoteStream.getTracks().forEach((track) => {
-          console.log(remoteStream.id);
-          console.log('stopping remote track', track);
-          track.stop();
-        });
+      localStream?.getTracks().forEach((track) => track.stop());
+      remoteStream?.getTracks().forEach((track) => track.stop());
       call && call.close();
       connection && connection.close();
       dispatch(resetState());

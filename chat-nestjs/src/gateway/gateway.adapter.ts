@@ -11,17 +11,11 @@ export class WebsocketAdapter extends IoAdapter {
     const sessionRepository = getRepository(Session);
     const server = super.createIOServer(port, options);
     server.use(async (socket: AuthenticatedSocket, next) => {
-      console.log('Inside Websocket Adapter');
       const { cookie: clientCookie } = socket.handshake.headers;
-      if (!clientCookie) {
-        console.log('Client has no cookies');
+      if (!clientCookie)
         return next(new Error('Not Authenticated. No cookies were sent'));
-      }
       const { CHAT_APP_SESSION_ID } = cookie.parse(clientCookie);
-      if (!CHAT_APP_SESSION_ID) {
-        console.log('CHAT_APP_SESSION_ID DOES NOT EXIST');
-        return next(new Error('Not Authenticated'));
-      }
+      if (!CHAT_APP_SESSION_ID) return next(new Error('Not Authenticated'));
       const signedCookie = cookieParser.signedCookie(
         CHAT_APP_SESSION_ID,
         process.env.COOKIE_SECRET,

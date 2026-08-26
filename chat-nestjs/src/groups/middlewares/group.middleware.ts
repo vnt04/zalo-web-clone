@@ -20,7 +20,6 @@ export class GroupMiddleware implements NestMiddleware {
     if (isNaN(id)) throw new InvalidGroupException();
     const params = { id, userId };
     const user = await this.groupService.hasAccess(params);
-    console.log(user);
     if (user) next();
     else throw new GroupNotFoundException();
   }

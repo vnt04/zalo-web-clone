@@ -4,23 +4,16 @@ import { fetchGroupById } from '../api';
 
 export function useGroupGuard() {
   const { id } = useParams();
-  const [loading, setLoading] = useState(false);
+  // Khởi tạo true: nếu false thì guard render children một nhịp trước khi biết
+  // người dùng có phải thành viên nhóm hay không.
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
-  const controller = new AbortController();
 
   useEffect(() => {
-    console.log('Fetching Group');
     setLoading(true);
     fetchGroupById(parseInt(id!))
-      .catch((err) => {
-        console.log(err);
-        setError(err);
-      })
+      .catch((err) => setError(err))
       .finally(() => setLoading(false));
-
-    return () => {
-      controller.abort();
-    };
   }, [id]);
 
   return { loading, error };

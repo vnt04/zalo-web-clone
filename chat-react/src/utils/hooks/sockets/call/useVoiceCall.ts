@@ -20,8 +20,6 @@ export function useVoiceCall() {
 
   useEffect(() => {
     socket.on(ReceiverEvents.VOICE_CALL, (data: CallPayload) => {
-      console.log('receiving voice call....');
-      console.log(data);
       if (isReceivingCall) return;
       dispatch(setCaller(data.caller));
       dispatch(setReceiver(user!));

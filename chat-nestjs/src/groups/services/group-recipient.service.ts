@@ -79,14 +79,11 @@ export class GroupRecipientService implements IGroupRecipientService {
 
   async leaveGroup({ id, userId }: LeaveGroupParams) {
     const group = await this.isUserInGroup({ id, userId });
-    console.log(`Updating Groups`);
     if (group.owner.id === userId)
       throw new HttpException(
         'Cannot leave group as owner',
         HttpStatus.BAD_REQUEST,
       );
-    console.log('New Users in Group after leaving...');
-    console.log(group.users.filter((user) => user.id !== userId));
     group.users = group.users.filter((user) => user.id !== userId);
     return this.groupService.saveGroup(group);
   }

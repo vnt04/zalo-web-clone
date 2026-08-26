@@ -25,18 +25,11 @@ export class UserProfileService implements IUserProfile {
   }
 
   async createProfileOrUpdate(user: User, params: UpdateUserProfileParams) {
-    console.log('CreateProfileOrUpdate');
-    if (!user.profile) {
-      console.log('User has no profile. Creating...');
-      user.profile = await this.createProfile();
-      return this.updateProfile(user, params);
-    }
-    console.log('User has profile');
+    if (!user.profile) user.profile = await this.createProfile();
     return this.updateProfile(user, params);
   }
 
   async updateProfile(user: User, params: UpdateUserProfileParams) {
-    console.log(params);
     if (params.avatar)
       user.profile.avatar = await this.updateAvatar(params.avatar);
     if (params.banner)
@@ -45,17 +38,11 @@ export class UserProfileService implements IUserProfile {
     return this.userRepository.save(user);
   }
 
-  async updateBanner(file: Express.Multer.File) {
-    console.log('Updating Banner');
-    const key = generateUUIDV4();
-    const banner_url = await this.imageStorageService.upload({ key, file });
-    return banner_url;
+  updateBanner(file: Express.Multer.File) {
+    return this.imageStorageService.upload({ key: generateUUIDV4(), file });
   }
 
-  async updateAvatar(file: Express.Multer.File) {
-    console.log('Updating Avatar');
-    const key = generateUUIDV4();
-    const avatar_url = await this.imageStorageService.upload({ key, file });
-    return avatar_url;
+  updateAvatar(file: Express.Multer.File) {
+    return this.imageStorageService.upload({ key: generateUUIDV4(), file });
   }
 }

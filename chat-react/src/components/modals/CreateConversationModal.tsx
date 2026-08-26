@@ -50,8 +50,13 @@ export const CreateConversationModal: FC<Props> = ({ setShowModal }) => {
       const { data } = await getConversationByPhoneNumber(recipient.phoneNumber);
       closeModal();
       navigate(`/conversations/${data.id}`);
-    } catch {
-      error("Không mở được cuộc trò chuyện");
+    } catch (err: any) {
+      // 404 = chưa phải bạn bè; API chặn tạo hội thoại với người lạ.
+      error(
+        err?.response?.status === 404
+          ? "Bạn cần kết bạn trước khi nhắn tin cho người này"
+          : "Không mở được cuộc trò chuyện"
+      );
     }
   };
 

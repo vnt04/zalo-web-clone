@@ -1,10 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FriendNotFoundException } from '../friends/exceptions/FriendNotFound';
@@ -124,11 +118,13 @@ export class ConversationsService implements IConversationsService {
       throw new CreateConversationException(
         'Cannot create Conversation with yourself',
       );
-    // const isFriends = await this.friendsService.isFriends(
-    //   creator.id,
-    //   recipient.id,
-    // );
-    // if (!isFriends) throw new FriendNotFoundException();
+    // Chặn ở đây cho khớp với createMessage (message.service.ts), vốn cũng đòi
+    // là bạn bè — nếu không sẽ tạo được hội thoại rồi lại không nhắn được.
+    const isFriends = await this.friendsService.isFriends(
+      creator.id,
+      recipient.id,
+    );
+    if (!isFriends) throw new FriendNotFoundException();
     const exists = await this.isCreated(creator.id, recipient.id);
     if (exists) throw new ConversationExistsException();
     const newConversation = this.conversationRepository.create({

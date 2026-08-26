@@ -7,12 +7,9 @@ type Props = {
 export const MessageImageCanvas: FC<Props> = ({ file }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    console.log('creating image for: ', file.name);
     const image = new Image();
-    console.log(URL.createObjectURL(file));
     image.src = URL.createObjectURL(file);
     image.onload = () => {
-      console.log('image.onload');
       const { current: canvas } = canvasRef;
       if (!canvas) return;
       const context = canvas.getContext('2d');

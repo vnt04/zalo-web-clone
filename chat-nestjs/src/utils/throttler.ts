@@ -4,8 +4,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
   protected getTracker(req: Record<string, any>): string {
-    console.log('Inside ThrottlerBehindProxyGuard');
-    console.log(req.ips);
-    return req.ips.length ? req.ips[0] : req.ip; // individualize IP extraction to meet your own needs
+    // req.ips chỉ có khi chạy sau proxy đã được trust; rỗng thì lùi về req.ip.
+    return req.ips?.length ? req.ips[0] : req.ip;
   }
 }

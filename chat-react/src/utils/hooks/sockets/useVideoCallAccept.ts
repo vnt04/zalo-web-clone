@@ -25,19 +25,15 @@ export function useVideoCallAccept() {
 
   useEffect(() => {
     socket.on('onVideoCallAccept', (data: AcceptedCallPayload) => {
-      console.log('videoCallAccepted');
       dispatch(setIsCallInProgress(true));
       dispatch(setIsReceivingCall(false));
       dispatch(setActiveConversationId(data.conversation.id));
-      if (!peer) return console.log('No peer....');
+      if (!peer) return;
       if (data.caller.id === user!.id) {
-        console.log(peer.id);
         const connection = peer.connect(data.acceptor.peer.id);
         dispatch(setConnection(connection));
-        if (!connection) return console.log('No connection');
+        if (!connection) return;
         if (localStream) {
-          console.log('local stream for caller exists!');
-          console.log('My local stream:', localStream.id);
           const newCall = peer.call(data.acceptor.peer.id, localStream);
           dispatch(setCall(newCall));
         }

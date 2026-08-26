@@ -15,8 +15,6 @@ export function useFriendRequestReceived() {
   const { info } = useToast({ theme: 'dark' });
   useEffect(() => {
     socket.on('onFriendRequestReceived', (payload: FriendRequest) => {
-      console.log('onFriendRequestReceived');
-      console.log(payload);
       dispatch(addFriendRequest(payload));
       info(`Incoming Friend Request from ${payload.sender.firstName}`, {
         position: 'bottom-left',

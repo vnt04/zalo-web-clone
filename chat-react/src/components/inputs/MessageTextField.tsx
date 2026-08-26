@@ -66,7 +66,6 @@ export const MessageTextField: FC<Props> = ({
     const filesArray = Array.from(files);
     let localCounter = attachmentCounter;
     for (let i = 0; i < filesArray.length; i++) {
-      console.log(filesArray[i]);
       if (i === maxFilesDropped) break;
       dispatch(addAttachment({ id: localCounter++, file: filesArray[i] }));
       dispatch(incrementAttachmentCounter());
@@ -82,8 +81,6 @@ export const MessageTextField: FC<Props> = ({
 
   const onPaste = (e: ClipboardEvent) => {
     const { files } = e.clipboardData;
-    console.log("pasting...");
-    console.log(files);
     handleFileAdd(files);
   };
 

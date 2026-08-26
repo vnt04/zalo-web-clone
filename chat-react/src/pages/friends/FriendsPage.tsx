@@ -26,13 +26,11 @@ export const FriendsPage = () => {
     }, 10000);
 
     socket.on('onFriendRemoved', (friend: Friend) => {
-      console.log('onFriendRemoved');
       dispatch(removeFriend(friend));
       socket.emit('getOnlineFriends');
     });
 
     return () => {
-      console.log('clearing interval');
       clearInterval(interval);
       socket.off('getOnlineFriends');
       socket.off('onFriendRemoved');
@@ -41,8 +39,6 @@ export const FriendsPage = () => {
 
   useEffect(() => {
     socket.on('getOnlineFriends', (friends: Friend[]) => {
-      console.log('received online friends');
-      console.log(friends);
       dispatch(setOnlineFriends(friends));
       dispatch(setOfflineFriends());
     });

@@ -54,7 +54,6 @@ export class GroupMessageController {
     @Param('id', ParseIntPipe) id: number,
     @Body() { content }: CreateMessageDto,
   ) {
-    console.log(`Creating Group Message for ${id}`);
     if (!attachments && !content) throw new EmptyMessageException();
     const params = { groupId: id, author: user, content, attachments };
     const response = await this.groupMessageService.createGroupMessage(params);
@@ -68,7 +67,6 @@ export class GroupMessageController {
     @AuthUser() user: User,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    console.log(`Fetching GroupMessages for Group Id: ${id}`);
     const messages = await this.groupMessageService.getGroupMessages(id);
     return { id, messages };
   }

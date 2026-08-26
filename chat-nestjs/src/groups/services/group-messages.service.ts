@@ -64,7 +64,6 @@ export class GroupMessageService implements IGroupMessageService {
   }
 
   async deleteGroupMessage(params: DeleteGroupMessageParams) {
-    console.log(params);
     const group = await this.groupRepository
       .createQueryBuilder('group')
       .where('group.id = :groupId', { groupId: params.groupId })
@@ -91,14 +90,12 @@ export class GroupMessageService implements IGroupMessageService {
     const size = group.messages.length;
     const SECOND_MESSAGE_INDEX = 1;
     if (size <= 1) {
-      console.log('Last Message Sent is deleted');
       await this.groupRepository.update(
         { id: params.groupId },
         { lastMessageSent: null },
       );
       return this.groupMessageRepository.delete({ id: message.id });
     } else {
-      console.log('There are more than 1 message');
       const newLastMessage = group.messages[SECOND_MESSAGE_INDEX];
       await this.groupRepository.update(
         { id: params.groupId },

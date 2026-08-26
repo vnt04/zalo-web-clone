@@ -26,12 +26,7 @@ export class UserPresenceService implements IUserPresenceService {
     user,
     statusMessage,
   }: UpdateStatusMessageParams): Promise<User> {
-    console.log(user);
-    if (!user.presence) {
-      console.log('userDB.presence does not exist. creating');
-      user.presence = await this.createPresence();
-    }
-    console.log('updating status...');
+    if (!user.presence) user.presence = await this.createPresence();
     user.presence.statusMessage = statusMessage;
     return this.userService.saveUser(user);
   }

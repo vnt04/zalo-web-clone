@@ -23,17 +23,15 @@ export function useVoiceCallAccepted() {
     socket.on(
       WebsocketEvents.VOICE_CALL_ACCEPTED,
       (data: AcceptedCallPayload) => {
-        if (!peer) return console.log('AUDIO: No Peer');
+        if (!peer) return;
         dispatch(setActiveConversationId(data.conversation.id));
         dispatch(setIsCallInProgress(true));
         dispatch(setIsReceivingCall(false));
         if (data.caller.id === user!.id) {
-          console.log('AUDIO: connecting to peer now');
           const connection = peer.connect(data.acceptor.peer.id);
           dispatch(setConnection(connection));
-          if (!connection) return console.log('No connection');
+          if (!connection) return;
           if (localStream) {
-            console.log('AUDIO: calling peer now');
             const newCall = peer.call(data.acceptor.peer.id, localStream);
             dispatch(setCall(newCall));
           }

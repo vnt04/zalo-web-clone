@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TypeormStore } from 'connect-typeorm/out';
@@ -64,15 +64,11 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  const logger = new Logger('Bootstrap');
   try {
-    await app.listen(PORT, () => {
-      console.log(`Running on Port ${PORT}`);
-      // console.log(
-      //   `Running in ${process.env.ENVIRONMENT} mode: ${process.env.ENVIRONMENT_MESSAGE}`,
-      // );
-    });
+    await app.listen(PORT, () => logger.log(`Running on port ${PORT}`));
   } catch (err) {
-    console.log(err);
+    logger.error('Failed to start the HTTP server', err);
   }
 }
 bootstrap();

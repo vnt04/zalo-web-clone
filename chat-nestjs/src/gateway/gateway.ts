@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
   WebSocketGateway,
@@ -9,20 +9,14 @@ import {
   ConnectedSocket,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { IConversationsService } from '../conversations/conversations';
 import { IFriendsService } from '../friends/friends';
 import { IGroupService } from '../groups/interfaces/group';
 import { Services, WebsocketEvents } from '../utils/constants';
 import { getCorsOrigins } from '../utils/cors';
 import { AuthenticatedSocket } from '../utils/interfaces';
-import {
-  Conversation,
-  Group,
-  GroupMessage,
-  Message,
-  User,
-} from '../utils/typeorm';
+import { Conversation, Group, GroupMessage, Message } from '../utils/typeorm';
 import {
   AddGroupUserResponse,
   CallAcceptedPayload,
@@ -46,6 +40,8 @@ import { IGatewaySessionManager } from './gateway.session';
 export class MessagingGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
+  private readonly logger = new Logger(MessagingGateway.name);
+
   constructor(
     @Inject(Services.GATEWAY_SESSION_MANAGER)
     readonly sessions: IGatewaySessionManager,
@@ -60,14 +56,14 @@ export class MessagingGateway
   @WebSocketServer()
   server: Server;
 
-  handleConnection(socket: AuthenticatedSocket, ...args: any[]) {
-    console.log('Incoming Connection');
+  handleConnection(socket: AuthenticatedSocket) {
+    this.logger.log(`Socket connected for user ${socket.user.id}`);
     this.sessions.setUserSocket(socket.user.id, socket);
     socket.emit('connected', {});
   }
 
   handleDisconnect(socket: AuthenticatedSocket) {
-    console.log('handleDisconnect');
+    this.logger.log(`Socket disconnected for user ${socket.user.id}`);
     this.sessions.removeUserSocket(socket.user.id);
   }
 
@@ -89,21 +85,12 @@ export class MessagingGateway
     socket.emit('onlineGroupUsersReceived', { onlineUsers, offlineUsers });
   }
 
-  @SubscribeMessage('createMessage')
-  handleCreateMessage(@MessageBody() data: any) {
-    console.log('Create Message');
-  }
-
   @SubscribeMessage('onConversationJoin')
   onConversationJoin(
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log(
-      `${client.user?.id} joined a Conversation of ID: ${data.conversationId}`,
-    );
     client.join(`conversation-${data.conversationId}`);
-    console.log(client.rooms);
     client.to(`conversation-${data.conversationId}`).emit('userJoin');
   }
 
@@ -112,9 +99,7 @@ export class MessagingGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onConversationLeave');
     client.leave(`conversation-${data.conversationId}`);
-    console.log(client.rooms);
     client.to(`conversation-${data.conversationId}`).emit('userLeave');
   }
 
@@ -123,9 +108,7 @@ export class MessagingGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onGroupJoin');
     client.join(`group-${data.groupId}`);
-    console.log(client.rooms);
     client.to(`group-${data.groupId}`).emit('userGroupJoin');
   }
 
@@ -134,9 +117,7 @@ export class MessagingGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onGroupLeave');
     client.leave(`group-${data.groupId}`);
-    console.log(client.rooms);
     client.to(`group-${data.groupId}`).emit('userGroupLeave');
   }
 
@@ -145,9 +126,6 @@ export class MessagingGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onTypingStart');
-    console.log(data.conversationId);
-    console.log(client.rooms);
     client.to(`conversation-${data.conversationId}`).emit('onTypingStart');
   }
 
@@ -156,15 +134,11 @@ export class MessagingGateway
     @MessageBody() data: any,
     @ConnectedSocket() client: AuthenticatedSocket,
   ) {
-    console.log('onTypingStop');
-    console.log(data.conversationId);
-    console.log(client.rooms);
     client.to(`conversation-${data.conversationId}`).emit('onTypingStop');
   }
 
   @OnEvent('message.create')
   handleMessageCreateEvent(payload: CreateMessageResponse) {
-    console.log('Inside message.create');
     const {
       author,
       conversation: { creator, recipient },
@@ -182,14 +156,12 @@ export class MessagingGateway
 
   @OnEvent('conversation.create')
   handleConversationCreateEvent(payload: Conversation) {
-    console.log('Inside conversation.create');
     const recipientSocket = this.sessions.getUserSocket(payload.recipient.id);
     if (recipientSocket) recipientSocket.emit('onConversation', payload);
   }
+
   @OnEvent('message.delete')
   async handleMessageDelete(payload) {
-    console.log('Inside message.delete');
-    console.log(payload);
     const conversation = await this.conversationService.findById(
       payload.conversationId,
     );
@@ -208,7 +180,6 @@ export class MessagingGateway
       author,
       conversation: { creator, recipient },
     } = message;
-    console.log(message);
     const recipientSocket =
       author.id === creator.id
         ? this.sessions.getUserSocket(recipient.id)
@@ -219,13 +190,11 @@ export class MessagingGateway
   @OnEvent('group.message.create')
   async handleGroupMessageCreate(payload: CreateGroupMessageResponse) {
     const { id } = payload.group;
-    console.log('Inside group.message.create');
     this.server.to(`group-${id}`).emit('onGroupMessage', payload);
   }
 
   @OnEvent('group.create')
   handleGroupCreate(payload: Group) {
-    console.log('group.create event');
     payload.users.forEach((user) => {
       const socket = this.sessions.getUserSocket(user.id);
       socket && socket.emit('onGroupCreate', payload);
@@ -234,16 +203,14 @@ export class MessagingGateway
 
   @OnEvent('group.message.update')
   handleGroupMessageUpdate(payload: GroupMessage) {
-    const room = `group-${payload.group.id}`;
-    console.log(room);
-    this.server.to(room).emit('onGroupMessageUpdate', payload);
+    this.server
+      .to(`group-${payload.group.id}`)
+      .emit('onGroupMessageUpdate', payload);
   }
 
   @OnEvent('group.user.add')
   handleGroupUserAdd(payload: AddGroupUserResponse) {
     const recipientSocket = this.sessions.getUserSocket(payload.user.id);
-    console.log('inside group.user.add');
-    console.log(`group-${payload.group.id}`);
     this.server
       .to(`group-${payload.group.id}`)
       .emit('onGroupReceivedNewUser', payload);
@@ -252,74 +219,41 @@ export class MessagingGateway
 
   @OnEvent('group.user.remove')
   handleGroupUserRemove(payload: RemoveGroupUserResponse) {
-    const { group, user } = payload;
     const ROOM_NAME = `group-${payload.group.id}`;
     const removedUserSocket = this.sessions.getUserSocket(payload.user.id);
-    console.log(payload);
-    console.log('Inside group.user.remove');
     if (removedUserSocket) {
-      console.log('Emitting onGroupRemoved');
       removedUserSocket.emit('onGroupRemoved', payload);
       removedUserSocket.leave(ROOM_NAME);
     }
     this.server.to(ROOM_NAME).emit('onGroupRecipientRemoved', payload);
-    const onlineUsers = group.users
-      .map((user) => this.sessions.getUserSocket(user.id) && user)
-      .filter((user) => user);
-    // this.server.to(ROOM_NAME).emit('onlineGroupUsersReceived', { onlineUsers });
   }
 
   @OnEvent('group.owner.update')
   handleGroupOwnerUpdate(payload: Group) {
     const ROOM_NAME = `group-${payload.id}`;
     const newOwnerSocket = this.sessions.getUserSocket(payload.owner.id);
-    console.log('Inside group.owner.update');
-    const { rooms } = this.server.sockets.adapter;
-    console.log(rooms.get(ROOM_NAME));
-    const socketsInRoom = rooms.get(ROOM_NAME);
-    console.log('Sockets In Room');
-    console.log(socketsInRoom);
-    console.log(newOwnerSocket);
-    // Check if the new owner is in the group (room)
+    const socketsInRoom = this.server.sockets.adapter.rooms.get(ROOM_NAME);
     this.server.to(ROOM_NAME).emit('onGroupOwnerUpdate', payload);
-    if (newOwnerSocket && !socketsInRoom.has(newOwnerSocket.id)) {
-      console.log('The new owner is not in the room...');
+    // rooms.get trả undefined khi phòng rỗng, nên phải optional-chain.
+    if (newOwnerSocket && !socketsInRoom?.has(newOwnerSocket.id)) {
       newOwnerSocket.emit('onGroupOwnerUpdate', payload);
     }
   }
 
   @OnEvent('group.user.leave')
   handleGroupUserLeave(payload) {
-    console.log('inside group.user.leave');
     const ROOM_NAME = `group-${payload.group.id}`;
-    const { rooms } = this.server.sockets.adapter;
-    const socketsInRoom = rooms.get(ROOM_NAME);
+    const socketsInRoom = this.server.sockets.adapter.rooms.get(ROOM_NAME);
     const leftUserSocket = this.sessions.getUserSocket(payload.userId);
+    if (!leftUserSocket) return;
     /**
-     * If socketsInRoom is undefined, this means that there is
-     * no one connected to the room. So just emit the event for
-     * the connected user if they are online.
+     * Phòng rỗng thì chỉ báo cho chính người vừa rời, nếu họ còn online.
      */
-    console.log(socketsInRoom);
-    console.log(leftUserSocket);
-    if (leftUserSocket && socketsInRoom) {
-      console.log('user is online, at least 1 person is in the room');
-      if (socketsInRoom.has(leftUserSocket.id)) {
-        console.log('User is in room... room set has socket id');
-        return this.server
-          .to(ROOM_NAME)
-          .emit('onGroupParticipantLeft', payload);
-      } else {
-        console.log('User is not in room, but someone is there');
-        leftUserSocket.emit('onGroupParticipantLeft', payload);
-        this.server.to(ROOM_NAME).emit('onGroupParticipantLeft', payload);
-        return;
-      }
-    }
-    if (leftUserSocket && !socketsInRoom) {
-      console.log('User is online but there are no sockets in the room');
+    if (!socketsInRoom)
       return leftUserSocket.emit('onGroupParticipantLeft', payload);
-    }
+    if (!socketsInRoom.has(leftUserSocket.id))
+      leftUserSocket.emit('onGroupParticipantLeft', payload);
+    this.server.to(ROOM_NAME).emit('onGroupParticipantLeft', payload);
   }
 
   @SubscribeMessage('getOnlineFriends')
@@ -328,18 +262,14 @@ export class MessagingGateway
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
     const { user } = socket;
-    if (user) {
-      console.log('user is authenticated');
-      const friends = await this.friendsService.getFriends(user.id);
-      const onlineFriends = friends.filter((friend) =>
-        this.sessions.getUserSocket(
-          user.id === friend.receiver.id
-            ? friend.sender.id
-            : friend.receiver.id,
-        ),
-      );
-      socket.emit('getOnlineFriends', onlineFriends);
-    }
+    if (!user) return;
+    const friends = await this.friendsService.getFriends(user.id);
+    const onlineFriends = friends.filter((friend) =>
+      this.sessions.getUserSocket(
+        user.id === friend.receiver.id ? friend.sender.id : friend.receiver.id,
+      ),
+    );
+    socket.emit('getOnlineFriends', onlineFriends);
   }
 
   @SubscribeMessage('onVideoCallInitiate')
@@ -363,9 +293,8 @@ export class MessagingGateway
       data.caller.id,
       socket.user.id,
     );
-    if (!conversation) return console.log('No conversation found');
+    if (!conversation) return;
     if (callerSocket) {
-      console.log('Emitting onVideoCallAccept event');
       const payload = { ...data, conversation, acceptor: socket.user };
       callerSocket.emit('onVideoCallAccept', payload);
       socket.emit('onVideoCallAccept', payload);
@@ -377,7 +306,6 @@ export class MessagingGateway
     @MessageBody() data,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    console.log('inside videoCallRejected event');
     const receiver = socket.user;
     const callerSocket = this.sessions.getUserSocket(data.caller.id);
     callerSocket &&
@@ -390,7 +318,6 @@ export class MessagingGateway
     @MessageBody() { caller, receiver }: CallHangUpPayload,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    console.log('inside videoCallHangup event');
     if (socket.user.id === caller.id) {
       const receiverSocket = this.sessions.getUserSocket(receiver.id);
       socket.emit('onVideoCallHangUp');
@@ -417,15 +344,13 @@ export class MessagingGateway
     @MessageBody() payload: CallAcceptedPayload,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    console.log('Inside onVoiceCallAccepted event');
     const callerSocket = this.sessions.getUserSocket(payload.caller.id);
     const conversation = await this.conversationService.isCreated(
       payload.caller.id,
       socket.user.id,
     );
-    if (!conversation) return console.log('No conversation found');
+    if (!conversation) return;
     if (callerSocket) {
-      console.log('Emitting onVoiceCallAccepted event');
       const callPayload = { ...payload, conversation, acceptor: socket.user };
       callerSocket.emit(WebsocketEvents.VOICE_CALL_ACCEPTED, callPayload);
       socket.emit(WebsocketEvents.VOICE_CALL_ACCEPTED, callPayload);
@@ -437,7 +362,6 @@ export class MessagingGateway
     @MessageBody() { caller, receiver }: CallHangUpPayload,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    console.log('inside onVoiceCallHangUp event');
     if (socket.user.id === caller.id) {
       const receiverSocket = this.sessions.getUserSocket(receiver.id);
       socket.emit(WebsocketEvents.VOICE_CALL_HANG_UP);
@@ -456,7 +380,6 @@ export class MessagingGateway
     @MessageBody() data,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    console.log('inside onVoiceCallRejected event');
     const receiver = socket.user;
     const callerSocket = this.sessions.getUserSocket(data.caller.id);
     callerSocket &&

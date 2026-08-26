@@ -9,8 +9,7 @@ export function useVoiceCallRejected() {
   const socket = useContext(SocketContext);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    socket.on(WebsocketEvents.VOICE_CALL_REJECTED, (data) => {
-      console.log('receiver rejected the voice call ', data.receiver);
+    socket.on(WebsocketEvents.VOICE_CALL_REJECTED, () => {
       dispatch(resetState());
     });
 

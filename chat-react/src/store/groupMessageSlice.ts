@@ -69,8 +69,6 @@ export const groupMessagesSlice = createSlice({
     builder
       .addCase(fetchGroupMessagesThunk.fulfilled, (state, action) => {
         const { id } = action.payload.data;
-        console.log('fetchGroupMessagesThunk.fulfilled');
-        console.log(action.payload.data);
         const index = state.messages.findIndex((gm) => gm.id === id);
         const exists = state.messages.find((gm) => gm.id === id);
         exists

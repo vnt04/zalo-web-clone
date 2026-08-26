@@ -11,7 +11,6 @@ export class FriendEvents {
   @OnEvent(ServerEvents.FRIEND_REMOVED)
   handleFriendRemoved({ userId, friend }: RemoveFriendEventPayload) {
     const { sender, receiver } = friend;
-    console.log(ServerEvents.FRIEND_REMOVED);
     const socket = this.gateway.sessions.getUserSocket(
       receiver.id === userId ? sender.id : receiver.id,
     );

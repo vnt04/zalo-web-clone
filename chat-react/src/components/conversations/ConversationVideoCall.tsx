@@ -22,21 +22,13 @@ export const ConversationVideoCall = () => {
     (state: RootState) => state.call
   );
   useEffect(() => {
-    console.log('local stream was updated...');
-    console.log(localStream);
     if (localVideoRef.current && localStream) {
-      console.log('updating local video ref');
-      console.log(`Updating local stream ${localStream.id}`);
       localVideoRef.current.srcObject = localStream;
       localVideoRef.current.muted = true;
     }
   }, [localStream]);
   useEffect(() => {
-    console.log('remote stream was updated...');
-    console.log(remoteStream);
     if (remoteVideoRef.current && remoteStream) {
-      console.log('updating remote video ref');
-      console.log(`Updating remote stream ${remoteStream.id}`);
       remoteVideoRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);

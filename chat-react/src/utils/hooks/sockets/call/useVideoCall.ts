@@ -19,8 +19,6 @@ export function useVideoCall() {
 
   useEffect(() => {
     socket.on('onVideoCall', (data: CallPayload) => {
-      console.log('receiving video call....');
-      console.log(data);
       if (isReceivingCall) return;
       dispatch(setCaller(data.caller));
       dispatch(setReceiver(user!));

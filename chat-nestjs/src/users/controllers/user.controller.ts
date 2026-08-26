@@ -21,7 +21,6 @@ export class UsersController {
 
   @Get('search')
   searchUsers(@Query('query') query: string) {
-    console.log(query);
     if (!query)
       throw new HttpException('Provide a valid query', HttpStatus.BAD_REQUEST);
     return this.userService.searchUserByPhoneNumber(query);

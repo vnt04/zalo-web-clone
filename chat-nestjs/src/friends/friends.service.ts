@@ -44,7 +44,6 @@ export class FriendsService implements IFriendsService {
   async deleteFriend({ id, userId }: DeleteFriendRequestParams) {
     const friend = await this.findFriendById(id);
     if (!friend) throw new FriendNotFoundException();
-    console.log(friend);
     if (friend.receiver.id !== userId && friend.sender.id !== userId)
       throw new DeleteFriendException();
     await this.friendsRepository.delete(id);

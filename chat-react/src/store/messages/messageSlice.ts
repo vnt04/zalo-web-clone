@@ -33,11 +33,14 @@ export const messagesSlice = createSlice({
   initialState,
   reducers: {
     addMessage: (state, action: PayloadAction<MessageEventPayload>) => {
-      console.log(state);
-      console.log(action);
       const { conversation, message } = action.payload;
       const conversationMessage = state.messages.find((cm) => cm.id === conversation.id);
-      conversationMessage?.messages.unshift(message);
+      // Hội thoại chưa được nạp thì tạo entry mới, đừng nuốt tin nhắn.
+      if (!conversationMessage) {
+        state.messages.push({ id: conversation.id, messages: [message] });
+        return;
+      }
+      conversationMessage.messages.unshift(message);
     },
     deleteMessage: (state, action: PayloadAction<DeleteMessageResponse>) => {
       const { payload } = action;

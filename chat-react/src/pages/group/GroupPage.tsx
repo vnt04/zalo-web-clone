@@ -46,14 +46,12 @@ export const GroupPage = () => {
 
   useEffect(() => {
     socket.on('onGroupMessage', (payload: GroupMessageEventPayload) => {
-      console.log('Group Message Received');
       const { group } = payload;
       dispatch(addGroupMessage(payload));
       dispatch(updateGroup({ type: UpdateGroupAction.NEW_MESSAGE, group }));
     });
 
     socket.on('onGroupCreate', (payload: Group) => {
-      console.log('Group Created...');
       dispatch(addGroup(payload));
     });
 
@@ -62,8 +60,6 @@ export const GroupPage = () => {
      * to the group.
      */
     socket.on('onGroupUserAdd', (payload: AddGroupUserMessagePayload) => {
-      console.log('onGroupUserAdd');
-      console.log(payload);
       dispatch(addGroup(payload.group));
     });
 
@@ -74,7 +70,6 @@ export const GroupPage = () => {
     socket.on(
       'onGroupReceivedNewUser',
       ({ group }: AddGroupUserMessagePayload) => {
-        console.log('Received onGroupReceivedNewUser');
         dispatch(updateGroup({ group }));
       }
     );
@@ -82,7 +77,6 @@ export const GroupPage = () => {
     socket.on(
       'onGroupRecipientRemoved',
       ({ group }: RemoveGroupUserMessagePayload) => {
-        console.log('onGroupRecipientRemoved');
         dispatch(updateGroup({ group }));
       }
     );
@@ -90,7 +84,6 @@ export const GroupPage = () => {
     socket.on('onGroupRemoved', (payload: RemoveGroupUserMessagePayload) => {
       dispatch(removeGroup(payload.group));
       if (id && parseInt(id) === payload.group.id) {
-        console.log('Navigating User to /groups');
         navigate('/groups');
       }
     });
@@ -98,10 +91,8 @@ export const GroupPage = () => {
     socket.on(
       'onGroupParticipantLeft',
       ({ group, userId }: GroupParticipantLeftPayload) => {
-        console.log('onGroupParticipantLeft received');
         dispatch(updateGroup({ group }));
         if (userId === user?.id) {
-          console.log('payload.userId matches user.id...');
           dispatch(removeGroup(group));
           navigate('/groups');
         }
@@ -109,7 +100,6 @@ export const GroupPage = () => {
     );
 
     socket.on('onGroupOwnerUpdate', (group: Group) => {
-      console.log('received onGroupOwnerUpdate');
       dispatch(updateGroup({ group }));
     });
 

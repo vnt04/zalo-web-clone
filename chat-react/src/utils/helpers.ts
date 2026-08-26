@@ -211,7 +211,8 @@ export const toNationalPhoneNumber = (raw: string): string | null => {
 export const formatPhoneNumber = (raw: string): string => {
   const national = toNationalPhoneNumber(raw);
   if (!national) return raw;
-  return `(+84) 0${national.slice(0, 3)} ${national.slice(3, 6)} ${national.slice(
+  // Dùng +84 thì bỏ số 0 đứng đầu, không viết cả hai.
+  return `(+84) ${national.slice(0, 3)} ${national.slice(3, 6)} ${national.slice(
     6
   )}`;
 };

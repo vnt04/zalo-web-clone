@@ -43,18 +43,14 @@ export const friendsSlice = createSlice({
       );
     },
     removeFriend: (state, action: PayloadAction<Friend>) => {
-      console.log('removeFriend reducer');
       state.friends = state.friends.filter(
         (friend) => friend.id !== action.payload.id
       );
     },
     setOnlineFriends: (state, action: PayloadAction<Friend[]>) => {
-      console.log('setFriends Reducer');
       state.onlineFriends = action.payload;
     },
     setOfflineFriends: (state) => {
-      console.log('setOfflineFriends Reducer');
-      console.log(state.onlineFriends);
       state.offlineFriends = state.friends.filter(
         (friend) =>
           !state.onlineFriends.find(
@@ -75,20 +71,13 @@ export const friendsSlice = createSlice({
   extraReducers: (builder) =>
     builder
       .addCase(fetchFriendsThunk.fulfilled, (state, action) => {
-        console.log('fetchFriendsThunk.fulfilled');
-        console.log(action.payload.data);
         state.friends = action.payload.data;
       })
       .addCase(fetchFriendRequestThunk.fulfilled, (state, action) => {
-        console.log('fetchFriendRequestsThunk.fulfilled');
         state.friendRequests = action.payload.data;
       })
       .addCase(createFriendRequestThunk.fulfilled, (state, action) => {
-        console.log('createFriendRequestThunk.fulfilled');
         state.friendRequests.push(action.payload.data);
-      })
-      .addCase(createFriendRequestThunk.rejected, (_state, _action) => {
-        console.log('createFriendRequestThunk.rejected');
       })
       .addCase(cancelFriendRequestThunk.fulfilled, (state, action) => {
         const { id } = action.payload.data;
@@ -97,7 +86,6 @@ export const friendsSlice = createSlice({
         );
       })
       .addCase(acceptFriendRequestThunk.fulfilled, (state, action) => {
-        console.log('acceptFriendRequestThunk.fulfilled');
         const {
           friendRequest: { id },
         } = action.payload.data;
@@ -106,14 +94,12 @@ export const friendsSlice = createSlice({
         );
       })
       .addCase(rejectFriendRequestThunk.fulfilled, (state, action) => {
-        console.log('rejectFriendRequestThunk.fulfilled');
         const { id } = action.payload.data;
         state.friendRequests = state.friendRequests.filter(
           (friendRequest) => friendRequest.id !== id
         );
       })
       .addCase(removeFriendThunk.fulfilled, (state, action) => {
-        console.log('rejectFriendRequestThunk.fulfilled');
         state.friends = state.friends.filter(
           (friend) => friend.id !== action.payload.data.id
         );

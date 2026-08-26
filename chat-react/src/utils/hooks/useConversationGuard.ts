@@ -4,23 +4,16 @@ import { getConversationById } from '../api';
 
 export function useConversationGuard() {
   const { id } = useParams();
-  const [loading, setLoading] = useState(false);
+  // Khởi tạo true: nếu false thì guard render children một nhịp trước khi biết
+  // người dùng có quyền vào hội thoại hay không.
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
-  const controller = new AbortController();
 
   useEffect(() => {
-    console.log('Fetching Conversation');
     setLoading(true);
     getConversationById(parseInt(id!))
-      .catch((err) => {
-        console.log(err);
-        setError(err);
-      })
+      .catch((err) => setError(err))
       .finally(() => setLoading(false));
-
-    return () => {
-      controller.abort();
-    };
   }, [id]);
 
   return { loading, error };
