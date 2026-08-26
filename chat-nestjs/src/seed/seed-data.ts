@@ -318,7 +318,10 @@ export const groups: SeedGroup[] = [
     lastActivityMinutesAgo: 55,
     gapMinutes: 4,
     lines: [
-      { fromPhone: '0900000006', content: 'Team ơi hôm nay deploy lúc mấy giờ' },
+      {
+        fromPhone: '0900000006',
+        content: 'Team ơi hôm nay deploy lúc mấy giờ',
+      },
       { fromPhone: '0900000002', content: '8h tối nha, sau giờ cao điểm' },
       { fromPhone: '0900000001', content: 'Ok tôi chuẩn bị sẵn script' },
       { fromPhone: '0900000004', content: 'Nhớ backup DB trước' },

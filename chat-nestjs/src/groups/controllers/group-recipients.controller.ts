@@ -6,9 +6,11 @@ import {
   Body,
   Inject,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SkipThrottle } from '@nestjs/throttler';
+import { AuthenticatedGuard } from '../../auth/utils/Guards';
 import { Routes, Services } from '../../utils/constants';
 import { AuthUser } from '../../utils/decorators';
 import { User } from '../../utils/typeorm';
@@ -17,6 +19,7 @@ import { IGroupRecipientService } from '../interfaces/group-recipient';
 
 @SkipThrottle()
 @Controller(Routes.GROUP_RECIPIENTS)
+@UseGuards(AuthenticatedGuard)
 export class GroupRecipientsController {
   constructor(
     @Inject(Services.GROUP_RECIPIENTS)

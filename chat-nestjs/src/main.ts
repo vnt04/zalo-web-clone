@@ -13,7 +13,17 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { getCorsOrigins } from './utils/cors';
 
 async function bootstrap() {
-  const { PORT, COOKIE_SECRET } = process.env;
+  const { PORT, COOKIE_SECRET, ENVIRONMENT } = process.env;
+  const isProduction = ENVIRONMENT === 'PRODUCTION';
+
+  if (!COOKIE_SECRET) throw new Error('COOKIE_SECRET chưa được đặt.');
+  // Giá trị mẫu ký được cookie phiên bất kỳ. Chỉ chặn ở production để lệnh
+  // quickstart `cp .env.example .env && docker compose up` vẫn chạy được.
+  if (isProduction && COOKIE_SECRET.startsWith('change-me'))
+    throw new Error(
+      'COOKIE_SECRET còn giá trị mẫu. Sinh chuỗi ngẫu nhiên: openssl rand -base64 48',
+    );
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const sessionRepository = getRepository(Session);
   const adapter = new WebsocketAdapter(app);
@@ -21,7 +31,9 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors({ origin: getCorsOrigins(), credentials: true });
   app.useGlobalPipes(new ValidationPipe());
-  app.set('trust proxy', 'loopback');
+  // Production đứng sau reverse proxy: 'loopback' làm req.ips rỗng nên
+  // ThrottlerBehindProxyGuard gộp mọi người dùng vào chung một hạn mức.
+  app.set('trust proxy', isProduction ? 1 : 'loopback');
   app.use(
     session({
       secret: COOKIE_SECRET,
@@ -30,6 +42,11 @@ async function bootstrap() {
       name: 'CHAT_APP_SESSION_ID',
       cookie: {
         maxAge: 86400000, // cookie expires 1 day later
+        httpOnly: true,
+        // SPA khác origin với API, nên production cần SameSite=None — mà
+        // trình duyệt chỉ nhận None khi đi kèm Secure.
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
       },
       store: new TypeormStore().connect(sessionRepository),
     }),

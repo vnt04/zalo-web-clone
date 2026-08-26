@@ -31,11 +31,6 @@ export class ConversationsController {
     private readonly conversationStatesService: IConversationStatesService,
     private readonly events: EventEmitter2,
   ) {}
-  @Get('test/endpoint/check')
-  test() {
-    return;
-  }
-
   @Post()
   async createConversation(
     @AuthUser() user: User,

@@ -14,6 +14,7 @@ import {
   CreateMessageParams,
   DeleteMessageParams,
   EditMessageParams,
+  GetMessagesParams,
 } from '../utils/types';
 import { CannotCreateMessageException } from './exceptions/CannotCreateMessage';
 import { CannotDeleteMessage } from './exceptions/CannotDeleteMessage';
@@ -57,10 +58,13 @@ export class MessageService implements IMessageService {
     return { message: savedMessage, conversation: updated };
   }
 
-  getMessages(conversationId: number): Promise<Message[]> {
+  async getMessages({ id, userId }: GetMessagesParams): Promise<Message[]> {
+    // 404 chứ không phải 403: 403 xác nhận hội thoại có tồn tại, tự nó đã rò rỉ.
+    const hasAccess = await this.conversationService.hasAccess({ id, userId });
+    if (!hasAccess) throw new ConversationNotFoundException();
     return this.messageRepository.find({
       relations: ['author', 'attachments', 'author.profile'],
-      where: { conversation: { id: conversationId } },
+      where: { conversation: { id } },
       order: { createdAt: 'DESC' },
     });
   }

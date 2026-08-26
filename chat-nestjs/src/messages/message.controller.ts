@@ -9,8 +9,10 @@ import {
   Patch,
   Post,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { Routes, Services } from '../utils/constants';
 import { AuthUser } from '../utils/decorators';
 import { User } from '../utils/typeorm';
@@ -24,6 +26,7 @@ import { EmptyMessageException } from './exceptions/EmptyMessage';
 import { Attachment } from '../utils/types';
 
 @Controller(Routes.MESSAGES)
+@UseGuards(AuthenticatedGuard)
 export class MessageController {
   constructor(
     @Inject(Services.MESSAGES) private readonly messageService: IMessageService,
@@ -60,7 +63,10 @@ export class MessageController {
     @AuthUser() user: User,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    const messages = await this.messageService.getMessages(id);
+    const messages = await this.messageService.getMessages({
+      id,
+      userId: user.id,
+    });
     return { id, messages };
   }
 

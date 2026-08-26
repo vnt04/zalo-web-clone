@@ -228,6 +228,11 @@ export type GetConversationMessagesParams = {
   limit: number;
 };
 
+export type GetMessagesParams = {
+  id: number;
+  userId: number;
+};
+
 export type UpdateConversationParams = Partial<{
   id: number;
   lastMessageSent: Message;
@@ -256,6 +261,7 @@ export type CallAcceptedPayload = {
 
 export type UpdateGroupDetailsParams = {
   id: number;
+  userId: number;
   title?: string;
   avatar?: Attachment;
 };

@@ -6,8 +6,10 @@ import {
   Inject,
   Param,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { IConversationsService } from '../conversations/conversations';
 import { IUserService } from '../users/interfaces/user';
 import { Routes, Services } from '../utils/constants';
@@ -15,6 +17,7 @@ import { AuthUser } from '../utils/decorators';
 import { User } from '../utils/typeorm';
 
 @Controller(Routes.EXISTS)
+@UseGuards(AuthenticatedGuard)
 export class ExistsController {
   constructor(
     @Inject(Services.CONVERSATIONS)

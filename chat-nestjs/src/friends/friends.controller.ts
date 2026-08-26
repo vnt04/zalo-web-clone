@@ -5,9 +5,11 @@ import {
   Inject,
   Param,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SkipThrottle } from '@nestjs/throttler';
+import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { Routes, ServerEvents, Services } from '../utils/constants';
 import { AuthUser } from '../utils/decorators';
 import { User } from '../utils/typeorm';
@@ -15,6 +17,7 @@ import { IFriendsService } from './friends';
 
 @SkipThrottle()
 @Controller(Routes.FRIENDS)
+@UseGuards(AuthenticatedGuard)
 export class FriendsController {
   constructor(
     @Inject(Services.FRIENDS_SERVICE)

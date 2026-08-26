@@ -5,12 +5,15 @@ import {
   HttpStatus,
   Inject,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthenticatedGuard } from '../../auth/utils/Guards';
 import { Routes, Services } from '../../utils/constants';
 import { UserAlreadyExists } from '../exceptions/UserAlreadyExists';
 import { IUserService } from '../interfaces/user';
 
 @Controller(Routes.USERS)
+@UseGuards(AuthenticatedGuard)
 export class UsersController {
   constructor(
     @Inject(Services.USERS) private readonly userService: IUserService,

@@ -36,15 +36,13 @@ import {
  */
 function storedPhone(raw: string): string {
   const normalized = normalizePhone(raw);
-  if (!normalized)
-    throw new Error(`Số điện thoại seed không hợp lệ: ${raw}`);
+  if (!normalized) throw new Error(`Số điện thoại seed không hợp lệ: ${raw}`);
   return normalized;
 }
 
 const MINUTE = 60 * 1000;
 const minutesAgo = (minutes: number) => new Date(Date.now() - minutes * MINUTE);
-const asSql = (date: Date) =>
-  date.toISOString().slice(0, 19).replace('T', ' ');
+const asSql = (date: Date) => date.toISOString().slice(0, 19).replace('T', ' ');
 
 /**
  * Trong container thì biến môi trường đã có sẵn; chạy native thì đọc file env
@@ -116,16 +114,24 @@ async function reset(connection: Connection, seedUsers: User[]) {
 
   if (conversationIds.length) {
     await connection.query(
-      `UPDATE conversations SET last_message_sent = NULL WHERE id IN (${conversationIds.join(',')})`,
+      `UPDATE conversations SET last_message_sent = NULL WHERE id IN (${conversationIds.join(
+        ',',
+      )})`,
     );
     await connection.query(
-      `DELETE FROM conversation_states WHERE conversationId IN (${conversationIds.join(',')})`,
+      `DELETE FROM conversation_states WHERE conversationId IN (${conversationIds.join(
+        ',',
+      )})`,
     );
     await connection.query(
-      `DELETE FROM message_attachments WHERE messageId IN (SELECT id FROM messages WHERE conversationId IN (${conversationIds.join(',')}))`,
+      `DELETE FROM message_attachments WHERE messageId IN (SELECT id FROM messages WHERE conversationId IN (${conversationIds.join(
+        ',',
+      )}))`,
     );
     await connection.query(
-      `DELETE FROM messages WHERE conversationId IN (${conversationIds.join(',')})`,
+      `DELETE FROM messages WHERE conversationId IN (${conversationIds.join(
+        ',',
+      )})`,
     );
     await connection.query(
       `DELETE FROM conversations WHERE id IN (${conversationIds.join(',')})`,
@@ -142,13 +148,17 @@ async function reset(connection: Connection, seedUsers: User[]) {
 
   if (groupIds.length) {
     await connection.query(
-      `UPDATE \`groups\` SET last_message_sent = NULL WHERE id IN (${groupIds.join(',')})`,
+      `UPDATE \`groups\` SET last_message_sent = NULL WHERE id IN (${groupIds.join(
+        ',',
+      )})`,
     );
     await connection.query(
       `DELETE FROM group_messages WHERE groupId IN (${groupIds.join(',')})`,
     );
     await connection.query(
-      `DELETE FROM groups_users_users WHERE groupsId IN (${groupIds.join(',')})`,
+      `DELETE FROM groups_users_users WHERE groupsId IN (${groupIds.join(
+        ',',
+      )})`,
     );
     await connection.query(
       `DELETE FROM \`groups\` WHERE id IN (${groupIds.join(',')})`,
@@ -156,10 +166,14 @@ async function reset(connection: Connection, seedUsers: User[]) {
   }
 
   await connection.query(
-    `DELETE FROM friends WHERE senderId IN (${userIds.join(',')}) OR receiverId IN (${userIds.join(',')})`,
+    `DELETE FROM friends WHERE senderId IN (${userIds.join(
+      ',',
+    )}) OR receiverId IN (${userIds.join(',')})`,
   );
   await connection.query(
-    `DELETE FROM friend_requests WHERE senderId IN (${userIds.join(',')}) OR receiverId IN (${userIds.join(',')})`,
+    `DELETE FROM friend_requests WHERE senderId IN (${userIds.join(
+      ',',
+    )}) OR receiverId IN (${userIds.join(',')})`,
   );
   await connection.query(
     `DELETE FROM users WHERE id IN (${userIds.join(',')})`,
@@ -262,10 +276,10 @@ async function createConversations(
       );
       // created_at là @CreateDateColumn nên TypeORM luôn ghi đè lúc insert —
       // phải sửa lại bằng UPDATE thì mốc thời gian mẫu mới có tác dụng.
-      await connection.query('UPDATE messages SET created_at = ? WHERE id = ?', [
-        asSql(sentAt[index]),
-        message.id,
-      ]);
+      await connection.query(
+        'UPDATE messages SET created_at = ? WHERE id = ?',
+        [asSql(sentAt[index]), message.id],
+      );
       messages.push(message);
       messageCount++;
     }
@@ -382,9 +396,15 @@ async function main() {
 
     console.log('');
     console.log('Đã tạo:');
-    console.log(`  ${people.length} tài khoản, tất cả là bạn bè của người đầu tiên`);
-    console.log(`  ${conversationSeeds.length} hội thoại / ${messageCount} tin nhắn`);
-    console.log(`  ${groupSeeds.length} nhóm / ${groupMessageCount} tin nhắn nhóm`);
+    console.log(
+      `  ${people.length} tài khoản, tất cả là bạn bè của người đầu tiên`,
+    );
+    console.log(
+      `  ${conversationSeeds.length} hội thoại / ${messageCount} tin nhắn`,
+    );
+    console.log(
+      `  ${groupSeeds.length} nhóm / ${groupMessageCount} tin nhắn nhóm`,
+    );
     console.log('');
     console.log('Đăng nhập bằng:');
     console.log(`  Số điện thoại: ${people[0].phoneNumber}`);

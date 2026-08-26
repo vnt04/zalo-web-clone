@@ -8,11 +8,13 @@ import {
   Patch,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SkipThrottle } from '@nestjs/throttler';
+import { AuthenticatedGuard } from '../../auth/utils/Guards';
 import { Routes, Services } from '../../utils/constants';
 import { AuthUser } from '../../utils/decorators';
 import { User } from '../../utils/typeorm';
@@ -24,6 +26,7 @@ import { IGroupService } from '../interfaces/group';
 
 @SkipThrottle()
 @Controller(Routes.GROUPS)
+@UseGuards(AuthenticatedGuard)
 export class GroupController {
   constructor(
     @Inject(Services.GROUPS) private readonly groupService: IGroupService,
@@ -65,12 +68,11 @@ export class GroupController {
   @Patch(':id/details')
   @UseInterceptors(FileInterceptor('avatar'))
   async updateGroupDetails(
+    @AuthUser() { id: userId }: User,
     @Body() { title }: UpdateGroupDetailsDto,
     @Param('id', ParseIntPipe) id: number,
     @UploadedFile() avatar: Attachment,
   ) {
-    console.log(avatar);
-    console.log(title);
-    return this.groupService.updateDetails({ id, avatar, title });
+    return this.groupService.updateDetails({ id, userId, avatar, title });
   }
 }

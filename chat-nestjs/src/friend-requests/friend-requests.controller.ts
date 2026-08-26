@@ -8,9 +8,11 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { AuthenticatedGuard } from '../auth/utils/Guards';
 import { Routes, ServerEvents, Services } from '../utils/constants';
 import { AuthUser } from '../utils/decorators';
 import { User } from '../utils/typeorm';
@@ -18,6 +20,7 @@ import { CreateFriendDto } from './dtos/CreateFriend.dto';
 import { IFriendRequestService } from './friend-requests';
 
 @Controller(Routes.FRIEND_REQUESTS)
+@UseGuards(AuthenticatedGuard)
 export class FriendRequestController {
   constructor(
     @Inject(Services.FRIENDS_REQUESTS_SERVICE)

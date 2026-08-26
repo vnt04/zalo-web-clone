@@ -10,10 +10,12 @@ import {
   Patch,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { AuthenticatedGuard } from '../../auth/utils/Guards';
 import { CreateMessageDto } from '../../messages/dtos/CreateMessage.dto';
 import { EditMessageDto } from '../../messages/dtos/EditMessage.dto';
 import { EmptyMessageException } from '../../messages/exceptions/EmptyMessage';
@@ -24,6 +26,7 @@ import { Attachment } from '../../utils/types';
 import { IGroupMessageService } from '../interfaces/group-messages';
 
 @Controller(Routes.GROUP_MESSAGES)
+@UseGuards(AuthenticatedGuard)
 export class GroupMessageController {
   constructor(
     @Inject(Services.GROUP_MESSAGES)

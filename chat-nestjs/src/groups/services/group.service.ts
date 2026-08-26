@@ -17,6 +17,7 @@ import {
 } from '../../utils/types';
 import { GroupNotFoundException } from '../exceptions/GroupNotFound';
 import { GroupOwnerTransferException } from '../exceptions/GroupOwnerTransfer';
+import { NotGroupOwnerException } from '../exceptions/NotGroupOwner';
 import { IGroupService } from '../interfaces/group';
 
 @Injectable()
@@ -103,6 +104,7 @@ export class GroupService implements IGroupService {
   async updateDetails(params: UpdateGroupDetailsParams): Promise<Group> {
     const group = await this.findGroupById(params.id);
     if (!group) throw new GroupNotFoundException();
+    if (group.owner.id !== params.userId) throw new NotGroupOwnerException();
     if (params.avatar) {
       const key = generateUUIDV4();
       await this.imageStorageService.upload({ key, file: params.avatar });
