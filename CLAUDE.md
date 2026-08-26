@@ -59,11 +59,16 @@ Under docker, prefix with `docker compose exec api` / `docker compose exec web`.
 | chat-nestjs | `yarn lint` | ✅ passes — eslint + prettier, `--fix` is on by default, 22 warnings are expected |
 | chat-nestjs | `yarn build` | ✅ passes — `nest build` |
 | chat-react | `yarn build` | ✅ passes — `tsc -b && vite build`, the only gate in that package |
-| chat-nestjs | `yarn test` | ❌ **already broken on `main`** |
+| chat-nestjs | `yarn test` | ✅ passes — jest, 11/11 suites |
 
-`yarn test` fails 9/9 suites and has done since before any current work — verified against a clean checkout of `main`.
-The specs build a `TestingModule` without providing the repository and `Services.*` tokens their subjects inject, so
-Nest cannot resolve the DI graph. Do not treat it as a regression you caused, and do not claim it passes.
+`yarn test` was broken for a long time (9/11 suites failing) and was fixed on `fix/production-blockers`. It is a real
+gate now — a red suite means you broke something. Two distinct causes were at play, worth knowing before you add specs:
+most were `nest g` boilerplate that never got the repository and `Services.*` providers their subject injects, and the
+two friend-request specs had additionally drifted from the code (asserting `email` after the app moved to `phoneNumber`,
+and `rejects.toThrow` without `await`, which asserts nothing).
+
+Shared fixtures live in `src/__mocks__/index.ts` — `mockUser` and `mockRepository()`. Reach for `mockRepository()` rather
+than hand-rolling a repository stub per spec.
 
 `chat-react` runs `strict`, `noUnusedLocals` and `noUnusedParameters`, so an unused import or an unused destructured
 setter fails the build. For a deliberately unused callback parameter, prefix it with `_` rather than deleting it.

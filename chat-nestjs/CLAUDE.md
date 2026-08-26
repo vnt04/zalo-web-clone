@@ -91,6 +91,11 @@ events, and add both the internal and the client-facing name there.
 
 ## Tests
 
-Jest + `@nestjs/testing`. Shared fixtures live in `src/__mocks__/index.ts` (`mockUser`, …). Existing specs are mostly
-smoke-level ("should be defined"); new tests for new logic should assert real behaviour — arrange/act/assert, one
-behaviour per test, mock collaborators through the same `Services` tokens the module uses.
+Jest + `@nestjs/testing`, 11/11 suites green — treat a red run as a regression you caused. Shared fixtures live in
+`src/__mocks__/index.ts`: `mockUser`, and `mockRepository()` for a TypeORM repository stub (use it instead of
+hand-rolling one per spec).
+
+Most specs are still smoke-level ("should be defined"); new tests for new logic should assert real behaviour —
+arrange/act/assert, one behaviour per test, mock collaborators through the same `Services` tokens the module uses.
+`message.service.spec.ts` is the worked example: it pins that `getMessages` refuses a non-participant *and* never
+touches the repository, which is the regression guard for a real data-leak bug.
