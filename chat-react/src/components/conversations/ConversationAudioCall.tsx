@@ -1,12 +1,7 @@
 import { useEffect, useRef, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import {
-  AudioContainerItem,
-  ConversationCallContainer,
-  MediaContainer,
-  VideoContainerActionButtons,
-} from '../../utils/styles';
+import classNames from 'classnames';
 import {
   BiMicrophone,
   BiMicrophoneOff,
@@ -16,6 +11,7 @@ import {
 import { ImPhoneHangUp } from 'react-icons/im';
 import { SocketContext } from '../../utils/context/SocketContext';
 import { WebsocketEvents } from '../../utils/constants';
+import styles from '../calls/index.module.scss';
 
 export const ConversationAudioCall = () => {
   const localAudioRef = useRef<HTMLAudioElement>(null);
@@ -27,21 +23,14 @@ export const ConversationAudioCall = () => {
     (state: RootState) => state.call
   );
   useEffect(() => {
-    console.log('AUDIO: local stream was updated...');
-    console.log(localStream);
     if (localAudioRef.current && localStream) {
-      console.log('AUDIO: updating local video ref');
-      console.log(`AUDIO: Updating local stream ${localStream.id}`);
       localAudioRef.current.srcObject = localStream;
       localAudioRef.current.muted = true;
     }
   }, [localStream]);
+
   useEffect(() => {
-    console.log('AUDIO: remote stream was updated...');
-    console.log(remoteStream);
     if (remoteAudioRef.current && remoteStream) {
-      console.log('AUDIO: updating remote video ref');
-      console.log(`AUDIO: Updating remote stream ${remoteStream.id}`);
       remoteAudioRef.current.srcObject = remoteStream;
     }
   }, [remoteStream]);
@@ -65,39 +54,41 @@ export const ConversationAudioCall = () => {
   };
 
   return (
-    <ConversationCallContainer>
-      <div className="invisible"></div>
-      <MediaContainer>
-        {localStream && (
-          <AudioContainerItem>
-            <audio ref={localAudioRef} autoPlay controls />
-          </AudioContainerItem>
-        )}
-        {remoteStream && (
-          <AudioContainerItem>
-            <audio ref={remoteAudioRef} autoPlay controls />
-          </AudioContainerItem>
-        )}
-      </MediaContainer>
-      <VideoContainerActionButtons>
-        <div>
-          {videoEnabled ? (
-            <BiVideo onClick={toggleVideo} />
-          ) : (
-            <BiVideoOff onClick={toggleVideo} />
-          )}
-        </div>
-        <div>
+    <div className={styles.callStage}>
+      <div className={styles.mediaArea}>
+        {localStream && <audio ref={localAudioRef} autoPlay controls />}
+        {remoteStream && <audio ref={remoteAudioRef} autoPlay controls />}
+      </div>
+      <div className={styles.controlBar}>
+        <button
+          type="button"
+          className={styles.controlButton}
+          title={videoEnabled ? "Tắt camera" : "Bật camera"}
+          onClick={toggleVideo}
+        >
+          {videoEnabled ? <BiVideo size={22} /> : <BiVideoOff size={22} />}
+        </button>
+        <button
+          type="button"
+          className={styles.controlButton}
+          title={microphoneEnabled ? "Tắt micro" : "Bật micro"}
+          onClick={toggleMicrophone}
+        >
           {microphoneEnabled ? (
-            <BiMicrophone onClick={toggleMicrophone} />
+            <BiMicrophone size={22} />
           ) : (
-            <BiMicrophoneOff onClick={toggleMicrophone} />
+            <BiMicrophoneOff size={22} />
           )}
-        </div>
-        <div>
-          <ImPhoneHangUp onClick={closeCall} />
-        </div>
-      </VideoContainerActionButtons>
-    </ConversationCallContainer>
+        </button>
+        <button
+          type="button"
+          className={classNames(styles.controlButton, styles.hangUpButton)}
+          title="Kết thúc"
+          onClick={closeCall}
+        >
+          <ImPhoneHangUp size={20} />
+        </button>
+      </div>
+    </div>
   );
 };

@@ -1,29 +1,19 @@
-import { FC, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { AppDispatch, RootState } from '../../store';
+import { FC, useContext } from "react";
+import { Crown, PersonCross } from "akar-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { AppDispatch, RootState } from "../../store";
 import {
   removeGroupRecipientThunk,
   selectGroupById,
   updateGroupOwnerThunk,
-} from '../../store/groupSlice';
-import { AuthContext } from '../../utils/context/AuthContext';
-import { getUserContextMenuIcon, isGroupOwner } from '../../utils/helpers';
-import { ContextMenu, ContextMenuItem } from '../../utils/styles';
-import { UserContextMenuActionType } from '../../utils/types';
-import { Person, PersonCross, Crown } from 'akar-icons';
+} from "../../store/groupSlice";
+import { AuthContext } from "../../utils/context/AuthContext";
+import { isGroupOwner } from "../../utils/helpers";
+import { ContextMenu, ContextMenuItem } from "../common/ContextMenu";
 
 type Props = {
   points: { x: number; y: number };
-};
-
-type CustomIconProps = {
-  type: UserContextMenuActionType;
-};
-
-export const CustomIcon: FC<CustomIconProps> = ({ type }) => {
-  const { icon: MyIcon, color } = getUserContextMenuIcon(type);
-  return <MyIcon size={20} color={color} />;
 };
 
 export const SelectedParticipantContextMenu: FC<Props> = ({ points }) => {
@@ -37,46 +27,39 @@ export const SelectedParticipantContextMenu: FC<Props> = ({ points }) => {
     selectGroupById(state, parseInt(id!))
   );
 
+  const canManage = isGroupOwner(user, group) && user?.id !== selectedUser?.id;
+
   const kickUser = () => {
-    console.log(`Kicking User: ${selectedUser?.id}`);
-    console.log(selectedUser);
     if (!selectedUser) return;
     dispatch(
-      removeGroupRecipientThunk({
-        id: parseInt(id!),
-        userId: selectedUser.id,
-      })
+      removeGroupRecipientThunk({ id: parseInt(id!), userId: selectedUser.id })
     );
   };
 
   const transferGroupOwner = () => {
-    console.log(`Transfering Group Owner to ${selectedUser?.id}`);
     if (!selectedUser) return;
     dispatch(
       updateGroupOwnerThunk({ id: parseInt(id!), newOwnerId: selectedUser.id })
     );
   };
 
-  const isOwner = isGroupOwner(user, group);
+  if (!canManage) return null;
 
   return (
     <ContextMenu top={points.y} left={points.x}>
-      <ContextMenuItem>
-        <Person size={20} color="#7c7c7c" />
-        <span style={{ color: '#7c7c7c' }}>Profile</span>
+      <ContextMenuItem
+        icon={<Crown size={18} color="var(--zl-gold)" />}
+        onClick={transferGroupOwner}
+      >
+        Chuyển quyền trưởng nhóm
       </ContextMenuItem>
-      {isOwner && user?.id !== selectedUser?.id && (
-        <>
-          <ContextMenuItem onClick={kickUser}>
-            <PersonCross size={20} color="#ff0000" />
-            <span style={{ color: '#ff0000' }}>Kick User</span>
-          </ContextMenuItem>
-          <ContextMenuItem onClick={transferGroupOwner}>
-            <Crown size={20} color="#FFB800" />
-            <span style={{ color: '#FFB800' }}>Transfer Owner</span>
-          </ContextMenuItem>
-        </>
-      )}
+      <ContextMenuItem
+        icon={<PersonCross size={18} />}
+        danger
+        onClick={kickUser}
+      >
+        Xoá khỏi nhóm
+      </ContextMenuItem>
     </ContextMenu>
   );
 };

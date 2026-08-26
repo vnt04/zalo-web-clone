@@ -7,20 +7,25 @@ import {
   setSelectedGroup,
   toggleContextMenu,
 } from "../../store/groupSlice";
-import { ScrollableContainer } from "../../utils/styles";
 import { ContextMenuEvent, Group } from "../../utils/types";
 import { GroupSidebarContextMenu } from "../context-menus/GroupSidebarContextMenu";
 import { ConversationSidebarItem } from "../conversations/ConversationSidebarItem";
 import { GroupSidebarItem } from "../groups/GroupSidebarItem";
 import { CreateConversationModal } from "../modals/CreateConversationModal";
 import { CreateGroupModal } from "../modals/CreateGroupModal";
-import { SidebarHeader, SidebarStyle } from "../common/Sidebar";
+import {
+  ScrollableContainer,
+  SidebarHeader,
+  SidebarStyle,
+} from "../common/Sidebar";
 import { SearchBox } from "../common/Search";
 import styles from "./index.module.scss";
 import classNames from "classnames";
 
 export const ConversationSidebar = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [showNewConversationModal, setShowNewConversationModal] =
+    useState(false);
+  const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [unreadOnly, setUnreadOnly] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const conversations = useSelector(
@@ -40,8 +45,6 @@ export const ConversationSidebar = () => {
 
   const onGroupContextMenu = (event: ContextMenuEvent, group: Group) => {
     event.preventDefault();
-    console.log("Group Context Menu");
-    console.log(group);
     dispatch(toggleContextMenu(true));
     dispatch(setContextMenuLocation({ x: event.pageX, y: event.pageY }));
     dispatch(setSelectedGroup(group));
@@ -61,39 +64,26 @@ export const ConversationSidebar = () => {
 
   return (
     <>
-      {showModal && conversationType === "private" && (
-        <CreateConversationModal setShowModal={setShowModal} />
+      {showNewConversationModal && (
+        <CreateConversationModal setShowModal={setShowNewConversationModal} />
       )}
-      {showModal && conversationType === "group" && (
-        <CreateGroupModal setShowModal={setShowModal} />
+      {showCreateGroupModal && (
+        <CreateGroupModal setShowModal={setShowCreateGroupModal} />
       )}
       <SidebarStyle>
         <SidebarHeader>
           <SearchBox placeholder="Tìm kiếm" />
-          {/* {conversationType === "private" ? (
-            <AiOutlineUserAdd
-              size={30}
-              cursor="pointer"
-              onClick={() => setShowModal(true)}
-            />
-          ) : (
-            <AiOutlineUsergroupAdd
-              size={30}
-              cursor="pointer"
-              onClick={() => setShowModal(true)}
-            />
-          )} */}
           <button
             className={styles.headerAction}
-            title="Thêm bạn"
-            onClick={() => setShowModal(true)}
+            title="Tin nhắn mới"
+            onClick={() => setShowNewConversationModal(true)}
           >
             <AiOutlineUserAdd size={20} />
           </button>
           <button
             className={styles.headerAction}
             title="Tạo nhóm chat"
-            onClick={() => setShowModal(true)}
+            onClick={() => setShowCreateGroupModal(true)}
           >
             <AiOutlineUsergroupAdd size={20} />
           </button>

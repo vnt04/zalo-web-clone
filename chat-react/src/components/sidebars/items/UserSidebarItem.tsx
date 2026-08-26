@@ -21,15 +21,11 @@ export const UserSidebarItem: FC<Props> = ({ item }) => {
   const ICON_SIZE = 24;
   const STROKE_WIDTH = 2;
 
-  const isActive = () => {
-    if (pathname.includes("/groups") && item.id === "conversations")
-      return true;
-    return pathname.includes(item.pathname);
-  };
+  const isActive = pathname.startsWith(item.pathname);
   return (
     <UserSidebarItemStyle
       onClick={() => navigate(item.pathname)}
-      active={isActive()}
+      active={isActive}
     >
       <Icon
         size={ICON_SIZE}

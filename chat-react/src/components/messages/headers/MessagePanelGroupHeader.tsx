@@ -20,12 +20,7 @@ export const MessagePanelGroupHeader = () => {
   const dispatch = useDispatch<AppDispatch>();
   return (
     <>
-      {showModal && (
-        <AddGroupRecipientModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-        />
-      )}
+      {showModal && <AddGroupRecipientModal setShowModal={setShowModal} />}
       <MessagePanelHeaderStyle>
         <div className={styles.messagePanelHeader}>
           <span className={styles.headerName}>{group?.title || 'Group'}</span>

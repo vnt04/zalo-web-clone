@@ -40,7 +40,7 @@
 }
 
 .hr {
-  background-color: #242424;
+  background-color: var(--zl-line);
   height: 1px;
   border: none;
   width: 85%;
@@ -125,7 +125,7 @@
   padding: 0 5px;
   box-sizing: border-box;
   border-radius: 9px;
-  background-color: #ff4444;
+  background-color: var(--zl-badge);
   color: #ffffff;
   font-size: 11px;
   font-weight: 600;
@@ -155,7 +155,7 @@
 }
 
 .pinButton:hover {
-  background-color: #dfe2e7;
+  background-color: var(--zl-fill-hover);
   color: var(--zl-text);
 }
 
@@ -175,7 +175,7 @@
   flex: 0 0 344px;
   height: 100%;
   box-sizing: border-box;
-  background-color: #ffffff;
+  background-color: var(--zl-bg);
   border-left: 1px solid var(--zl-line);
 }
 

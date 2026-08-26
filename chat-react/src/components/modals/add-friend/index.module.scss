@@ -1,0 +1,68 @@
+@use "../../../utils/styles/zalo" as zl;
+
+// Chiều cao cố định để danh sách kết quả không làm popup nhảy khi tìm kiếm.
+.addFriendBody {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-height: 500px;
+  margin: 0;
+  padding: 16px;
+}
+
+.phoneRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.dialCodeField {
+  @include zl.field;
+  width: 110px;
+}
+
+.flag {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.dialCodeSelect {
+  @include zl.input;
+  appearance: none;
+  cursor: pointer;
+}
+
+.dialCodeCaret {
+  flex-shrink: 0;
+  color: var(--zl-blue);
+  pointer-events: none;
+}
+
+// Ô số điện thoại luôn gạch chân xanh, kể cả khi chưa focus — theo đúng Zalo.
+.phoneField {
+  @include zl.field;
+  flex: 1;
+  min-width: 0;
+  border-bottom-color: var(--zl-blue);
+}
+
+.phoneInput {
+  @include zl.input;
+}
+
+.section {
+  margin-top: 20px;
+}
+
+.sectionTitle {
+  @include zl.section-title;
+}
+
+.emptyState {
+  @include zl.empty-state;
+}
+
+.addFriendAction {
+  @include zl.button-outline;
+}

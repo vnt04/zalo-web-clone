@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Socket } from "socket.io-client";
 import { AuthenticatedRoute } from "./components/AuthenticatedRoute";
 import { ConversationChannelPage } from "./pages/conversations/ConversationChannelPage";
@@ -21,6 +21,7 @@ import "./utils/styles/toast.scss";
 import { ConversationPageGuard } from "./guards/ConversationPageGuard";
 import { GroupPageGuard } from "./guards/GroupPageGuard";
 import { FriendsLayoutPage } from "./pages/friends/FriendsLayoutPage";
+import { BlockedPage } from "./pages/friends/BlockedPage";
 import { FriendRequestPage } from "./pages/friends/FriendRequestPage";
 import { SettingsPage } from "./pages/settings/SettingsPage";
 import { SettingsProfilePage } from "./pages/settings/SettingsProfilePage";
@@ -76,13 +77,15 @@ function App() {
           </Route>
           <Route path="friends" element={<FriendsLayoutPage />}>
             <Route path="requests" element={<FriendRequestPage />} />
-            <Route path="blocked" element={<div>Blocked</div>} />
+            <Route path="blocked" element={<BlockedPage />} />
           </Route>
           <Route path="settings" element={<SettingsPage />}>
+            <Route index element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<SettingsProfilePage />} />
             <Route path="appearance" element={<SettingsAppearancePage />} />
           </Route>
           <Route path="calls" element={<CallsPage />}>
+            <Route index element={<CurrentCallPage />} />
             <Route path="current" element={<CurrentCallPage />} />
           </Route>
         </Route>

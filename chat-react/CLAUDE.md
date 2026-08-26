@@ -32,7 +32,7 @@ src/
     helpers.ts
     context/      # AuthContext, SocketContext, MessageMenuContext
     hooks/        # generic hooks + hooks/sockets/** for realtime listeners
-    styles/       # legacy styled-components
+    styles/       # _zalo.scss (mixin dùng chung) + toast.scss
 ```
 
 Providers are composed once in `App.tsx`: Redux `store` → `AuthContext` → `SocketContext`. Routes are declared there too.
@@ -76,11 +76,18 @@ it — never register the same listener in two places, `socket.off(name)` remove
 
 Named exports, `React.FC<Props>` with a local `type Props = {...}`, one component per file, PascalCase filenames.
 
-Two styling systems coexist:
-- **SCSS Modules** — `index.module.scss` per component folder, imported as `import styles from "./index.module.scss"`.
-  This is the pattern for new UI.
-- **styled-components** — older shared primitives in `utils/styles/`. Still used by existing screens; leave them alone
-  unless the task is specifically to migrate.
+SCSS Modules only — `index.module.scss` per component folder, imported as `import styles from "./index.module.scss"`.
+Shared visual language lives in the mixin partial `utils/styles/_zalo.scss` (`@use "…/styles/zalo" as zl;` then
+`@include zl.button-primary;` etc.): panel, field, input, search-field, the four button kinds, avatar, menu-item, tab,
+scrollbar, truncate. Reach for a mixin before writing new rules — that is what keeps popups, lists and menus consistent.
+
+Colours are **always** `var(--zl-*)` from `src/index.css`, never literal hex. Dark mode only overrides those variables
+under `:root[data-theme="dark"]`, so a hardcoded colour silently breaks the dark theme. The two exceptions on purpose:
+the theme preview swatches in `components/settings/index.module.scss` and the always-dark call stage in
+`components/calls/index.module.scss`.
+
+Shared building blocks worth reusing instead of rebuilding: `common/Modal/ZaloModal` (popup shell + footer buttons),
+`common/UserRow` (avatar + name + subtitle + online dot + trailing action), `common/ContextMenu`, `common/Page`.
 
 Icons come from `react-icons` and `akar-icons`; toasts from the `useToast` hook, not `react-toastify` directly.
 

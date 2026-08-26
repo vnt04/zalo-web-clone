@@ -1,0 +1,29 @@
+@use "../../../utils/styles/zalo" as zl;
+
+.contextMenu {
+  @include zl.panel;
+  position: fixed;
+  z-index: 99;
+  box-sizing: border-box;
+  min-width: 180px;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+
+.contextMenuItem {
+  @include zl.menu-item;
+
+  svg {
+    flex-shrink: 0;
+    color: var(--zl-text-muted);
+  }
+}
+
+.danger {
+  color: var(--zl-danger);
+
+  svg {
+    color: var(--zl-danger);
+  }
+}

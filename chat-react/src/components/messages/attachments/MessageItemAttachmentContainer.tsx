@@ -1,48 +1,51 @@
 import { FC, useState } from "react";
+import { MdClose } from "react-icons/md";
 import { CDN_URL } from "../../../utils/constants";
 import { useKeydown } from "../../../utils/hooks";
 import { GroupMessageType, MessageType } from "../../../utils/types";
 import styles from "./index.module.scss";
-import { OverlayStyle } from "../../common/Modal";
-import { CloseButton } from "../../common/Button";
 
 type Props = {
   message: MessageType | GroupMessageType;
 };
+
 export const MessageItemAttachmentContainer: FC<Props> = ({ message }) => {
-  const [showOverlay, setShowOverlay] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
 
-  const onClick = (key: string) => {
-    setShowOverlay(true);
-    setImageUrl(CDN_URL.ORIGINAL.concat(key));
-  };
-
-  const handleKeydown = (e: KeyboardEvent) =>
-    e.key === "Escape" && setShowOverlay(false);
-  useKeydown(handleKeydown);
+  useKeydown((e: KeyboardEvent) => e.key === "Escape" && setImageUrl(""));
 
   return (
     <>
-      {showOverlay && (
-        <OverlayStyle>
-          <CloseButton
-            className={styles.closeIcon}
-            onClick={() => setShowOverlay(false)}
-          />
-          <img src={imageUrl} alt="overlay" style={{ maxHeight: "90%" }} />
-        </OverlayStyle>
+      {imageUrl && (
+        <div
+          className={styles.lightbox}
+          role="dialog"
+          aria-label="Xem ảnh"
+          onMouseDown={(e) => e.target === e.currentTarget && setImageUrl("")}
+        >
+          <button
+            type="button"
+            className={styles.lightboxClose}
+            aria-label="Đóng"
+            onClick={() => setImageUrl("")}
+          >
+            <MdClose size={24} />
+          </button>
+          <img className={styles.lightboxImage} src={imageUrl} alt="" />
+        </div>
       )}
-      <div>
+      <div className={styles.attachmentGrid}>
         {message.attachments?.map((attachment) => (
-          <img
+          <button
+            type="button"
             key={attachment.key}
-            src={CDN_URL.PREVIEW.concat(attachment.key)}
-            width={300}
-            alt={attachment.key}
-            onClick={() => onClick(attachment.key)}
-            style={{ cursor: "pointer" }}
-          />
+            className={styles.attachmentThumb}
+            onClick={() =>
+              setImageUrl(CDN_URL.ORIGINAL.concat(attachment.key))
+            }
+          >
+            <img src={CDN_URL.PREVIEW.concat(attachment.key)} alt="" />
+          </button>
         ))}
       </div>
     </>

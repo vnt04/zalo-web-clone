@@ -1,25 +1,58 @@
-.groupName {
-  display: block;
-  font-weight: bold;
-  font-size: 16px;
-}
+@use "../../utils/styles/zalo" as zl;
 
-.groupLastMessage {
-  font-size: 14px;
-  color: rgb(163, 163, 163);
-}
 .groupAvatar {
-  height: 56px;
-  width: 56px;
-  border-radius: 50%;
+  @include zl.avatar(48px);
 }
 
 .defaultGroupAvatar {
-  background-color: rgb(36, 36, 36);
-  height: 56px;
-  width: 56px;
-  border-radius: 50%;
+  @include zl.avatar(48px);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background-color: var(--zl-blue-pale);
+  color: var(--zl-blue);
+}
+
+// ── Thanh bên thành viên nhóm ─────────────────────────────────────────
+
+.recipientsSidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 300px;
+  height: 100%;
+  border-left: 1px solid var(--zl-line);
+  background-color: var(--zl-bg);
+}
+
+.recipientsHeader {
+  padding: 16px;
+  border-bottom: 1px solid var(--zl-line);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--zl-text);
+}
+
+.recipientsBody {
+  @include zl.scrollbar;
+  flex: 1;
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.groupTitle {
+  margin: 12px 0 4px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--zl-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.ownerBadge {
+  display: flex;
+  flex-shrink: 0;
+  padding-right: 8px;
+  color: var(--zl-gold);
 }

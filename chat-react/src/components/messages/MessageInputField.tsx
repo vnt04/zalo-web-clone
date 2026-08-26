@@ -1,5 +1,4 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
-import { CharacterLimit } from "../../utils/styles";
 import { MessageTextField } from "../inputs/MessageTextField";
 import styles from "./index.module.scss";
 import { BsCardText, BsEmojiSmile, BsLightningCharge } from "react-icons/bs";
@@ -121,9 +120,9 @@ export const MessageInputField: FC<Props> = ({
       </MessageInputBody>
 
       {atMaxLength && (
-        <CharacterLimit atMaxLength={atMaxLength}>
+        <span className={styles.characterLimit}>
           {`${content.length}/${MAX_LENGTH}`}
-        </CharacterLimit>
+        </span>
       )}
     </MessageInputContainer>
   );

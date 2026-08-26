@@ -1,10 +1,18 @@
-import { useDispatch } from "react-redux";
+import classNames from "classnames";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
 import { setTheme } from "../../store/settings/settingsSlice";
-import { Page } from "../../utils/styles";
 import { SelectableTheme } from "../../utils/types";
+import styles from "../../components/settings/index.module.scss";
+
+const THEMES: { value: SelectableTheme; label: string; swatch: string }[] = [
+  { value: "light", label: "Sáng", swatch: styles.themeSwatchLight },
+  { value: "dark", label: "Tối", swatch: styles.themeSwatchDark },
+];
 
 export const SettingsAppearancePage = () => {
   const dispatch = useDispatch();
+  const currentTheme = useSelector((state: RootState) => state.settings.theme);
 
   const handleThemeChange = (theme: SelectableTheme) => {
     dispatch(setTheme(theme));
@@ -12,26 +20,20 @@ export const SettingsAppearancePage = () => {
   };
 
   return (
-    <Page>
-      <div>
-        <span>Theme</span>
-        <form>
-          <input
-            type="radio"
-            id="dark"
-            name="theme"
-            onChange={() => handleThemeChange("dark")}
-          />
-          <label htmlFor="dark">Dark</label>
-          <input
-            type="radio"
-            id="light"
-            name="theme"
-            onChange={() => handleThemeChange("light")}
-          />
-          <label htmlFor="light">Light</label>
-        </form>
-      </div>
-    </Page>
+    <div className={styles.themeList}>
+      {THEMES.map((theme) => (
+        <button
+          type="button"
+          key={theme.value}
+          className={classNames(styles.themeOption, {
+            [styles.themeOptionActive]: currentTheme === theme.value,
+          })}
+          onClick={() => handleThemeChange(theme.value)}
+        >
+          <span className={classNames(styles.themeSwatch, theme.swatch)} />
+          {theme.label}
+        </button>
+      ))}
+    </div>
   );
 };

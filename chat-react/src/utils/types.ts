@@ -258,6 +258,7 @@ export type AcceptFriendRequestResponse = {
 
 export type UserSidebarRouteType =
   | "conversations"
+  | "groups"
   | "friends"
   | "settings"
   | "calls";

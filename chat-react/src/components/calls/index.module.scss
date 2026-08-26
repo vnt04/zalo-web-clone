@@ -1,0 +1,206 @@
+@use "../../utils/styles/zalo" as zl;
+
+.callsSidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: 320px;
+  height: 100%;
+  border-right: 1px solid var(--zl-line);
+  background-color: var(--zl-bg);
+}
+
+.sidebarHeader {
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--zl-text);
+}
+
+.friendList {
+  @include zl.scrollbar;
+  flex: 1;
+  padding: 0 8px 16px;
+  overflow-y: auto;
+}
+
+.callActions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 4px;
+}
+
+.callAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--zl-blue);
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--zl-blue-pale);
+  }
+}
+
+.emptyState {
+  @include zl.empty-state;
+  padding: 16px;
+}
+
+// ── Màn hình cuộc gọi đang diễn ra ────────────────────────────────────
+
+.callStage {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  background-color: #1b1e23;
+}
+
+.mediaArea {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 0;
+  padding: 24px;
+
+  video {
+    max-width: 48%;
+    max-height: 100%;
+    border-radius: 12px;
+    background-color: #000;
+  }
+
+  audio {
+    width: 280px;
+  }
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.24);
+  }
+}
+
+.hangUpButton {
+  background-color: var(--zl-danger);
+
+  &:hover {
+    background-color: #b8272f;
+  }
+}
+
+.callPlaceholder {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: var(--zl-chat-bg);
+  font-size: 15px;
+  color: var(--zl-text-muted);
+}
+
+// ── Hộp thoại cuộc gọi đến ────────────────────────────────────────────
+
+.receiveDialog {
+  @include zl.panel;
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 320px;
+  padding: 16px;
+}
+
+.receiveAvatar {
+  @include zl.avatar(48px);
+}
+
+.receiveText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.receiveName {
+  @include zl.truncate;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--zl-text);
+}
+
+.receiveSubtitle {
+  font-size: 13px;
+  color: var(--zl-text-muted);
+}
+
+.receiveActions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.acceptCall,
+.rejectCall {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+}
+
+.acceptCall {
+  background-color: var(--zl-online);
+
+  &:hover {
+    background-color: #2ba84a;
+  }
+}
+
+.rejectCall {
+  background-color: var(--zl-danger);
+
+  &:hover {
+    background-color: #b8272f;
+  }
+}

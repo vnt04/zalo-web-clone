@@ -1,3 +1,9 @@
+import styles from "../../components/calls/index.module.scss";
+
 export const CurrentCallPage = () => {
-  return <div>Current Call</div>;
+  return (
+    <div className={styles.callPlaceholder}>
+      Chọn một người bạn để bắt đầu cuộc gọi.
+    </div>
+  );
 };

@@ -6,16 +6,13 @@ import { AppDispatch, RootState } from '../store';
 import { removeFriendRequest } from '../store/friends/friendsSlice';
 import { SocketContext } from '../utils/context/SocketContext';
 import { useToast } from '../utils/hooks/useToast';
-import { LayoutPage } from '../utils/styles';
 import {
   AcceptFriendRequestResponse,
   FriendRequest,
-  SelectableTheme,
 } from '../utils/types';
 import { BsFillPersonCheckFill } from 'react-icons/bs';
 import { fetchFriendRequestThunk } from '../store/friends/friendsThunk';
-import { ThemeProvider } from 'styled-components';
-import { DarkTheme, LightTheme } from '../utils/themes';
+import styles from './index.module.scss';
 import Peer from 'peerjs';
 import { AuthContext } from '../utils/context/AuthContext';
 import {
@@ -44,7 +41,12 @@ export const AppPage = () => {
     useSelector((state: RootState) => state.call);
   const { info } = useToast({ theme: 'dark' });
   const { theme } = useSelector((state: RootState) => state.settings);
-  const storageTheme = localStorage.getItem('theme') as SelectableTheme;
+
+  // Chế độ tối đổi bảng --zl-* bằng thuộc tính trên <html>, xem src/index.css.
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
+
   useEffect(() => {
     dispatch(fetchFriendRequestThunk());
   }, [dispatch]);
@@ -178,22 +180,12 @@ export const AppPage = () => {
   }, [connection]);
 
   return (
-    <ThemeProvider
-      theme={
-        storageTheme
-          ? storageTheme === 'dark'
-            ? DarkTheme
-            : LightTheme
-          : theme === 'dark'
-          ? DarkTheme
-          : LightTheme
-      }
-    >
+    <>
       {isReceivingCall && caller && <CallReceiveDialog />}
-      <LayoutPage>
+      <div className={styles.layout}>
         <UserSidebar />
         <Outlet />
-      </LayoutPage>
-    </ThemeProvider>
+      </div>
+    </>
   );
 };

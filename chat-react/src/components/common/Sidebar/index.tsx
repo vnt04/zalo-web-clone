@@ -65,6 +65,21 @@ export const UserAvatarContainer: React.FC<UserAvatarProps> = ({
   );
 };
 
+export const ScrollableContainer: React.FC<SidebarProps> = ({
+  className,
+  children,
+  ...props
+}) => {
+  return (
+    <div
+      className={classNames(styles.scrollableContainer, className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const UserSidebarScrollableContainer: React.FC<SidebarProps> = ({
   className,
   children,

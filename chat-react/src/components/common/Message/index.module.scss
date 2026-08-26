@@ -15,7 +15,7 @@
   box-sizing: border-box;
   width: 100%;
   flex-shrink: 0;
-  background-color: #ffffff;
+  background-color: var(--zl-bg);
   border-bottom: 1px solid var(--zl-line);
   display: flex;
   align-items: center;
@@ -83,7 +83,7 @@
   font-size: 15px;
   line-height: 20px;
   color: var(--zl-text);
-  background-color: #ffffff;
+  background-color: var(--zl-bg);
   box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
 
   &.isOwnerMessage {
@@ -131,9 +131,10 @@
 .messageTextarea {
   outline: none;
   border: none;
+  background: transparent;
   font-size: 15px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  // color: var(--text);
+  color: var(--zl-text);
   box-sizing: border-box;
   width: 100%;
   padding: 0;
@@ -142,6 +143,10 @@
   height: 20px;
   max-height: 200px;
   flex: 0 0 auto;
+
+  &::placeholder {
+    color: var(--zl-text-muted);
+  }
 
   &::-webkit-scrollbar {
     display: none;

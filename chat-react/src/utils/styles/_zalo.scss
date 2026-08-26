@@ -1,0 +1,238 @@
+// Ngôn ngữ giao diện Zalo dùng chung cho toàn app: popup, danh sách, menu chuột
+// phải, tab. Màu lấy từ biến --zl-* trong src/index.css để đổi theme một chỗ.
+// Hai màn xác thực có partial riêng (components/forms/_authForm.scss) vì chúng
+// dựng trước và có kiểu nút bo tròn khác.
+
+@mixin panel {
+  border-radius: 8px;
+  background-color: var(--zl-bg-raised);
+  box-shadow: 0 4px 24px var(--zl-shadow);
+}
+
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: var(--zl-scroll-thumb);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+// Ô nhập gạch chân. Đặt lên phần tử bọc; input bên trong dùng @include input.
+@mixin field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--zl-line);
+
+  &:focus-within {
+    border-bottom-color: var(--zl-blue);
+  }
+}
+
+@mixin input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: none;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--zl-text);
+
+  &::placeholder {
+    color: var(--zl-text-muted);
+  }
+}
+
+// Ô tìm kiếm nền xám bo tròn — kiểu ở đầu danh sách hội thoại của Zalo.
+@mixin search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background-color: var(--zl-surface);
+  color: var(--zl-text-muted);
+
+  &:focus-within {
+    border-color: var(--zl-blue);
+    background-color: var(--zl-bg);
+  }
+}
+
+@mixin button-base {
+  box-sizing: border-box;
+  height: 36px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+@mixin button-primary {
+  @include button-base;
+  background-color: var(--zl-blue);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background-color: var(--zl-blue-dark);
+  }
+
+  &:disabled {
+    background-color: var(--zl-blue-muted);
+    cursor: default;
+  }
+}
+
+@mixin button-secondary {
+  @include button-base;
+  background-color: var(--zl-fill);
+  color: var(--zl-text);
+
+  &:hover:not(:disabled) {
+    background-color: var(--zl-fill-hover);
+  }
+
+  &:disabled {
+    color: var(--zl-text-muted);
+    cursor: default;
+  }
+}
+
+// Nút viền xanh cỡ nhỏ nằm cuối dòng danh sách ("Kết bạn", "Thu hồi"...).
+@mixin button-outline {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--zl-blue);
+  border-radius: 4px;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--zl-blue);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--zl-blue-pale);
+  }
+
+  &:disabled {
+    border-color: var(--zl-line);
+    background: none;
+    color: var(--zl-text-muted);
+    cursor: default;
+  }
+}
+
+// Nút xám cỡ nhỏ đi kèm nút viền xanh trong cùng một dòng.
+@mixin button-subtle {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  height: 32px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--zl-surface);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--zl-text);
+  cursor: pointer;
+  transition: background-color 150ms ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--zl-fill-hover);
+  }
+}
+
+@mixin avatar($size: 40px) {
+  flex-shrink: 0;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--zl-surface);
+}
+
+@mixin section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--zl-text-muted);
+}
+
+@mixin empty-state {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: var(--zl-text-muted);
+}
+
+// Một dòng menu chuột phải / danh sách chọn.
+@mixin menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--zl-text);
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--zl-hover);
+  }
+}
+
+@mixin tab {
+  padding: 12px 4px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--zl-text-muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--zl-text);
+  }
+}
+
+@mixin tab-active {
+  border-bottom-color: var(--zl-blue);
+  color: var(--zl-blue);
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

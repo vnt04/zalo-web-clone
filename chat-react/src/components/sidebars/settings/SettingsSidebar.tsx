@@ -1,22 +1,14 @@
-import { settingsItems } from '../../../utils/constants';
-import {
-  SettingsSidebarHeader,
-  SettingsSidebarItemContainer,
-  SettingsSidebarStyle,
-} from '../../../utils/styles/settings';
-import { SettingsSidebarItem } from '../items/SettingsSidebarItem';
+import { settingsItems } from "../../../utils/constants";
+import { SettingsSidebarItem } from "../items/SettingsSidebarItem";
+import styles from "../../settings/index.module.scss";
 
 export const SettingsSidebar = () => {
   return (
-    <SettingsSidebarStyle>
-      <SettingsSidebarHeader>
-        <span>Settings</span>
-      </SettingsSidebarHeader>
-      <SettingsSidebarItemContainer>
-        {settingsItems.map((item) => (
-          <SettingsSidebarItem key={item.id} item={item} />
-        ))}
-      </SettingsSidebarItemContainer>
-    </SettingsSidebarStyle>
+    <aside className={styles.sidebar}>
+      <div className={styles.sidebarHeader}>Cài đặt</div>
+      {settingsItems.map((item) => (
+        <SettingsSidebarItem key={item.id} item={item} />
+      ))}
+    </aside>
   );
 };

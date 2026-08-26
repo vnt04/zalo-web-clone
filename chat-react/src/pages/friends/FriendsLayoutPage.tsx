@@ -1,15 +1,16 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { FriendPageNavbar } from '../../components/navbar/FriendsPageNavbar';
-import { FriendsPageStyle } from '../../utils/styles/friends';
-import { FriendsPage } from './FriendsPage';
+import { Outlet, useLocation } from "react-router-dom";
+import { FriendPageNavbar } from "../../components/navbar/FriendsPageNavbar";
+import styles from "../../components/friends/index.module.scss";
+import { FriendsPage } from "./FriendsPage";
 
 export const FriendsLayoutPage = () => {
   const { pathname } = useLocation();
+
   return (
-    <FriendsPageStyle>
+    <div className={styles.friendsPage}>
       <FriendPageNavbar />
-      {pathname === '/friends' && <FriendsPage />}
+      {pathname === "/friends" && <FriendsPage />}
       <Outlet />
-    </FriendsPageStyle>
+    </div>
   );
 };

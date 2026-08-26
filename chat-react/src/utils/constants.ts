@@ -40,17 +40,17 @@ export const userContextMenuItems: ContextMenuItemType[] = [
 export const friendsNavbarItems = [
   {
     id: 'friends',
-    label: 'Friends',
+    label: 'Bạn bè',
     pathname: '/friends',
   },
   {
     id: 'requests',
-    label: 'Requests',
+    label: 'Lời mời kết bạn',
     pathname: '/friends/requests',
   },
   {
     id: 'blocked',
-    label: 'Blocked',
+    label: 'Đã chặn',
     pathname: '/friends/blocked',
   },
 ];
@@ -59,6 +59,11 @@ export const userSidebarItems: UserSidebarItemType[] = [
   {
     id: 'conversations',
     pathname: '/conversations',
+    group: 'primary',
+  },
+  {
+    id: 'groups',
+    pathname: '/groups',
     group: 'primary',
   },
   {
@@ -79,29 +84,16 @@ export const userSidebarItems: UserSidebarItemType[] = [
 ];
 
 export const settingsItems: SettingsItemType[] = [
+  // Chỉ liệt kê mục đã có route trong App.tsx — security/notifications/integrations
+  // chưa có màn hình nào nên bỏ ra, bấm vào chỉ ra vùng trắng.
   {
     id: 'profile',
-    label: 'Profile',
+    label: 'Thông tin tài khoản',
     pathname: '/settings/profile',
   },
   {
-    id: 'security',
-    label: 'Security',
-    pathname: '/settings/security',
-  },
-  {
-    id: 'notifications',
-    label: 'Notifications',
-    pathname: '/settings/notifications',
-  },
-  {
-    id: 'integrations',
-    label: 'Integrations',
-    pathname: '/settings/integrations',
-  },
-  {
     id: 'appearance',
-    label: 'Appearance',
+    label: 'Giao diện',
     pathname: '/settings/appearance',
   },
 ];
@@ -129,3 +121,21 @@ export enum WebsocketEvents {
   VOICE_CALL_REJECTED = 'onVoiceCallRejected',
   VIDEO_CALL_REJECTED = 'onVideoCallRejected',
 }
+
+export type CountryDialCode = {
+  code: string;
+  name: string;
+  dialCode: string;
+  flag: string;
+};
+
+// normalizePhone ở API (chat-nestjs/src/utils/phone.ts) chỉ chấp nhận đầu số di
+// động Việt Nam, nên thêm quốc gia ở đây phải sửa kèm bên đó.
+export const COUNTRY_DIAL_CODES: CountryDialCode[] = [
+  {
+    code: 'VN',
+    name: 'Việt Nam',
+    dialCode: '84',
+    flag: '🇻🇳',
+  },
+];

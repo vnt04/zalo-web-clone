@@ -1,14 +1,15 @@
-import { useContext } from 'react';
-import { MdPersonRemove, MdOutlineTextsms } from 'react-icons/md';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { AppDispatch, RootState } from '../../store';
-import { toggleContextMenu } from '../../store/friends/friendsSlice';
-import { removeFriendThunk } from '../../store/friends/friendsThunk';
-import { checkConversationOrCreate } from '../../utils/api';
-import { AuthContext } from '../../utils/context/AuthContext';
-import { SocketContext } from '../../utils/context/SocketContext';
-import { ContextMenu, ContextMenuItem } from '../../utils/styles';
+import { useContext } from "react";
+import { MdOutlineTextsms, MdPersonRemove } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch, RootState } from "../../store";
+import { toggleContextMenu } from "../../store/friends/friendsSlice";
+import { removeFriendThunk } from "../../store/friends/friendsThunk";
+import { checkConversationOrCreate } from "../../utils/api";
+import { AuthContext } from "../../utils/context/AuthContext";
+import { SocketContext } from "../../utils/context/SocketContext";
+import { useToast } from "../../utils/hooks/useToast";
+import { ContextMenu, ContextMenuItem } from "../common/ContextMenu";
 
 export const FriendContextMenu = () => {
   const { user } = useContext(AuthContext);
@@ -18,8 +19,9 @@ export const FriendContextMenu = () => {
     (state: RootState) => state.friends
   );
   const socket = useContext(SocketContext);
+  const { error } = useToast();
 
-  const getUserFriendInstance = () =>
+  const peer =
     user?.id === selectedFriendContextMenu?.sender.id
       ? selectedFriendContextMenu?.receiver
       : selectedFriendContextMenu?.sender;
@@ -28,32 +30,31 @@ export const FriendContextMenu = () => {
     if (!selectedFriendContextMenu) return;
     dispatch(toggleContextMenu(false));
     dispatch(removeFriendThunk(selectedFriendContextMenu.id)).then(() =>
-      socket.emit('getOnlineFriends')
+      socket.emit("getOnlineFriends")
     );
   };
 
-  const sendMessage = () => {
-    const recipient = getUserFriendInstance();
-    recipient &&
-      checkConversationOrCreate(recipient.id)
-        .then(({ data }) => {
-          console.log(data);
-          navigate(`/conversations/${data.id}`);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+  const sendMessage = async () => {
+    if (!peer) return;
+    try {
+      const { data } = await checkConversationOrCreate(peer.id);
+      navigate(`/conversations/${data.id}`);
+    } catch {
+      error("Không mở được cuộc trò chuyện");
+    }
   };
 
   return (
     <ContextMenu top={points.y} left={points.x}>
-      <ContextMenuItem onClick={removeFriend}>
-        <MdPersonRemove size={20} color="#ff0000" />
-        <span style={{ color: '#ff0000' }}>Remove Friend</span>
+      <ContextMenuItem icon={<MdOutlineTextsms size={18} />} onClick={sendMessage}>
+        Nhắn tin
       </ContextMenuItem>
-      <ContextMenuItem onClick={sendMessage}>
-        <MdOutlineTextsms size={20} color="#fff" />
-        <span style={{ color: '#fff' }}>Message</span>
+      <ContextMenuItem
+        icon={<MdPersonRemove size={18} />}
+        danger
+        onClick={removeFriend}
+      >
+        Xoá bạn
       </ContextMenuItem>
     </ContextMenu>
   );

@@ -1,42 +1,36 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../../store';
-import {
-  MessageAttachmentContainerStyle,
-  MessageAttachmentStyle,
-} from '../../../utils/styles';
-import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { MessageImageCanvas } from './MessageImageCanvas';
-import { Attachment } from '../../../utils/types';
-import { removeAttachment } from '../../../store/message-panel/messagePanelSlice';
+import { MdClose } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store";
+import { removeAttachment } from "../../../store/message-panel/messagePanelSlice";
+import { Attachment } from "../../../utils/types";
+import messageStyles from "../index.module.scss";
+import { MessageImageCanvas } from "./MessageImageCanvas";
 
 export const MessageAttachmentContainer = () => {
   const { attachments } = useSelector((state: RootState) => state.messagePanel);
   const dispatch = useDispatch<AppDispatch>();
 
-  const onDeleteAttachment = (attachment: Attachment) => {
+  if (attachments.length === 0) return null;
+
+  const onDeleteAttachment = (attachment: Attachment) =>
     dispatch(removeAttachment(attachment));
-  };
 
   return (
-    <MessageAttachmentContainerStyle>
+    <div className={messageStyles.attachmentTray}>
       {attachments.map((attachment) => (
-        <MessageAttachmentStyle
-          key={attachment.id}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
+        <div className={messageStyles.attachmentItem} key={attachment.id}>
           <MessageImageCanvas file={attachment.file} />
-          <RiDeleteBin6Fill
-            color="red"
-            style={{ position: 'absolute', zIndex: 1, right: 15, top: 10 }}
-            size={30}
+          <button
+            type="button"
+            className={messageStyles.attachmentRemove}
+            aria-label={`Bỏ ${attachment.file.name}`}
             onClick={() => onDeleteAttachment(attachment)}
-          />
-          <div>{attachment.file.name}</div>
-        </MessageAttachmentStyle>
+          >
+            <MdClose size={14} />
+          </button>
+          <span>{attachment.file.name}</span>
+        </div>
       ))}
-    </MessageAttachmentContainerStyle>
+    </div>
   );
 };

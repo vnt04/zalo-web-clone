@@ -1,0 +1,119 @@
+@use "../../utils/styles/zalo" as zl;
+
+// Kiểu dùng chung cho các popup nhỏ. Popup "Thêm bạn" có file riêng vì nó khoá
+// chiều cao thân popup.
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 16px;
+}
+
+.searchField {
+  @include zl.search-field;
+  height: 36px;
+}
+
+.searchInput {
+  @include zl.input;
+  font-size: 14px;
+}
+
+.field {
+  @include zl.field;
+}
+
+.fieldInput {
+  @include zl.input;
+}
+
+.fieldLabel {
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--zl-text-muted);
+}
+
+.section {
+  margin-top: 20px;
+}
+
+.sectionTitle {
+  @include zl.section-title;
+}
+
+.emptyState {
+  @include zl.empty-state;
+}
+
+.resultList {
+  @include zl.scrollbar;
+  max-height: 280px;
+  margin-top: 4px;
+  overflow-y: auto;
+}
+
+.outlineAction {
+  @include zl.button-outline;
+}
+
+.subtleAction {
+  @include zl.button-subtle;
+}
+
+// Danh sách người đã chọn khi tạo nhóm / thêm thành viên.
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 4px;
+  border-radius: 16px;
+  background-color: var(--zl-blue-pale);
+  font-size: 13px;
+  color: var(--zl-text);
+}
+
+.chipAvatar {
+  @include zl.avatar(20px);
+}
+
+.chipRemove {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--zl-text-muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--zl-text);
+  }
+}
+
+// Ảnh đại diện nhóm ở popup đổi thông tin nhóm.
+.avatarUpload {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.avatarPreview {
+  @include zl.avatar(56px);
+}
+
+.avatarPick {
+  @include zl.button-subtle;
+}
+
+.hiddenFileInput {
+  display: none;
+}

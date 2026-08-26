@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { MessagePanel } from '../../components/messages/MessagePanel';
 import { SocketContext } from '../../utils/context/SocketContext';
-import { ConversationChannelPageStyle } from '../../utils/styles';
+import { ConversationChannelPageStyle } from '../../components/common/Conversation';
 import { AppDispatch, RootState } from '../../store';
 import {
   editGroupMessage,
@@ -33,13 +33,10 @@ export const GroupChannelPage = () => {
 
   useEffect(() => {
     const groupId = id!;
-    console.log(groupId);
     socket.emit('onGroupJoin', { groupId });
-    socket.on('onGroupMessageUpdate', (message: GroupMessageType) => {
-      console.log('onGroupMessageUpdate received');
-      console.log(message);
-      dispatch(editGroupMessage(message));
-    });
+    socket.on('onGroupMessageUpdate', (message: GroupMessageType) =>
+      dispatch(editGroupMessage(message))
+    );
     return () => {
       socket.emit('onGroupLeave', { groupId });
       socket.off('onGroupMessageUpdate');

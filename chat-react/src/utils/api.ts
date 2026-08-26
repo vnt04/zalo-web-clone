@@ -122,8 +122,9 @@ export const fetchGroupMessages = (id: number) =>
 export const postGroupMessage = ({ id, content }: CreateMessageParams) =>
   axiosClient.post(`/groups/${id}/messages`, { content }, config);
 
+// Không tìm thấy thì API trả về thân rỗng, nên phía gọi phải tự kiểm tra data.
 export const searchUsers = (query: string) =>
-  axiosClient.get<User>(`/users/search?query=${query}`, config);
+  axiosClient.get<User | null>(`/users/search?query=${query}`, config);
 
 export const createGroup = (params: CreateGroupParams) =>
   axiosClient.post(`/groups`, params, config);

@@ -1,30 +1,31 @@
-import { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { getSettingSidebarIcon } from '../../../utils/helpers';
-import { SettingsSidebarItemStyle } from '../../../utils/styles/settings';
-import { SettingsItemType } from '../../../utils/types';
+import { FC } from "react";
+import classNames from "classnames";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getSettingSidebarIcon } from "../../../utils/helpers";
+import { SettingsItemType } from "../../../utils/types";
+import styles from "../../settings/index.module.scss";
 
 type Props = {
   item: SettingsItemType;
 };
 
+const ICON_SIZE = 20;
+
 export const SettingsSidebarItem: FC<Props> = ({ item }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
   const Icon = getSettingSidebarIcon(item.id);
-  const ICON_SIZE = 30;
-  const STROKE_WIDTH = 2;
 
   return (
-    <SettingsSidebarItemStyle
+    <button
+      type="button"
+      className={classNames(styles.sidebarItem, {
+        [styles.sidebarItemActive]: pathname === item.pathname,
+      })}
       onClick={() => navigate(item.pathname)}
-      isActive={item.pathname === pathname}
     >
-      <div className="settingItem">
-        <Icon size={ICON_SIZE} strokeWidth={STROKE_WIDTH} />
-        <span>{item.label}</span>
-      </div>
-    </SettingsSidebarItemStyle>
+      <Icon size={ICON_SIZE} />
+      <span>{item.label}</span>
+    </button>
   );
 };

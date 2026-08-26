@@ -1,9 +1,9 @@
-import { LoginForm } from '../components/forms/login';
-import { Page } from '../utils/styles';
+import { LoginForm } from "../components/forms/login";
+import { Page } from "../components/common/Page";
 
 export const LoginPage = () => {
   return (
-    <Page display="flex" justifyContent="center" alignItems="center">
+    <Page centered>
       <LoginForm />
     </Page>
   );

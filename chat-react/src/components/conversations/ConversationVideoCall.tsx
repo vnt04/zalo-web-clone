@@ -1,12 +1,7 @@
 import { useEffect, useRef, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
-import {
-  ConversationCallContainer,
-  MediaContainer,
-  VideoContainerActionButtons,
-  VideoContainerItem,
-} from '../../utils/styles';
+import classNames from 'classnames';
 import {
   BiMicrophone,
   BiMicrophoneOff,
@@ -15,6 +10,7 @@ import {
 } from 'react-icons/bi';
 import { ImPhoneHangUp } from 'react-icons/im';
 import { SocketContext } from '../../utils/context/SocketContext';
+import styles from '../calls/index.module.scss';
 
 export const ConversationVideoCall = () => {
   const localVideoRef = useRef<HTMLVideoElement>(null);
@@ -64,38 +60,41 @@ export const ConversationVideoCall = () => {
   };
 
   return (
-    <ConversationCallContainer>
-      <MediaContainer>
-        {localStream && (
-          <VideoContainerItem>
-            <video ref={localVideoRef} playsInline autoPlay />
-          </VideoContainerItem>
-        )}
-        {remoteStream && (
-          <VideoContainerItem>
-            <video ref={remoteVideoRef} playsInline autoPlay />
-          </VideoContainerItem>
-        )}
-      </MediaContainer>
-      <VideoContainerActionButtons>
-        <div>
-          {videoEnabled ? (
-            <BiVideo onClick={toggleVideo} />
-          ) : (
-            <BiVideoOff onClick={toggleVideo} />
-          )}
-        </div>
-        <div>
+    <div className={styles.callStage}>
+      <div className={styles.mediaArea}>
+        {localStream && <video ref={localVideoRef} playsInline autoPlay />}
+        {remoteStream && <video ref={remoteVideoRef} playsInline autoPlay />}
+      </div>
+      <div className={styles.controlBar}>
+        <button
+          type="button"
+          className={styles.controlButton}
+          title={videoEnabled ? 'Tắt camera' : 'Bật camera'}
+          onClick={toggleVideo}
+        >
+          {videoEnabled ? <BiVideo size={22} /> : <BiVideoOff size={22} />}
+        </button>
+        <button
+          type="button"
+          className={styles.controlButton}
+          title={microphoneEnabled ? 'Tắt micro' : 'Bật micro'}
+          onClick={toggleMicrophone}
+        >
           {microphoneEnabled ? (
-            <BiMicrophone onClick={toggleMicrophone} />
+            <BiMicrophone size={22} />
           ) : (
-            <BiMicrophoneOff onClick={toggleMicrophone} />
+            <BiMicrophoneOff size={22} />
           )}
-        </div>
-        <div>
-          <ImPhoneHangUp onClick={closeCall} />
-        </div>
-      </VideoContainerActionButtons>
-    </ConversationCallContainer>
+        </button>
+        <button
+          type="button"
+          className={classNames(styles.controlButton, styles.hangUpButton)}
+          title="Kết thúc"
+          onClick={closeCall}
+        >
+          <ImPhoneHangUp size={20} />
+        </button>
+      </div>
+    </div>
   );
 };

@@ -1,0 +1,73 @@
+@use "../../../utils/styles/zalo" as zl;
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 6px;
+}
+
+.clickable:hover {
+  background-color: var(--zl-hover);
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 8px 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: inherit;
+}
+
+.clickable .main {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.avatarWrap {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.avatar {
+  @include zl.avatar(40px);
+}
+
+.onlineDot {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--zl-bg);
+  border-radius: 50%;
+  background-color: var(--zl-online);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  @include zl.truncate;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--zl-text);
+}
+
+.subtitle {
+  @include zl.truncate;
+  font-size: 13px;
+  color: var(--zl-text-muted);
+}

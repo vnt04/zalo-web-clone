@@ -3,6 +3,7 @@ import {
   ChatDots,
   Crown,
   Minus,
+  PeopleGroup,
   Person,
   PersonCross,
   Gear,
@@ -54,6 +55,8 @@ export const getUserSidebarIcon = (id: UserSidebarRouteType) => {
   switch (id) {
     case "conversations":
       return ChatDots;
+    case "groups":
+      return PeopleGroup;
     case "friends":
       return Person;
     case "settings":
@@ -86,13 +89,13 @@ export const getFriendRequestDetails = (
 ): FriendRequestDetailsType =>
   user?.id === receiver.id
     ? {
-        status: "Incoming Friend Request",
+        status: "Muốn kết bạn với bạn",
         displayName: `${sender.firstName} ${sender.lastName}`,
         user: sender,
         incoming: true,
       }
     : {
-        status: "Outgoing Friend Request",
+        status: "Đã gửi lời mời kết bạn",
         displayName: `${receiver.firstName} ${receiver.lastName}`,
         user: receiver,
         incoming: false,
@@ -188,4 +191,27 @@ export const getMessageSentTime = (isoString: string) => {
 export const isPhoneNumber = (phone: string): boolean => {
   const regex = /^(?:\+84|0)(3|5|7|8|9)\d{8}$/;
   return regex.test(phone);
+};
+
+const VN_MOBILE = /^[35789]\d{8}$/;
+
+/**
+ * Bỏ tiền tố quốc gia/số 0 và trả về 9 số thuê bao, null nếu không hợp lệ.
+ * Rộng hơn isPhoneNumber ở trên: chấp nhận cả dạng không tiền tố mà API nhận.
+ * Chân lý vẫn nằm ở chat-nestjs/src/utils/phone.ts, đây chỉ để báo lỗi sớm.
+ */
+export const toNationalPhoneNumber = (raw: string): string | null => {
+  const digits = raw.replace(/\D/g, "");
+  let national = digits;
+  if (digits.startsWith("84")) national = digits.slice(2);
+  else if (digits.startsWith("0")) national = digits.slice(1);
+  return VN_MOBILE.test(national) ? national : null;
+};
+
+export const formatPhoneNumber = (raw: string): string => {
+  const national = toNationalPhoneNumber(raw);
+  if (!national) return raw;
+  return `(+84) 0${national.slice(0, 3)} ${national.slice(3, 6)} ${national.slice(
+    6
+  )}`;
 };

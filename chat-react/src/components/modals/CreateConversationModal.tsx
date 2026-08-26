@@ -1,45 +1,110 @@
-import { createRef, Dispatch, FC, useEffect } from "react";
-import { ModalContainer, ModalContentBody, ModalHeader } from ".";
-import { CreateConversationForm } from "../forms/CreateConversationForm";
-import { OverlayStyle } from "../common/Modal";
-import { CloseButton } from "../common/Button";
+import { Dispatch, FC, FormEvent, SetStateAction, useState } from "react";
+import { MdSearch } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { getConversationByPhoneNumber, searchUsers } from "../../utils/api";
+import { formatPhoneNumber, toNationalPhoneNumber } from "../../utils/helpers";
+import { useToast } from "../../utils/hooks/useToast";
+import { User } from "../../utils/types";
+import { ZaloModal, ZaloModalAction } from "../common/Modal/ZaloModal";
+import { UserRow } from "../common/UserRow";
+import styles from "./index.module.scss";
 
 type Props = {
-  setShowModal: Dispatch<React.SetStateAction<boolean>>;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
 };
 
+const FORM_ID = "new-conversation-form";
+
 export const CreateConversationModal: FC<Props> = ({ setShowModal }) => {
-  const ref = createRef<HTMLDivElement>();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [result, setResult] = useState<User | null>(null);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const { error } = useToast();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) =>
-      e.key === "Escape" && setShowModal(false);
-    window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
-  }, []);
+  const closeModal = () => setShowModal(false);
 
-  const handleOverlayClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    const { current } = ref;
-    if (current === e.target) {
-      console.log("Close Modal");
-      setShowModal(false);
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const national = toNationalPhoneNumber(phoneNumber);
+    if (!national) {
+      error("Số điện thoại không hợp lệ");
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const { data } = await searchUsers(national);
+      setResult(data?.id ? data : null);
+      setHasSearched(true);
+    } catch {
+      error("Không tìm kiếm được, thử lại sau");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const openConversation = async (recipient: User) => {
+    try {
+      const { data } = await getConversationByPhoneNumber(recipient.phoneNumber);
+      closeModal();
+      navigate(`/conversations/${data.id}`);
+    } catch {
+      error("Không mở được cuộc trò chuyện");
     }
   };
 
   return (
-    <OverlayStyle ref={ref} onClick={handleOverlayClick}>
-      <ModalContainer>
-        <ModalHeader>
-          <h2>Thêm bạn</h2>
-          <CloseButton size={24} onClick={() => setShowModal(false)} />
-        </ModalHeader>
-        <ModalContentBody>
-          {/* <ConversationTypeForm type={type} setType={setType} /> */}
-          <CreateConversationForm setShowModal={setShowModal} />
-        </ModalContentBody>
-      </ModalContainer>
-    </OverlayStyle>
+    <ZaloModal
+      title="Tin nhắn mới"
+      onClose={closeModal}
+      footer={
+        <>
+          <ZaloModalAction onClick={closeModal}>Huỷ</ZaloModalAction>
+          <ZaloModalAction
+            type="submit"
+            form={FORM_ID}
+            variant="primary"
+            disabled={!phoneNumber || isSearching}
+          >
+            Tìm kiếm
+          </ZaloModalAction>
+        </>
+      }
+    >
+      <form id={FORM_ID} className={styles.modalBody} onSubmit={onSubmit}>
+        <div className={styles.searchField}>
+          <MdSearch size={18} />
+          <input
+            className={styles.searchInput}
+            type="tel"
+            inputMode="numeric"
+            autoFocus
+            placeholder="Nhập số điện thoại"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+        </div>
+
+        {hasSearched && (
+          <section className={styles.section}>
+            <h3 className={styles.sectionTitle}>Kết quả tìm kiếm</h3>
+            {result ? (
+              <UserRow
+                avatarUrl={result.profile?.avatar}
+                name={`${result.firstName} ${result.lastName}`}
+                subtitle={formatPhoneNumber(result.phoneNumber)}
+                onClick={() => openConversation(result)}
+              />
+            ) : (
+              <p className={styles.emptyState}>
+                Không tìm thấy người dùng với số điện thoại này.
+              </p>
+            )}
+          </section>
+        )}
+      </form>
+    </ZaloModal>
   );
 };

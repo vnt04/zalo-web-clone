@@ -1,17 +1,18 @@
-import { FC } from 'react';
-import { SystemMessageContainer } from '../../../utils/styles';
-import { SystemMessageLevel, SystemMessageType } from '../../../utils/types';
-import { RiAlertFill, RiInformationLine } from 'react-icons/ri';
+import { FC } from "react";
+import { RiAlertFill, RiInformationLine } from "react-icons/ri";
+import { SystemMessageLevel, SystemMessageType } from "../../../utils/types";
+import styles from "../index.module.scss";
+
 type Props = {
   message: SystemMessageType;
 };
 
 const getSystemIcon = (type: SystemMessageLevel) => {
   switch (type) {
-    case 'info':
+    case "info":
       return RiInformationLine;
-    case 'warning':
-    case 'error':
+    case "warning":
+    case "error":
       return RiAlertFill;
   }
 };
@@ -19,15 +20,14 @@ const getSystemIcon = (type: SystemMessageLevel) => {
 export const SystemMessage: FC<Props> = ({ message }) => {
   const { content, level } = message;
   const Icon = getSystemIcon(level);
+
   return (
-    <SystemMessageContainer>
-      <div className="header">
-        <Icon className="icon" />
-        <span>System Message</span>
+    <div className={styles.systemMessage}>
+      <div className={styles.systemMessageHeader}>
+        <Icon size={14} />
+        <span>Thông báo hệ thống</span>
       </div>
-      <div>
-        <span className="content">{content}</span>
-      </div>
-    </SystemMessageContainer>
+      <span>{content}</span>
+    </div>
   );
 };

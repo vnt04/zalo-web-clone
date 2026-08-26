@@ -1,147 +1,173 @@
-import { useContext, useEffect, useState } from "react";
-import { MoonLoader } from "react-spinners";
-import { Edit } from "akar-icons";
-import { UserBanner } from "../../components/settings/profile/UserBanner";
-import { Page } from "../../utils/styles";
-import {
-  ProfileAboutSection,
-  ProfileAboutSectionHeader,
-  ProfileDescriptionField,
-  ProfileEditActionBar,
-  ProfileSection,
-  SettingsProfileUserDetails,
-} from "../../utils/styles/settings";
-import { Button } from "../../utils/styles/button";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import { MdPhotoCamera } from "react-icons/md";
 import { updateUserProfile } from "../../utils/api";
 import { AuthContext } from "../../utils/context/AuthContext";
-import { UserAvatar } from "../../components/settings/profile/UserAvatar";
-import { OverlayStyle } from "../../components/common/Modal";
+import { formatPhoneNumber } from "../../utils/helpers";
+import { useToast } from "../../utils/hooks/useToast";
+import defaultAvatar from "../../__assets__/default_avatar.jpg";
+import styles from "../../components/settings/index.module.scss";
 
 export const SettingsProfilePage = () => {
   const { user, updateAuthUser } = useContext(AuthContext);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
 
   const [avatarFile, setAvatarFile] = useState<File>();
-  const [avatarSource] = useState(user?.profile?.avatar || "");
-  const [avatarSourceCopy, setAvatarSourceCopy] = useState(avatarSource);
-
-  const [bannerSource, setBannerSource] = useState(user?.profile?.banner || "");
   const [bannerFile, setBannerFile] = useState<File>();
-  const [bannerSourceCopy, setBannerSourceCopy] = useState(bannerSource);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [bannerPreview, setBannerPreview] = useState("");
   const [about, setAbout] = useState(user?.profile?.about || "");
-  const [aboutCopy, setAboutCopy] = useState(about);
-  const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const { success, error } = useToast();
 
   useEffect(() => {
-    console.log("Updating About");
     setAbout(user?.profile?.about || "");
   }, [user?.profile?.about]);
 
-  useEffect(() => {
-    console.log("Updating Banner URL");
-    console.log(user?.profile?.banner);
-    setBannerSource(user?.profile?.banner || "");
-    setBannerSourceCopy(user?.profile?.banner || "");
-  }, [user?.profile?.banner]);
+  const savedAvatar = user?.profile?.avatar || defaultAvatar;
+  const savedBanner = user?.profile?.banner || "";
+  const isChanged =
+    Boolean(avatarFile) ||
+    Boolean(bannerFile) ||
+    about !== (user?.profile?.about || "");
 
-  const isChanged = () => aboutCopy !== about || bannerFile || avatarFile;
+  const pickFile = (
+    e: ChangeEvent<HTMLInputElement>,
+    setFile: (file: File) => void,
+    setPreview: (url: string) => void
+  ) => {
+    const file = e.target.files?.item(0);
+    if (!file) return;
+    setFile(file);
+    setPreview(URL.createObjectURL(file));
+  };
 
   const reset = () => {
-    setAboutCopy(about);
-    setBannerSourceCopy(bannerSource);
-    setAvatarSourceCopy(avatarSource);
-    setIsEditing(false);
+    URL.revokeObjectURL(avatarPreview);
+    URL.revokeObjectURL(bannerPreview);
     setAvatarFile(undefined);
     setBannerFile(undefined);
-    URL.revokeObjectURL(bannerSourceCopy);
-    URL.revokeObjectURL(avatarSourceCopy);
+    setAvatarPreview("");
+    setBannerPreview("");
+    setAbout(user?.profile?.about || "");
   };
 
   const save = async () => {
     const formData = new FormData();
-    bannerFile && formData.append("banner", bannerFile);
-    avatarFile && formData.append("avatar", avatarFile);
-    about !== aboutCopy && formData.append("about", aboutCopy);
+    if (avatarFile) formData.append("avatar", avatarFile);
+    if (bannerFile) formData.append("banner", bannerFile);
+    if (about !== (user?.profile?.about || "")) formData.append("about", about);
+
+    setIsSaving(true);
     try {
-      setLoading(true);
       const { data: updatedUser } = await updateUserProfile(formData);
-      console.log(updatedUser);
-      URL.revokeObjectURL(bannerSourceCopy);
-      URL.revokeObjectURL(avatarSourceCopy);
-      setBannerFile(undefined);
-      setAvatarFile(undefined);
       updateAuthUser(updatedUser);
-      setIsEditing(false);
-    } catch (err) {
-      console.log(err);
+      reset();
+      success("Đã cập nhật thông tin");
+    } catch {
+      error("Không cập nhật được thông tin");
     } finally {
-      setLoading(false);
+      setIsSaving(false);
     }
   };
 
+  const bannerStyle = bannerPreview || savedBanner;
+
   return (
     <>
-      {loading && (
-        <OverlayStyle>
-          <MoonLoader size={40} color="#fff" />
-        </OverlayStyle>
-      )}
-      <Page>
-        <UserBanner
-          bannerSource={bannerSource}
-          bannerSourceCopy={bannerSourceCopy}
-          setBannerSourceCopy={setBannerSourceCopy}
-          setBannerFile={setBannerFile}
+      <button
+        type="button"
+        className={styles.banner}
+        style={
+          bannerStyle ? { backgroundImage: `url(${bannerStyle})` } : undefined
+        }
+        onClick={() => bannerInputRef.current?.click()}
+        aria-label="Đổi ảnh bìa"
+      >
+        <span className={styles.mediaHint}>
+          <MdPhotoCamera size={16} />
+          Đổi ảnh bìa
+        </span>
+      </button>
+      <input
+        className={styles.hiddenFileInput}
+        ref={bannerInputRef}
+        type="file"
+        accept="image/*"
+        onChange={(e) => pickFile(e, setBannerFile, setBannerPreview)}
+      />
+
+      <div className={styles.profileHeader}>
+        <button
+          type="button"
+          className={styles.avatarButton}
+          onClick={() => avatarInputRef.current?.click()}
+          aria-label="Đổi ảnh đại diện"
+        >
+          <img
+            className={styles.avatar}
+            src={avatarPreview || savedAvatar}
+            alt=""
+          />
+          <span className={styles.avatarHint}>
+            <MdPhotoCamera size={22} />
+          </span>
+        </button>
+        <input
+          className={styles.hiddenFileInput}
+          ref={avatarInputRef}
+          type="file"
+          accept="image/*"
+          onChange={(e) => pickFile(e, setAvatarFile, setAvatarPreview)}
         />
-        <ProfileSection>
-          <SettingsProfileUserDetails>
-            <UserAvatar
-              avatarSource={avatarSource}
-              avatarSourceCopy={avatarSourceCopy}
-              setAvatarSourceCopy={setAvatarSourceCopy}
-              setAvatarFile={setAvatarFile}
-            />
-            <span>@{user?.phoneNumber}</span>
-          </SettingsProfileUserDetails>
-          <ProfileAboutSection>
-            <ProfileAboutSectionHeader>
-              <label htmlFor="about">About Me</label>
-              <Edit
-                cursor="pointer"
-                strokeWidth={2}
-                size={28}
-                onClick={() => setIsEditing(!isEditing)}
-              />
-            </ProfileAboutSectionHeader>
-            <ProfileDescriptionField
-              maxLength={200}
-              disabled={!isEditing}
-              value={aboutCopy}
-              onChange={(e) => setAboutCopy(e.target.value)}
-            />
-          </ProfileAboutSection>
-        </ProfileSection>
-        {isChanged() && (
-          <ProfileEditActionBar>
-            <div>
-              <span>You have unsaved changes</span>
-            </div>
-            <div className="buttons">
-              <Button
-                size="md"
-                variant="secondary"
+
+        <div className={styles.profileIdentity}>
+          <span className={styles.profileName}>
+            {user?.firstName} {user?.lastName}
+          </span>
+          <span className={styles.profilePhone}>
+            {user ? formatPhoneNumber(user.phoneNumber) : ""}
+          </span>
+        </div>
+      </div>
+
+      <div className={styles.profileBody}>
+        <label className={styles.sectionLabel} htmlFor="about">
+          Giới thiệu bản thân
+        </label>
+        <textarea
+          id="about"
+          className={styles.about}
+          maxLength={200}
+          placeholder="Viết vài dòng về bạn..."
+          value={about}
+          onChange={(e) => setAbout(e.target.value)}
+        />
+
+        {isChanged && (
+          <div className={styles.actionBar}>
+            <span>Bạn có thay đổi chưa lưu</span>
+            <div className={styles.actionButtons}>
+              <button
+                type="button"
+                className={styles.resetAction}
                 onClick={reset}
-                disabled={loading}
+                disabled={isSaving}
               >
-                Reset
-              </Button>
-              <Button size="md" onClick={save} disabled={loading}>
-                Save
-              </Button>
+                Huỷ
+              </button>
+              <button
+                type="button"
+                className={styles.saveAction}
+                onClick={save}
+                disabled={isSaving}
+              >
+                Cập nhật
+              </button>
             </div>
-          </ProfileEditActionBar>
+          </div>
         )}
-      </Page>
+      </div>
     </>
   );
 };

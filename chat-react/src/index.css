@@ -65,8 +65,8 @@
   --sidebar-ring: #4b8ed1;
 }
 
-/* Bảng màu Zalo — dùng cho phần giao diện đang dựng lại theo Zalo thật.
-   Tách tiền tố --zl- để không đụng các biến cũ mà code hiện tại đang dùng. */
+/* Bảng màu Zalo — nguồn màu duy nhất của toàn bộ giao diện.
+   Chế độ tối đổi giá trị qua data-theme trên <html>, xem AppPage.tsx. */
 :root {
   --zl-blue: #0068ff;
   --zl-blue-dark: #005ae0;
@@ -74,10 +74,43 @@
   --zl-blue-mist: #e8f1ff;
   --zl-text: #081c36;
   --zl-text-muted: #7589a3;
+  --zl-bg: #ffffff;
+  --zl-bg-raised: #ffffff;
   --zl-surface: #f0f2f5;
   --zl-chat-bg: #ebecf0;
   --zl-hover: #f1f2f5;
   --zl-line: #e5e7eb;
+  --zl-shadow: rgba(0, 0, 0, 0.24);
+  --zl-fill: #e5e7eb;
+  --zl-fill-hover: #d6dae1;
+  --zl-scroll-thumb: #c9cdd4;
+  --zl-blue-muted: #b7d5ff;
+  --zl-danger: #d5313b;
+  --zl-gold: #f5a623;
+  --zl-online: #34c759;
+  /* Huy hiệu số chưa đọc giữ nguyên đỏ tươi ở cả hai theme. */
+  --zl-badge: #ff4444;
+}
+
+:root[data-theme="dark"] {
+  --zl-blue: #3a8bff;
+  --zl-blue-dark: #2f78e0;
+  --zl-blue-pale: #22344d;
+  --zl-blue-mist: #1d2837;
+  --zl-text: #e4e6eb;
+  --zl-text-muted: #9aa4b2;
+  --zl-bg: #21242a;
+  --zl-bg-raised: #2a2e35;
+  --zl-surface: #1a1d21;
+  --zl-chat-bg: #16181c;
+  --zl-hover: #2b3037;
+  --zl-line: #333940;
+  --zl-shadow: rgba(0, 0, 0, 0.6);
+  --zl-fill: #3a4048;
+  --zl-fill-hover: #454c55;
+  --zl-scroll-thumb: #454c55;
+  --zl-blue-muted: #2b4468;
+  --zl-danger: #ff5a5f;
 }
 
 body {
@@ -94,9 +127,9 @@ html,
 
 body,
 html {
-  background-color: #ffffff;
+  background-color: var(--zl-bg);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #000000;
+  color: var(--zl-text);
   font-size: 15px;
 }
 

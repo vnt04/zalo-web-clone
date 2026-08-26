@@ -1,47 +1,80 @@
-import { createRef, Dispatch, FC, useEffect } from "react";
-import { ModalContainer, ModalHeader, ModalContentBody } from ".";
-import { GroupRecipientAddForm } from "../forms/GroupRecipientAddForm";
-import { OverlayStyle } from "../common/Modal";
-import { CloseButton } from "../common/Button";
+import { Dispatch, FC, FormEvent, SetStateAction, useState } from "react";
+import { useParams } from "react-router-dom";
+import { addGroupRecipient } from "../../utils/api";
+import { toNationalPhoneNumber } from "../../utils/helpers";
+import { useToast } from "../../utils/hooks/useToast";
+import { ZaloModal, ZaloModalAction } from "../common/Modal/ZaloModal";
+import styles from "./index.module.scss";
 
 type Props = {
-  showModal: boolean;
-  setShowModal: Dispatch<React.SetStateAction<boolean>>;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
 };
 
-export const AddGroupRecipientModal: FC<Props> = ({
-  showModal,
-  setShowModal,
-}) => {
-  const ref = createRef<HTMLDivElement>();
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) =>
-      e.key === "Escape" && setShowModal(false);
-    window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
-  }, []);
+const FORM_ID = "add-group-recipient-form";
 
-  const handleOverlayClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    const { current } = ref;
-    if (current === e.target) {
-      console.log("Close Modal");
-      setShowModal(false);
+export const AddGroupRecipientModal: FC<Props> = ({ setShowModal }) => {
+  const { id: groupId } = useParams();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
+  const { success, error } = useToast();
+
+  const closeModal = () => setShowModal(false);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const national = toNationalPhoneNumber(phoneNumber);
+    if (!national) {
+      error("Số điện thoại không hợp lệ");
+      return;
+    }
+
+    setIsAdding(true);
+    try {
+      await addGroupRecipient({ id: parseInt(groupId!), phoneNumber: national });
+      success("Đã thêm thành viên vào nhóm");
+      setPhoneNumber("");
+    } catch {
+      error("Không thêm được thành viên");
+    } finally {
+      setIsAdding(false);
     }
   };
 
   return (
-    <OverlayStyle ref={ref} onClick={handleOverlayClick}>
-      <ModalContainer showModal={showModal}>
-        <ModalHeader>
-          <h2>Add Recipient</h2>
-          <CloseButton size={32} onClick={() => setShowModal(false)} />
-        </ModalHeader>
-        <ModalContentBody>
-          <GroupRecipientAddForm />
-        </ModalContentBody>
-      </ModalContainer>
-    </OverlayStyle>
+    <ZaloModal
+      title="Thêm thành viên"
+      onClose={closeModal}
+      footer={
+        <>
+          <ZaloModalAction onClick={closeModal}>Huỷ</ZaloModalAction>
+          <ZaloModalAction
+            type="submit"
+            form={FORM_ID}
+            variant="primary"
+            disabled={!phoneNumber || isAdding}
+          >
+            Thêm
+          </ZaloModalAction>
+        </>
+      }
+    >
+      <form id={FORM_ID} className={styles.modalBody} onSubmit={onSubmit}>
+        <label className={styles.fieldLabel} htmlFor="recipientPhoneNumber">
+          Số điện thoại
+        </label>
+        <div className={styles.field}>
+          <input
+            id="recipientPhoneNumber"
+            className={styles.fieldInput}
+            type="tel"
+            inputMode="numeric"
+            autoFocus
+            placeholder="Nhập số điện thoại"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+          />
+        </div>
+      </form>
+    </ZaloModal>
   );
 };

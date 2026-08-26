@@ -103,8 +103,11 @@ Use `/api-endpoint` and `/socket-event` for guided versions of this.
 - **`synchronize: true`** means an entity edit rewrites the live schema on next boot. Renaming a column drops data.
 - **Swagger is pinned to `@nestjs/swagger` 5.2.1** while Nest itself is 9 — do not upgrade one without the other.
 - **axios is 0.27** — error shape and config differ from axios 1.x.
-- **Two style systems coexist in the SPA**: `styled-components` (older code in `src/utils/styles/`) and SCSS Modules
-  (`index.module.scss` next to the components). New UI follows the SCSS Module pattern; do not convert old code unasked.
+- **The SPA styles with SCSS Modules only** — `index.module.scss` next to each component folder, plus the shared mixin
+  partial `src/utils/styles/_zalo.scss`. `styled-components` was removed; do not reintroduce it.
+- **Colours come from the `--zl-*` custom properties in `src/index.css`**, never hardcoded hex. Dark mode swaps those
+  values under `:root[data-theme="dark"]`; `AppPage` stamps `data-theme` from the settings slice. A literal hex in a
+  component means that element will not follow the theme.
 - **`chat-react/` carries both `yarn.lock` and `package-lock.json`.** Use yarn; treat `package-lock.json` as stale.
 - **`CORS_ORIGIN` only works from the real environment.** The `@WebSocketGateway` decorator in `src/gateway/gateway.ts`
   is evaluated at import time, before `ConfigModule` reads `.env.development` — so a value set in that file reaches the

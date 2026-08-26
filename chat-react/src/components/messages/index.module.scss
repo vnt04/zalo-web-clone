@@ -9,7 +9,7 @@
 }
 
 .time {
-  color: #6d6d6d;
+  color: var(--zl-text-muted);
   font-size: 12px;
 }
 .authorName {
@@ -37,7 +37,7 @@
   border: none;
   border-radius: 4px;
   background: transparent;
-  color: #5a6981;
+  color: var(--zl-text-muted);
   cursor: pointer;
 }
 
@@ -128,7 +128,113 @@
 .messageDayLabel {
   padding: 3px 12px;
   border-radius: 12px;
-  background-color: rgba(0, 0, 0, 0.08);
-  color: #5a6981;
+  background-color: var(--zl-line);
+  color: var(--zl-text-muted);
   font-size: 12px;
+}
+
+.messageItemHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.characterLimit {
+  padding: 0 16px 8px;
+  font-size: 12px;
+  color: var(--zl-danger);
+  text-align: right;
+}
+
+.editMessage {
+  width: 100%;
+}
+
+.editMessageInput {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--zl-blue);
+  border-radius: 6px;
+  outline: none;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--zl-text);
+}
+
+.editMessageHint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--zl-text-muted);
+
+  b {
+    font-weight: 600;
+    color: var(--zl-text);
+  }
+}
+
+.attachmentTray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px;
+  border-top: 1px solid var(--zl-line);
+}
+
+.attachmentItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 96px;
+  font-size: 12px;
+  color: var(--zl-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachmentRemove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--zl-danger);
+  }
+}
+
+.systemMessage {
+  align-self: center;
+  max-width: 70%;
+  margin: 8px auto;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background-color: var(--zl-hover);
+  font-size: 13px;
+  color: var(--zl-text-muted);
+  text-align: center;
+}
+
+.systemMessageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.hiddenFileInput {
+  display: none;
 }
