@@ -6,7 +6,6 @@ import {
   setShowEditGroupModal,
   updateGroupDetailsThunk,
 } from "../../store/groupSlice";
-import { CDN_URL } from "../../utils/constants";
 import { useBeforeUnload } from "../../utils/hooks";
 import { useToast } from "../../utils/hooks/useToast";
 import { ZaloModal, ZaloModalAction } from "../common/Modal/ZaloModal";
@@ -38,9 +37,7 @@ export const EditGroupModal = () => {
 
   const closeModal = () => !isSavingChanges && dispatch(setShowEditGroupModal(false));
 
-  const currentAvatar = group?.avatar
-    ? CDN_URL.BASE.concat(group.avatar)
-    : defaultAvatar;
+  const currentAvatar = group?.avatar ?? defaultAvatar;
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const picked = e.target.files?.item(0);

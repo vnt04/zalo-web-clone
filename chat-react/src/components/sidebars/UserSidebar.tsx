@@ -5,7 +5,6 @@ import { AuthContext } from "../../utils/context/AuthContext";
 import { UpdatePresenceStatusModal } from "../modals/UpdatePresenceStatusModal";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { UserAvatar } from "../users/UserAvatar";
-import { logoutUser as logoutUserAPI } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import {
   UserSidebarHeader,
@@ -16,12 +15,11 @@ import styles from "./index.module.scss";
 
 export const UserSidebar = () => {
   const [showModal, setShowModal] = useState(false);
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const logoutUser = () => {
-    logoutUserAPI().finally(() => navigate("/login", { replace: true }));
-  };
+  const handleLogout = () =>
+    logout().then(() => navigate("/login", { replace: true }));
 
   return (
     <>
@@ -48,7 +46,7 @@ export const UserSidebar = () => {
           <button
             className={styles.railLogout}
             title="Đăng xuất"
-            onClick={() => logoutUser()}
+            onClick={handleLogout}
           >
             <RiLogoutCircleLine size={24} />
           </button>

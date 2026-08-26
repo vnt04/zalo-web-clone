@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { PeopleGroup } from "akar-icons";
 import { useNavigate, useParams } from "react-router-dom";
-import { CDN_URL } from "../../utils/constants";
 import { getLastMessageSentTime } from "../../utils/helpers";
 import { ContextMenuEvent, Group } from "../../utils/types";
 import {
@@ -39,7 +38,7 @@ export const GroupSidebarItem: FC<Props> = ({ group, onContextMenu }) => {
       {group.avatar ? (
         <img
           className={styles.groupAvatar}
-          src={CDN_URL.BASE.concat(group.avatar)}
+          src={group.avatar}
           alt=""
         />
       ) : (

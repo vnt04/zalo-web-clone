@@ -54,7 +54,6 @@ export const groupMessagesSlice = createSlice({
       groupMessage?.messages.unshift(message);
     },
     editGroupMessage: (state, action: PayloadAction<GroupMessageType>) => {
-      console.log('editGroupMessageThunk.fulfilled');
       const { payload } = action;
       const { id } = payload.group;
       const groupMessage = state.messages.find((gm) => gm.id === id);
@@ -62,9 +61,8 @@ export const groupMessagesSlice = createSlice({
       const messageIndex = groupMessage.messages.findIndex(
         (m) => m.id === payload.id
       );
-      console.log(messageIndex);
+      if (messageIndex === -1) return;
       groupMessage.messages[messageIndex] = payload;
-      console.log('Updated Message');
     },
   },
   extraReducers: (builder) => {
@@ -80,19 +78,17 @@ export const groupMessagesSlice = createSlice({
           : state.messages.push(action.payload.data);
       })
       .addCase(deleteGroupMessageThunk.fulfilled, (state, action) => {
-        console.log('deleteGroupMessageThunk.fulfilled');
-
         const { data } = action.payload;
         const groupMessages = state.messages.find(
           (gm) => gm.id === data.groupId
         );
-        console.log(data);
-        console.log(groupMessages);
         if (!groupMessages) return;
         const messageIndex = groupMessages.messages.findIndex(
           (m) => m.id === data.messageId
         );
-        groupMessages?.messages.splice(messageIndex, 1);
+        // Không tìm thấy thì splice(-1, 1) sẽ xoá nhầm tin nhắn cuối.
+        if (messageIndex === -1) return;
+        groupMessages.messages.splice(messageIndex, 1);
       });
   },
 });

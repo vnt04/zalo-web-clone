@@ -62,3 +62,14 @@ export const UserProfileFileFields: MulterField[] = [
     maxCount: 1,
   },
 ];
+
+export const IMAGE_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+];
+
+export const UPLOAD_LIMITS = {
+  fileSize: 5 * 1024 * 1024,
+};

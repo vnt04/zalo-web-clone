@@ -9,7 +9,13 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { AuthenticatedGuard } from '../../auth/utils/Guards';
-import { Routes, Services, UserProfileFileFields } from '../../utils/constants';
+import {
+  IMAGE_MIME_TYPES,
+  Routes,
+  Services,
+  UPLOAD_LIMITS,
+  UserProfileFileFields,
+} from '../../utils/constants';
 import { AuthUser } from '../../utils/decorators';
 import { User } from '../../utils/typeorm';
 import { UpdateUserProfileParams, UserProfileFiles } from '../../utils/types';
@@ -25,7 +31,13 @@ export class UserProfilesController {
   ) {}
 
   @Patch()
-  @UseInterceptors(FileFieldsInterceptor(UserProfileFileFields))
+  @UseInterceptors(
+    FileFieldsInterceptor(UserProfileFileFields, {
+      limits: UPLOAD_LIMITS,
+      fileFilter: (_req, file, cb) =>
+        cb(null, IMAGE_MIME_TYPES.includes(file.mimetype)),
+    }),
+  )
   async updateUserProfile(
     @AuthUser() user: User,
     @UploadedFiles()

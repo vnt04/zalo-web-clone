@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { CDN_URL } from "../../../utils/constants";
 import { useKeydown } from "../../../utils/hooks";
 import { GroupMessageType, MessageType } from "../../../utils/types";
 import styles from "./index.module.scss";
@@ -40,11 +39,9 @@ export const MessageItemAttachmentContainer: FC<Props> = ({ message }) => {
             type="button"
             key={attachment.key}
             className={styles.attachmentThumb}
-            onClick={() =>
-              setImageUrl(CDN_URL.ORIGINAL.concat(attachment.key))
-            }
+            onClick={() => setImageUrl(attachment.url)}
           >
-            <img src={CDN_URL.PREVIEW.concat(attachment.key)} alt="" />
+            <img src={attachment.url} alt="" />
           </button>
         ))}
       </div>

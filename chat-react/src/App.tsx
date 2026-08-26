@@ -8,6 +8,7 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { AuthContext } from "./utils/context/AuthContext";
 import { socket, SocketContext } from "./utils/context/SocketContext";
+import { logoutUser } from "./utils/api";
 import { User } from "./utils/types";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "./store";
@@ -34,6 +35,7 @@ enableMapSet();
 type Props = {
   user?: User;
   setUser: React.Dispatch<React.SetStateAction<User | undefined>>;
+  logout: () => Promise<void>;
   socket: Socket;
 };
 
@@ -41,10 +43,11 @@ function AppWithProviders({
   children,
   user,
   setUser,
+  logout,
 }: PropsWithChildren & Props) {
   return (
     <ReduxProvider store={store}>
-      <AuthContext.Provider value={{ user, updateAuthUser: setUser }}>
+      <AuthContext.Provider value={{ user, updateAuthUser: setUser, logout }}>
         <SocketContext.Provider value={socket}>
           {children}
         </SocketContext.Provider>
@@ -55,12 +58,30 @@ function AppWithProviders({
 
 function App() {
   const [user, setUser] = useState<User>();
+
+  // Dọn cả ba nơi: phiên trên server, user trong context, và socket. Thiếu hai
+  // cái sau thì bấm Back là vào lại app như chưa đăng xuất.
+  const logout = async () => {
+    try {
+      await logoutUser();
+    } finally {
+      setUser(undefined);
+      socket.disconnect();
+    }
+  };
+
   return (
-    <AppWithProviders user={user} setUser={setUser} socket={socket}>
+    <AppWithProviders
+      user={user}
+      setUser={setUser}
+      logout={logout}
+      socket={socket}
+    >
       <Routes>
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route element={<AuthenticatedRoute children={<AppPage />} />}>
+          <Route index element={<Navigate to="/conversations" replace />} />
           <Route path="conversations" element={<ConversationPage />}>
             <Route
               path=":id"
@@ -89,6 +110,9 @@ function App() {
             <Route path="current" element={<CurrentCallPage />} />
           </Route>
         </Route>
+        {/* AuthenticatedRoute tự đá người chưa đăng nhập sang /login, nên một
+            đích duy nhất đủ cho cả hai trường hợp. */}
+        <Route path="*" element={<Navigate to="/conversations" replace />} />
       </Routes>
       <ToastContainer
         position="top-center"

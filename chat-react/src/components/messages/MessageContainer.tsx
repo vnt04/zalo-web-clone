@@ -76,7 +76,8 @@ export const MessageContainer = () => {
     index: number,
     messages: MessageType[] | GroupMessageType[]
   ) => {
-    if (!message.content) return null;
+    // Hội thoại mới tạo có một message giữ chỗ rỗng: không content, không ảnh.
+    if (!message.content && !message.attachments?.length) return null;
     const currentMessage = messages[index];
     const nextMessage = messages[index + 1];
 

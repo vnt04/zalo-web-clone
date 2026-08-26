@@ -15,7 +15,12 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SkipThrottle } from '@nestjs/throttler';
 import { AuthenticatedGuard } from '../../auth/utils/Guards';
-import { Routes, Services } from '../../utils/constants';
+import {
+  IMAGE_MIME_TYPES,
+  Routes,
+  Services,
+  UPLOAD_LIMITS,
+} from '../../utils/constants';
 import { AuthUser } from '../../utils/decorators';
 import { User } from '../../utils/typeorm';
 import { Attachment } from '../../utils/types';
@@ -66,7 +71,13 @@ export class GroupController {
   }
 
   @Patch(':id/details')
-  @UseInterceptors(FileInterceptor('avatar'))
+  @UseInterceptors(
+    FileInterceptor('avatar', {
+      limits: UPLOAD_LIMITS,
+      fileFilter: (_req, file, cb) =>
+        cb(null, IMAGE_MIME_TYPES.includes(file.mimetype)),
+    }),
+  )
   async updateGroupDetails(
     @AuthUser() { id: userId }: User,
     @Body() { title }: UpdateGroupDetailsDto,

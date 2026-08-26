@@ -347,10 +347,9 @@ export class MessagingGateway
     @MessageBody() data: CreateCallDto,
     @ConnectedSocket() socket: AuthenticatedSocket,
   ) {
-    console.log('onVideoCallInitiate');
     const caller = socket.user;
     const receiverSocket = this.sessions.getUserSocket(data.recipientId);
-    if (!receiverSocket) socket.emit('onUserUnavailable');
+    if (!receiverSocket) return socket.emit('onUserUnavailable');
     receiverSocket.emit('onVideoCall', { ...data, caller });
   }
 
@@ -409,7 +408,7 @@ export class MessagingGateway
   ) {
     const caller = socket.user;
     const receiverSocket = this.sessions.getUserSocket(payload.recipientId);
-    if (!receiverSocket) socket.emit('onUserUnavailable');
+    if (!receiverSocket) return socket.emit('onUserUnavailable');
     receiverSocket.emit('onVoiceCall', { ...payload, caller });
   }
 

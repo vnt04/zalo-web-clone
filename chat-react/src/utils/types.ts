@@ -73,6 +73,7 @@ export type CreateConversationParams = {
 
 export type MessageAttachment = {
   key: string;
+  url: string;
 };
 
 export type MessageType = {

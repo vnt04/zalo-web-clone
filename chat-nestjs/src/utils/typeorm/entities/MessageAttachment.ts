@@ -1,10 +1,14 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Message } from './Message';
 
 @Entity({ name: 'message_attachments' })
 export class MessageAttachment {
   @PrimaryGeneratedColumn('uuid')
   key: string;
+
+  // nullable: các hàng cũ lưu trước khi chuyển sang Cloudinary không có URL.
+  @Column({ nullable: true })
+  url: string;
 
   @ManyToOne(() => Message, (message) => message.attachments, {
     onDelete: 'CASCADE',

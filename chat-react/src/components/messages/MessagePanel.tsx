@@ -99,6 +99,14 @@ export const MessagePanel: FC<Props> = ({
               "The recipient is not in your friends list or they may have blocked you.",
           })
         );
+      } else {
+        dispatch(
+          addSystemMessage({
+            id: messageCounter,
+            level: "error",
+            content: "Không gửi được tin nhắn. Vui lòng thử lại.",
+          })
+        );
       }
     }
   };

@@ -19,7 +19,12 @@ import { AuthenticatedGuard } from '../../auth/utils/Guards';
 import { CreateMessageDto } from '../../messages/dtos/CreateMessage.dto';
 import { EditMessageDto } from '../../messages/dtos/EditMessage.dto';
 import { EmptyMessageException } from '../../messages/exceptions/EmptyMessage';
-import { Routes, Services } from '../../utils/constants';
+import {
+  IMAGE_MIME_TYPES,
+  Routes,
+  Services,
+  UPLOAD_LIMITS,
+} from '../../utils/constants';
 import { AuthUser } from '../../utils/decorators';
 import { User } from '../../utils/typeorm';
 import { Attachment } from '../../utils/types';
@@ -36,12 +41,11 @@ export class GroupMessageController {
 
   @Throttle(5, 10)
   @UseInterceptors(
-    FileFieldsInterceptor([
-      {
-        name: 'attachments',
-        maxCount: 5,
-      },
-    ]),
+    FileFieldsInterceptor([{ name: 'attachments', maxCount: 5 }], {
+      limits: UPLOAD_LIMITS,
+      fileFilter: (_req, file, cb) =>
+        cb(null, IMAGE_MIME_TYPES.includes(file.mimetype)),
+    }),
   )
   @Post()
   async createGroupMessage(

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { UserSidebar } from '../components/sidebars/UserSidebar';
 import { AppDispatch, RootState } from '../store';
 import { removeFriendRequest } from '../store/friends/friendsSlice';
@@ -9,7 +9,14 @@ import { useToast } from '../utils/hooks/useToast';
 import {
   AcceptFriendRequestResponse,
   FriendRequest,
+  MessageEventPayload,
 } from '../utils/types';
+import {
+  incrementUnreadCount,
+  markConversationReadThunk,
+  updateConversation,
+} from '../store/conversationSlice';
+import { addMessage } from '../store/messages/messageSlice';
 import { BsFillPersonCheckFill } from 'react-icons/bs';
 import { fetchFriendRequestThunk } from '../store/friends/friendsThunk';
 import styles from './index.module.scss';
@@ -37,6 +44,7 @@ export const AppPage = () => {
   const socket = useContext(SocketContext);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { peer, call, isReceivingCall, caller, connection, callType } =
     useSelector((state: RootState) => state.call);
   const { info } = useToast({ theme: 'dark' });
@@ -46,6 +54,34 @@ export const AppPage = () => {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  // Người dùng quay lại với cookie còn hạn không đi qua form đăng nhập, nên
+  // chỗ này lo phần connect cho luồng đó.
+  useEffect(() => {
+    if (!socket.connected) socket.connect();
+  }, [socket]);
+
+  // Listener sống suốt phiên. Đặt ở ConversationPage thì rời sang tab khác là
+  // mất tin nhắn đến và không cộng số chưa đọc.
+  useEffect(() => {
+    const handleMessage = (payload: MessageEventPayload) => {
+      const { conversation, message } = payload;
+      dispatch(addMessage(payload));
+      dispatch(updateConversation(conversation));
+      const openId = location.pathname.startsWith('/conversations/')
+        ? parseInt(location.pathname.split('/')[2])
+        : undefined;
+      if (openId === conversation.id)
+        dispatch(markConversationReadThunk(conversation.id));
+      else if (message.author?.id !== user?.id)
+        dispatch(incrementUnreadCount(conversation.id));
+    };
+
+    socket.on('onMessage', handleMessage);
+    return () => {
+      socket.off('onMessage', handleMessage);
+    };
+  }, [socket, dispatch, location.pathname, user?.id]);
 
   useEffect(() => {
     dispatch(fetchFriendRequestThunk());

@@ -6,7 +6,7 @@ import {
 } from '../utils/types';
 
 export interface IImageStorageService {
-  upload(params: UploadImageParams);
+  upload(params: UploadImageParams): Promise<string>;
   uploadMessageAttachment(
     params: UploadMessageAttachmentParams,
   ): Promise<MessageAttachment>;

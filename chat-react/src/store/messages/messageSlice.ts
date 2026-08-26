@@ -30,21 +30,22 @@ export const messagesSlice = createSlice({
       conversationMessage?.messages.unshift(message);
     },
     deleteMessage: (state, action: PayloadAction<DeleteMessageResponse>) => {
-      console.log('Inside deleteMessage reducer');
       const { payload } = action;
       const conversationMessages = state.messages.find((cm) => cm.id === payload.conversationId);
       if (!conversationMessages) return;
       const messageIndex = conversationMessages.messages.findIndex(
         (m) => m.id === payload.messageId
       );
+      // Không tìm thấy thì splice(-1, 1) sẽ xoá nhầm tin nhắn cuối.
+      if (messageIndex === -1) return;
       conversationMessages.messages.splice(messageIndex, 1);
     },
     editMessage: (state, action: PayloadAction<MessageType>) => {
-      console.log('editMessageReducer');
       const message = action.payload;
       const conversationMessage = state.messages.find((cm) => cm.id === message.conversation.id);
       if (!conversationMessage) return;
       const messageIndex = conversationMessage.messages.findIndex((m) => m.id === message.id);
+      if (messageIndex === -1) return;
       conversationMessage.messages[messageIndex] = message;
     },
   },
@@ -68,18 +69,17 @@ export const messagesSlice = createSlice({
         const messageIndex = conversationMessages.messages.findIndex(
           (m) => m.id === data.messageId
         );
-        conversationMessages?.messages.splice(messageIndex, 1);
+        if (messageIndex === -1) return;
+        conversationMessages.messages.splice(messageIndex, 1);
       })
       .addCase(editMessageThunk.fulfilled, (state, action) => {
-        console.log('editMessageThunk.fulfilled');
         const { data: message } = action.payload;
         const { id } = message.conversation;
         const conversationMessage = state.messages.find((cm) => cm.id === id);
         if (!conversationMessage) return;
         const messageIndex = conversationMessage.messages.findIndex((m) => m.id === message.id);
-        console.log(messageIndex);
+        if (messageIndex === -1) return;
         conversationMessage.messages[messageIndex] = message;
-        console.log('Updated Message');
       });
   },
 });

@@ -26,9 +26,6 @@ type Props = {
 const UNREAD_BADGE_MAX = 99;
 
 export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
-  // check if this is a new conversation with no message before.
-  if (!conversation.lastMessageSent) return null;
-
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -37,6 +34,10 @@ export const ConversationSidebarItem: React.FC<Props> = ({ conversation }) => {
 
   const unreadCount = conversation.unreadCount ?? 0;
   const hasUnread = unreadCount > 0;
+
+  // Guard phải nằm dưới mọi hook: lastMessageSent chuyển null -> có giá trị sẽ
+  // đổi số hook giữa hai lần render và làm sập cây React.
+  if (!conversation.lastMessageSent) return null;
 
   // Cắt chuỗi để lo phần tràn dòng, CSS ellipsis co theo bề rộng cột.
   const lastMessagePreview = () => {

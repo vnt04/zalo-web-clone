@@ -8,7 +8,6 @@ import {
   updateConversationStateThunk,
 } from "../../store/conversationSlice";
 import { selectConversationMessage } from "../../store/messages/messageSlice";
-import { CDN_URL } from "../../utils/constants";
 import { AuthContext } from "../../utils/context/AuthContext";
 import { getRecipientFromConversation } from "../../utils/helpers";
 import { UserAvatar } from "../users/UserAvatar";
@@ -35,9 +34,9 @@ export const ConversationInfoPanel = () => {
   const recipient = getRecipientFromConversation(conversation, user);
   const messages = conversationMessages?.messages ?? [];
 
-  const attachmentKeys = messages
+  const attachmentUrls = messages
     .flatMap((message) => message.attachments ?? [])
-    .map((attachment) => attachment.key);
+    .map((attachment) => attachment.url);
 
   const links = messages
     .flatMap((message) => message.content?.match(URL_PATTERN) ?? [])
@@ -62,13 +61,13 @@ export const ConversationInfoPanel = () => {
 
         <section className={styles.infoSection}>
           <h3 className={styles.infoSectionTitle}>Ảnh/Video</h3>
-          {attachmentKeys.length ? (
+          {attachmentUrls.length ? (
             <div className={styles.infoMediaGrid}>
-              {attachmentKeys.slice(0, PREVIEW_LIMIT).map((key) => (
+              {attachmentUrls.slice(0, PREVIEW_LIMIT).map((url) => (
                 <img
-                  key={key}
+                  key={url}
                   className={styles.infoMediaItem}
-                  src={CDN_URL.PREVIEW.concat(key)}
+                  src={url}
                   alt="ảnh đã gửi"
                 />
               ))}

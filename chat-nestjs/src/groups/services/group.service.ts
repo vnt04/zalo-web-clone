@@ -106,9 +106,11 @@ export class GroupService implements IGroupService {
     if (!group) throw new GroupNotFoundException();
     if (group.owner.id !== params.userId) throw new NotGroupOwnerException();
     if (params.avatar) {
-      const key = generateUUIDV4();
-      await this.imageStorageService.upload({ key, file: params.avatar });
-      group.avatar = key;
+      // Lưu URL đầy đủ: SPA render thẳng, không ghép tiền tố CDN nào nữa.
+      group.avatar = await this.imageStorageService.upload({
+        key: generateUUIDV4(),
+        file: params.avatar,
+      });
     }
     group.title = params.title ?? group.title;
     return this.groupRepository.save(group);
