@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { IUserService } from '../../users/interfaces/user';
-import { UserService } from '../../users/services/user.service';
 import { Services } from '../../utils/constants';
 import { Friend, FriendRequest } from '../../utils/typeorm';
 import { FriendRequestException } from '../exceptions/FriendRequest';
@@ -25,6 +24,10 @@ describe('FriendRequestsService', () => {
         },
         {
           provide: Services.USERS,
+          useValue: {},
+        },
+        {
+          provide: Services.FRIENDS_SERVICE,
           useValue: {},
         },
         {
@@ -66,7 +69,7 @@ describe('FriendRequestsService', () => {
           status: 'pending',
         },
       ],
-      relations: ['receiver', 'sender'],
+      relations: ['receiver', 'sender', 'receiver.profile', 'sender.profile'],
     });
   });
 
@@ -77,7 +80,7 @@ describe('FriendRequestsService', () => {
       jest
         .spyOn(friendRequestService, 'findById')
         .mockImplementationOnce(() => Promise.resolve(undefined));
-      expect(
+      await expect(
         friendRequestService.cancel({ id: 20, userId: 40 }),
       ).rejects.toThrow(FriendRequestNotFoundException);
     });
@@ -86,7 +89,7 @@ describe('FriendRequestsService', () => {
       jest
         .spyOn(friendRequestService, 'findById')
         .mockImplementationOnce(() => Promise.resolve(mockFriendRequest));
-      expect(
+      await expect(
         friendRequestService.cancel({ id: 500, userId: 30 }),
       ).rejects.toThrow(FriendRequestException);
     });
@@ -96,7 +99,7 @@ describe('FriendRequestsService', () => {
         .spyOn(friendRequestService, 'findById')
         .mockImplementationOnce(() => Promise.resolve(mockFriendRequest));
       await friendRequestService.cancel({ id: 321, userId: 50 });
-      expect(friendRequestRepository.delete).toHaveBeenCalledWith(322);
+      expect(friendRequestRepository.delete).toHaveBeenCalledWith(321);
     });
   });
 });

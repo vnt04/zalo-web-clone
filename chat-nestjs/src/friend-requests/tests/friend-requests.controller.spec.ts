@@ -1,3 +1,4 @@
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Services } from '../../utils/constants';
 import { mockUser } from '../../__mocks__';
@@ -19,6 +20,7 @@ describe('FriendRequestsController', () => {
             create: jest.fn((x) => x),
           },
         },
+        { provide: EventEmitter2, useValue: { emit: jest.fn() } },
       ],
     }).compile();
 
@@ -36,19 +38,20 @@ describe('FriendRequestsController', () => {
 
   it('should call friendRequestService.getFriendRequests', async () => {
     await controller.getFriendRequests(mockUser);
-    expect(friendRequestService.getFriendRequests).toHaveBeenCalled();
     expect(friendRequestService.getFriendRequests).toHaveBeenCalledWith(
       mockUser.id,
     );
   });
 
+  // Kết bạn tra theo số điện thoại, không phải email — CreateFriendDto chỉ có
+  // phoneNumber. Spec cũ còn truyền email từ thời trước khi đổi.
   it('should call createFriendRequest with correct params', async () => {
     await controller.createFriendRequest(mockUser, {
-      email: 'anson@gmail.com',
+      phoneNumber: '0900000001',
     });
     expect(friendRequestService.create).toHaveBeenCalledWith({
       user: mockUser,
-      email: 'anson@gmail.com',
+      phoneNumber: '0900000001',
     });
   });
 });
