@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -66,10 +67,12 @@ export class MessageController {
   async getMessagesFromConversation(
     @AuthUser() user: User,
     @Param('id', ParseIntPipe) id: number,
+    @Query('before') before?: string,
   ) {
     const messages = await this.messageService.getMessages({
       id,
       userId: user.id,
+      before: before ? parseInt(before) : undefined,
     });
     return { id, messages };
   }

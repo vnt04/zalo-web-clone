@@ -67,10 +67,14 @@ export const patchConversationState = ({
     config
   );
 
-export const getConversationMessages = (conversationId: number) =>
+// before = id tin nhắn cũ nhất đang giữ; bỏ trống để lấy trang mới nhất.
+export const getConversationMessages = (
+  conversationId: number,
+  before?: number
+) =>
   axiosClient.get<FetchMessagePayload>(
     `/conversations/${conversationId}/messages`,
-    config
+    before ? { ...config, params: { before } } : config
   );
 
 export const createMessage = (

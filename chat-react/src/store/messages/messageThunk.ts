@@ -13,6 +13,13 @@ export const fetchMessagesThunk = createAsyncThunk(
   }
 );
 
+export const fetchMoreMessagesThunk = createAsyncThunk(
+  'messages/fetchMore',
+  ({ id, before }: { id: number; before: number }) => {
+    return getConversationMessages(id, before);
+  }
+);
+
 export const deleteMessageThunk = createAsyncThunk(
   'messages/delete',
   (params: DeleteMessageParams) => {

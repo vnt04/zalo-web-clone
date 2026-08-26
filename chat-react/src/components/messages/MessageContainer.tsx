@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from "../../store";
 import { GroupMessageType, MessageType } from "../../utils/types";
 import { SelectedMessageContextMenu } from "../context-menus/SelectedMessageContextMenu";
 import { selectConversationMessage } from "../../store/messages/messageSlice";
+import { fetchMoreMessagesThunk } from "../../store/messages/messageThunk";
 import { selectGroupMessage } from "../../store/groupMessageSlice";
 import { selectType } from "../../store/selectedSlice";
 // import { MessageItemHeader } from "./MessageItemHeader";
@@ -31,6 +32,8 @@ import styles from "./index.module.scss";
 import { isSameDay } from "date-fns";
 import classNames from "classnames";
 
+const LOAD_MORE_THRESHOLD_PX = 200;
+
 export const MessageContainer = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
@@ -45,6 +48,14 @@ export const MessageContainer = () => {
   const { showContextMenu } = useSelector(
     (state: RootState) => state.messageContainer
   );
+  const { loadingMore, exhausted } = useSelector(
+    (state: RootState) => state.messages
+  );
+
+  // Danh sách xếp mới nhất trước, nên tin cũ nhất nằm cuối mảng.
+  const conversationMessageList = conversationMessages?.messages ?? [];
+  const oldestMessageId =
+    conversationMessageList[conversationMessageList.length - 1]?.id;
   const handleKeydown = (e: KeyboardEvent) =>
     e.key === "Escape" && dispatch(setIsEditing(false));
   const handleClick = () => dispatch(toggleContextMenu(false));
@@ -139,11 +150,21 @@ export const MessageContainer = () => {
   return (
     <MessageContainerStyle
       onScroll={(e) => {
+        // Nhóm chưa có thunk phân trang riêng, chỉ áp cho hội thoại 1-1.
+        if (selectedType !== "private" || !oldestMessageId) return;
+        const conversationId = parseInt(id!);
+        if (loadingMore || exhausted.includes(conversationId)) return;
         const node = e.target as HTMLDivElement;
-        const scrollTopMax = node.scrollHeight - node.clientHeight;
-        if (-scrollTopMax === node.scrollTop) {
-          console.log("");
-        }
+        // Khung lật bằng column-reverse: scrollTop âm dần khi cuộn về tin cũ.
+        const distanceToTop =
+          node.scrollHeight - node.clientHeight + node.scrollTop;
+        if (distanceToTop > LOAD_MORE_THRESHOLD_PX) return;
+        dispatch(
+          fetchMoreMessagesThunk({
+            id: conversationId,
+            before: oldestMessageId,
+          })
+        );
       }}
     >
       <>

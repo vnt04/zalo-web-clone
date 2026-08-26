@@ -6,16 +6,26 @@ import {
   MessageEventPayload,
   MessageType,
 } from '../../utils/types';
-import { deleteMessageThunk, editMessageThunk, fetchMessagesThunk } from './messageThunk';
+import {
+  deleteMessageThunk,
+  editMessageThunk,
+  fetchMessagesThunk,
+  fetchMoreMessagesThunk,
+} from './messageThunk';
 
 export interface MessagesState {
   messages: ConversationMessage[];
   loading: boolean;
+  loadingMore: boolean;
+  // id các hội thoại đã tải hết lịch sử — để thôi hỏi thêm khi cuộn.
+  exhausted: number[];
 }
 
 const initialState: MessagesState = {
   messages: [],
   loading: false,
+  loadingMore: false,
+  exhausted: [],
 };
 
 export const messagesSlice = createSlice({
@@ -53,14 +63,14 @@ export const messagesSlice = createSlice({
     builder
       .addCase(fetchMessagesThunk.fulfilled, (state, action) => {
         const { id } = action.payload.data;
+        // Tải lại từ đầu thì lịch sử cũ hết hiệu lực, cho phép cuộn hỏi lại.
+        state.exhausted = state.exhausted.filter((cid) => cid !== id);
         const index = state.messages.findIndex((cm) => cm.id === id);
-        const exists = state.messages.find((cm) => cm.id === id);
-        if (exists) {
-          console.log('exists');
-          state.messages[index] = action.payload.data;
-        } else {
+        if (index === -1) {
           state.messages.push(action.payload.data);
+          return;
         }
+        state.messages[index] = action.payload.data;
       })
       .addCase(deleteMessageThunk.fulfilled, (state, action) => {
         const { data } = action.payload;
@@ -80,6 +90,25 @@ export const messagesSlice = createSlice({
         const messageIndex = conversationMessage.messages.findIndex((m) => m.id === message.id);
         if (messageIndex === -1) return;
         conversationMessage.messages[messageIndex] = message;
+      })
+      .addCase(fetchMoreMessagesThunk.pending, (state) => {
+        state.loadingMore = true;
+      })
+      .addCase(fetchMoreMessagesThunk.rejected, (state) => {
+        state.loadingMore = false;
+      })
+      .addCase(fetchMoreMessagesThunk.fulfilled, (state, action) => {
+        state.loadingMore = false;
+        const { id, messages } = action.payload.data;
+        // Trang rỗng nghĩa là đã chạm đáy lịch sử.
+        if (!messages.length) {
+          if (!state.exhausted.includes(id)) state.exhausted.push(id);
+          return;
+        }
+        const conversationMessage = state.messages.find((cm) => cm.id === id);
+        if (!conversationMessage) return;
+        // Mảng xếp mới nhất trước, nên tin cũ hơn nối vào cuối.
+        conversationMessage.messages.push(...messages);
       });
   },
 });

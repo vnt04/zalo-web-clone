@@ -231,6 +231,8 @@ export type GetConversationMessagesParams = {
 export type GetMessagesParams = {
   id: number;
   userId: number;
+  limit?: number;
+  before?: number;
 };
 
 export type UpdateConversationParams = Partial<{

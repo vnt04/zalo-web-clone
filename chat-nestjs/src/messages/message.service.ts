@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { instanceToPlain } from 'class-transformer';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { IConversationsService } from '../conversations/conversations';
 import { ConversationNotFoundException } from '../conversations/exceptions/ConversationNotFound';
 import { FriendNotFoundException } from '../friends/exceptions/FriendNotFound';
@@ -19,6 +19,9 @@ import {
 import { CannotCreateMessageException } from './exceptions/CannotCreateMessage';
 import { CannotDeleteMessage } from './exceptions/CannotDeleteMessage';
 import { IMessageService } from './message';
+
+const DEFAULT_PAGE_SIZE = 30;
+const MAX_PAGE_SIZE = 100;
 
 @Injectable()
 export class MessageService implements IMessageService {
@@ -58,14 +61,26 @@ export class MessageService implements IMessageService {
     return { message: savedMessage, conversation: updated };
   }
 
-  async getMessages({ id, userId }: GetMessagesParams): Promise<Message[]> {
+  async getMessages({
+    id,
+    userId,
+    limit,
+    before,
+  }: GetMessagesParams): Promise<Message[]> {
     // 404 chứ không phải 403: 403 xác nhận hội thoại có tồn tại, tự nó đã rò rỉ.
     const hasAccess = await this.conversationService.hasAccess({ id, userId });
     if (!hasAccess) throw new ConversationNotFoundException();
     return this.messageRepository.find({
       relations: ['author', 'attachments', 'author.profile'],
-      where: { conversation: { id } },
-      order: { createdAt: 'DESC' },
+      where: {
+        conversation: { id },
+        // Con trỏ là id tin nhắn cũ nhất client đang giữ.
+        ...(before ? { id: LessThan(before) } : {}),
+      },
+      // Sắp theo id chứ không phải createdAt: con trỏ phân trang là id, hai thứ
+      // phải cùng một trục thì mới không bỏ sót hay lặp tin.
+      order: { id: 'DESC' },
+      take: Math.min(limit ?? DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE),
     });
   }
 
