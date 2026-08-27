@@ -6,7 +6,7 @@
 // ReactToastify.css trong App.tsx để thứ tự nguồn cho phép ghi đè.
 
 $pill-bg: auth.$primary;
-$pill-text: #ffffff;
+$pill-text: var(--zl-on-accent);
 
 :root {
   --toastify-color-dark: #{$pill-bg};

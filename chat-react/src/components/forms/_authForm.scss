@@ -77,7 +77,7 @@ $danger: #d5313b;
   border: none;
   border-radius: 22px;
   background-color: $primary;
-  color: #fff;
+  color: var(--zl-on-accent);
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;

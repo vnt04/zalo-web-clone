@@ -72,6 +72,9 @@
   --zl-blue-dark: #005ae0;
   --zl-blue-pale: #e5efff;
   --zl-blue-mist: #e8f1ff;
+  /* Chữ/icon nằm TRÊN nền màu thương hiệu (--zl-blue, --zl-badge). Cố ý không
+     có bản ghi đè cho dark: nền đó vẫn đậm ở cả hai theme nên vẫn phải trắng. */
+  --zl-on-accent: #ffffff;
   --zl-text: #081c36;
   --zl-text-muted: #7589a3;
   --zl-bg: #ffffff;
