@@ -18,9 +18,10 @@ import { EventsModule } from './events/events.module';
 import { ThrottlerBehindProxyGuard } from './utils/throttler';
 import { ExistsModule } from './exists/exists.module';
 import { MessageAttachmentsModule } from './message-attachments/message-attachments.module';
+import { HealthModule } from './health/health.module';
 
-let envFilePath = '.env.development';
-if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
+const isProduction = process.env.ENVIRONMENT === 'PRODUCTION';
+const envFilePath = isProduction ? '.env.production' : '.env.development';
 
 @Module({
   imports: [
@@ -35,7 +36,12 @@ if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
       username: process.env.MYSQL_DB_USERNAME,
       password: process.env.MYSQL_DB_PASSWORD,
       database: process.env.MYSQL_DB_NAME,
-      synchronize: true,
+      // synchronize dựng lại schema từ entity mỗi lần boot: đổi tên một cột là
+      // TypeORM drop cột cũ kèm dữ liệu. Tiện ở dev, không chấp nhận được ở
+      // production — nơi đó chạy migration.
+      synchronize: !isProduction,
+      migrations: [__dirname + '/migrations/*{.ts,.js}'],
+      migrationsRun: isProduction,
       entities,
       logging: false,
     }),
@@ -53,6 +59,7 @@ if (process.env.ENVIRONMENT === 'PRODUCTION') envFilePath = '.env.production';
       limit: 10,
     }),
     MessageAttachmentsModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [

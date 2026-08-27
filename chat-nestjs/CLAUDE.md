@@ -73,7 +73,19 @@ export class ConversationsController {
 
 `src/utils/typeorm/entities/`, re-exported from `src/utils/typeorm/index.ts` as both named exports and the default
 `entities` array consumed by `TypeOrmModule.forRoot`. A new entity that is not added to that array is invisible to the
-ORM. Remember `synchronize: true` — an entity change rewrites the live schema on the next boot.
+ORM. Remember `synchronize` is on outside production — an entity change rewrites the live schema on the next boot, and
+renaming a column drops its data.
+
+Production sets `synchronize: false` and `migrationsRun: true`. The TypeORM CLI has its own config in `ormconfig.js`
+(the app config in `app.module.ts` is not shared with it — change the connection in one and you must change the other):
+
+```bash
+yarn migration:generate SomeName   # diffs entities against the live DB, writes src/migrations/
+yarn migration:run
+yarn migration:revert
+```
+
+`src/migrations/` is empty so far, so production has no schema to build from yet.
 
 TypeORM here is **0.2.37**: `getRepository()` global, `findOne(id)`, `@JoinColumn` semantics of the 0.2 line. Do not write
 0.3.x-style repository code.

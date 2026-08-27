@@ -45,8 +45,18 @@ yarn start:dev                     # Swagger at http://localhost:8001/api/docs
 cd chat-react && yarn install && yarn dev
 ```
 
-TypeORM runs with `synchronize: true`, so the schema is created/altered from the entities on every start — there are no
-migrations. Under docker the database is created for you; natively you must create it before the API will boot.
+Outside production TypeORM runs with `synchronize: true`, so the schema is created/altered from the entities on every
+start. Under docker the database is created for you; natively you must create it before the API will boot.
+
+Production (`ENVIRONMENT=PRODUCTION`) turns `synchronize` off and runs migrations from `src/migrations/` instead.
+**That directory is still empty** — a production deploy against a fresh database would come up with no tables. Generate
+the initial migration once, against a running dev database, before deploying:
+
+```bash
+docker compose up -d mysql api
+docker compose exec api yarn migration:generate InitialSchema   # writes src/migrations/
+docker compose exec api yarn migration:run                      # or let PRODUCTION run it on boot
+```
 
 ## Verification gates
 
@@ -105,7 +115,8 @@ Use `/api-endpoint` and `/socket-event` for guided versions of this.
 
 - **TypeORM is 0.2.37, not 0.3.x.** The global `getRepository()` still exists and `findOne(id)` takes a bare id.
   Code written against 0.3 API docs will not compile.
-- **`synchronize: true`** means an entity edit rewrites the live schema on next boot. Renaming a column drops data.
+- **`synchronize` is on everywhere except production**, so an entity edit rewrites the live dev schema on next boot and
+  renaming a column drops its data. Production uses migrations; see the note under "Run it — native".
 - **Swagger is pinned to `@nestjs/swagger` 5.2.1** while Nest itself is 9 — do not upgrade one without the other.
 - **axios is 0.27** — error shape and config differ from axios 1.x.
 - **The SPA styles with SCSS Modules only** — `index.module.scss` next to each component folder, plus the shared mixin
