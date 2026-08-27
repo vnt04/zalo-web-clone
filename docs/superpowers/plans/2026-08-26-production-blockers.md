@@ -16,7 +16,10 @@
 
 Dòng FAIL duy nhất (`GET /users/presence/status → 404`) là **bug trong script probe, không phải lỗ hổng**: controller đó chỉ có `@Patch('status')`, và routing của Nest chạy trước guard nên 404 không nói gì về auth. Đã sửa method, đồng thời nâng độ phủ từ 23 lên 36 route và thêm xử lý 429 (xem phần dưới).
 
-Còn lại: chạy lại `check-auth.sh` bản mới, làm checklist kiểm tay, rồi Task 18 + 4 mục Task 19.
+Task 18 và Task 19 đã xong, cả 4 gate đã chạy trên host và xanh: `chat-nestjs` build + lint (0 lỗi, 9 cảnh báo) +
+test (11/11, 31 test), `chat-react` build. Bundle SPA giảm **878.60 → 434.76 kB** (gzip 232 → 141).
+
+Còn lại: checklist kiểm tay, đặc biệt mục 6 (hướng cuộn phân trang) — thứ duy nhất build và test không bắt được.
 
 <details>
 <summary>Ghi chú lịch sử — trạng thái lúc soạn plan</summary>
@@ -57,7 +60,7 @@ chmod +x chat-nestjs/scripts/check-auth.sh && ./chat-nestjs/scripts/check-auth.s
 | 16 — Nuốt lỗi | ✅ | ❌ |
 | 17 — Bỏ console.log (251 → 0) | ✅ | ❌ |
 | 18 — Sửa jest | ✅ | ✅ 11/11 |
-| 19 — Dọn vặt | ✅ phần lớn | ❌ |
+| 19 — Dọn vặt | ✅ | ✅ 4 gate xanh |
 
 **Phase 1, 2, 3 và phần lớn Phase 4 đã viết xong code.**
 
@@ -88,12 +91,44 @@ Còn lại vẫn là smoke-level "should be defined". Nâng chúng lên assert h
 
 Đã làm: bỏ `AbortController` chết ở 2 guard hook · bỏ `setTimeout(1000)` giả trong `useAuth` · `loading` khởi tạo `true` ở 2 guard hook · xoá `compressImage` + import `sharp` · xoá client S3 và token `Services.SPACES_CLIENT` · sửa `formatPhoneNumber` (bỏ số 0 thừa sau `+84`) · `addMessage` không còn nuốt tin nhắn khi hội thoại chưa nạp · xoá code comment kiểm tra bạn bè và các import mồ côi theo nó.
 
-Chưa làm, kèm lý do:
+Đã làm nốt ở lượt sau, khi Bash chạy lại được:
 
-- **Gỡ `sharp` và `@aws-sdk/client-s3` khỏi `package.json`** — code đã hết dùng, nhưng sửa `package.json` bắt buộc rebuild volume node_modules; để bạn làm cùng lúc chạy build đầu tiên.
-- **5 màu hex cứng** — xem lại thì chúng là chữ/icon trắng trên nền xanh accent (badge chưa đọc, nút primary), **phải** trắng ở cả light lẫn dark. Repo chưa có token kiểu `--zl-on-accent` để map vào. Việc đúng là **thêm token mới** vào `src/index.css` rồi trỏ 5 chỗ đó vào, chứ không phải ép về một biến sẵn có — nên tôi không swap mù. Đây không phải bug dark mode như tôi ghi ở lượt audit đầu.
-- **Xoá 4 file chết từ CRA** — tôi không có công cụ xoá file. Kiểm tra `index.tsx` còn import `reportWebVitals` không, và `tsconfig` còn include `react-app-env.d.ts` không, trước khi xoá.
-- **Chia nhỏ bundle, thêm lint script cho SPA, tắt `synchronize`, thêm healthcheck** — đều cần đo đạc hoặc là quyết định thiết kế, không nên làm mù.
+- **Gỡ `sharp`, `@aws-sdk/client-s3`, `@types/sharp`** khỏi `chat-nestjs/package.json`, và cụm CRA mồ côi (`web-vitals`,
+  `@testing-library/*`, `@types/jest`, khối `eslintConfig` trỏ tới preset `react-app` không hề được cài) khỏi
+  `chat-react/package.json`. Đã chạy `yarn install` ở cả hai để lockfile không còn giữ chúng.
+- **Token `--zl-on-accent`** vào `src/index.css`, cố ý không có bản ghi đè dark. Áp cho **6** điểm (không phải 5 —
+  grep lần đầu bỏ sót `toast.scss`): `button-primary`, nút submit form đăng nhập, icon sidebar, hai badge, pill toast.
+  Bốn chỗ trắng còn lại nằm trên scrim `rgba(0,0,0,…)` nên giữ nguyên: nền đó đen ở cả hai theme, token hoá mỗi phần
+  chữ mà bỏ phần nền là nửa vời. Đã ghi vào `chat-react/CLAUDE.md` như ngoại lệ thứ ba.
+- **Xoá 4 file chết từ CRA** bằng `git rm`. `index.tsx` có import `reportWebVitals` thật — đã gỡ trước khi xoá.
+  `tsconfig` không hề tham chiếu `react-app-env.d.ts`.
+- **Xoá `getUserContextMenuIcon`** (`helpers.ts`) — không ai gọi. Phát hiện tình cờ khi truy xem giá trị `color` của nó
+  chảy đi đâu để chắc `var(--zl-*)` hợp lệ ở chỗ dùng: hoá ra không có chỗ dùng nào. Là `export` nên `noUnusedLocals`
+  không bắt được — cùng cơ chế đã che `compressImage` trước đó. Đáng ngờ rằng còn hàm export chết khác trong SPA;
+  `knip` hoặc `ts-prune` sẽ quét ra, nhưng đó là việc riêng.
+
+**Bundle: đo trước rồi mới sửa, và số liệu lật ngược giả định trong plan.** Con số "1.17 MB" ghi ở đây là sai; thực tế
+là 878.60 kB. Và vấn đề không phải thiếu code-splitting:
+
+| | Trước | Sau |
+|---|---|---|
+| chunk chính | 878.60 kB (gzip 232.39) | **434.76 kB** (gzip 141.29) |
+| chunk WebRTC (lười) | — | 141.87 kB (gzip 36.95) |
+
+Hai nguyên nhân thật, tìm ra bằng cách build với `manualChunks` tách từng package rồi đọc kích thước:
+
+1. **`akar-icons` = 304.64 kB, 35% cả bundle, phục vụ đúng 8 icon.** Gói `1.9.20` chỉ có `dist/index.js` dạng CJS,
+   không `module`, không `exports`, không `sideEffects` → tree-shaking bất khả thi, không config nào cứu được. Đã đổi
+   sang `react-icons/lu` (Lucide), khớp 1:1 về tên và cùng phong cách nét mảnh nên diện mạo giữ nguyên.
+2. **Cụm WebRTC ≈ 142 kB** (`peerjs` + `webrtc-adapter` + `rtcpeerconnection-shim` + `sdp` + `binarypack`) tải cho mọi
+   người dù chỉ dùng khi gọi. `callSlice.ts` chỉ dùng peerjs làm **type** → `import type`. Chỗ dùng runtime duy nhất là
+   `new Peer()` trong `AppPage` → `import('peerjs')` động, kèm cờ huỷ để không bỏ lại peer mồ côi nếu rời trang giữa chừng.
+
+`React.lazy` theo route thì **không** làm: cảnh báo 500 kB đã hết, phần còn lại chủ yếu là react-dom + code ứng dụng,
+và thêm ranh giới `Suspense` sẽ đánh đổi bằng nhấp nháy màn hình chờ để lấy vài chục kB. Lợi ích giảm dần.
+
+Vẫn chưa làm: **lint script cho SPA, tắt `synchronize`, healthcheck** — đều là quyết định thiết kế, không nên làm mù.
+Và `default_avatar.jpg` nặng 102.62 kB cho một ảnh đại diện mặc định, nén lại được nhiều nhưng cần công cụ ảnh.
 
 ### ✅ Quyết định đã chốt: phải là bạn bè mới nhắn được
 
@@ -1802,21 +1837,32 @@ Mong đợi 11/11 suite pass. **Cập nhật `CLAUDE.md` gốc** để bỏ dòn
 
 Làm khi rảnh, không phụ thuộc lẫn nhau.
 
-- [ ] **Xoá `compressImage` và `sharp`.** Sau Task 5 không ai gọi `compressImage` (`chat-nestjs/src/utils/helpers.ts:29`) nữa — nó là export nên eslint không bắt được. Xoá hàm, xoá `import * as sharp`, và gỡ `sharp` khỏi `package.json` (nhớ rebuild volume node_modules).
-- [ ] **Xoá client S3 không còn ai dùng.** Sau Task 5, `image-storage.module.ts` vẫn tạo **hai** instance `S3` khác nhau (một ở `providers`, một ở `exports`) và một khối bị comment. Xoá cả token `Services.SPACES_CLIENT`, các biến `SPACES_*` trong file env mẫu, và gỡ `@aws-sdk/client-s3` khỏi `package.json`. Nhớ rebuild volume node_modules sau khi sửa `package.json`:
+- [x] **Xoá `compressImage` và `sharp`.** Sau Task 5 không ai gọi `compressImage` (`chat-nestjs/src/utils/helpers.ts:29`) nữa — nó là export nên eslint không bắt được. Xoá hàm, xoá `import * as sharp`, và gỡ `sharp` khỏi `package.json` (nhớ rebuild volume node_modules).
+- [x] **Xoá client S3 không còn ai dùng.** Sau Task 5, `image-storage.module.ts` vẫn tạo **hai** instance `S3` khác nhau (một ở `providers`, một ở `exports`) và một khối bị comment. Xoá cả token `Services.SPACES_CLIENT`, các biến `SPACES_*` trong file env mẫu, và gỡ `@aws-sdk/client-s3` khỏi `package.json`. Nhớ rebuild volume node_modules sau khi sửa `package.json`:
   ```bash
   docker compose down && docker volume rm zalo-web-clone_api-node-modules && docker compose up --build
   ```
-- [ ] **Bật lại kiểm tra bạn bè khi tạo hội thoại.** `conversations.service.ts:127-131` — bỏ comment hoặc xoá hẳn kèm ghi chú lý do. Hiện `createMessage` vẫn kiểm tra bạn bè (`message.service.ts:39`), nên tạo được hội thoại rồi mà không nhắn được, đó là trạng thái nửa vời.
-- [ ] **Xoá `AbortController` chết.** `useAuth.ts:8` và `useConversationGuard.ts:9` tạo controller nhưng không truyền vào request. Hoặc nối vào (`{ signal: controller.signal }`), hoặc xoá.
-- [ ] **Bỏ độ trễ giả 1 giây.** `useAuth.ts:15,19` — `setTimeout(() => setLoading(false), 1000)` chèn một giây chờ vào mọi lần vào app.
-- [ ] **Sửa `loading` khởi tạo sai.** `useConversationGuard.ts:7` khởi tạo `false` nên `ConversationPageGuard` render children trước rồi mới hiện "loading" — nháy màn hình và fetch thừa. Đổi thành `useState(true)`.
-- [ ] **Sửa định dạng số điện thoại.** `helpers.ts:214` cho ra `(+84) 0912 345 678` — dùng `+84` thì bỏ số `0` đứng đầu.
-- [ ] **Xoá 5 màu hex cứng** để dark mode đúng: `components/messages/index.module.scss:210`, `components/messages/attachments/index.module.scss:52`, `components/sidebars/items/index.module.scss:34`, `components/sidebars/index.module.scss:93`, `components/conversations/index.module.scss:129`. Thay bằng biến `--zl-*` phù hợp trong `chat-react/src/index.css`.
-- [ ] **Xoá file chết từ thời Create React App:** `chat-react/src/__tests__/RegisterPage.spec.tsx`, `setupTests.ts`, `reportWebVitals.ts`, `react-app-env.d.ts`. Không có runner nào chạy chúng.
-- [ ] **Đồng bộ chính sách mật khẩu.** `CreateUser.dto.ts:20` bắt tối thiểu 8 ký tự, nhưng `seed-data.ts:7` đặt `SEED_PASSWORD = '123456'`. Tài khoản seed không đăng ký lại được qua form.
-- [ ] **Chia nhỏ bundle.** SPA build ra 1.17 MB (303 kB gzip) trong một chunk. Dùng `React.lazy` cho các route ít dùng (`calls`, `settings`) hoặc cấu hình `manualChunks` trong `vite.config.ts`.
-- [ ] **Tin nhắn bị nuốt im lặng.** `messageSlice.ts:30` — `conversationMessage?.messages.unshift(message)`: nếu hội thoại chưa có trong store thì tin nhắn biến mất không dấu vết. Hoặc `dispatch(fetchMessagesThunk(conversation.id))` để nạp hội thoại, hoặc push một entry mới vào `state.messages`.
+- [x] **Bật lại kiểm tra bạn bè khi tạo hội thoại.** `conversations.service.ts:127-131` — bỏ comment hoặc xoá hẳn kèm ghi chú lý do. Hiện `createMessage` vẫn kiểm tra bạn bè (`message.service.ts:39`), nên tạo được hội thoại rồi mà không nhắn được, đó là trạng thái nửa vời.
+- [x] **Xoá `AbortController` chết.** `useAuth.ts:8` và `useConversationGuard.ts:9` tạo controller nhưng không truyền vào request. Hoặc nối vào (`{ signal: controller.signal }`), hoặc xoá.
+- [x] **Bỏ độ trễ giả 1 giây.** `useAuth.ts:15,19` — `setTimeout(() => setLoading(false), 1000)` chèn một giây chờ vào mọi lần vào app.
+- [x] **Sửa `loading` khởi tạo sai.** `useConversationGuard.ts:7` khởi tạo `false` nên `ConversationPageGuard` render children trước rồi mới hiện "loading" — nháy màn hình và fetch thừa. Đổi thành `useState(true)`.
+- [x] **Sửa định dạng số điện thoại.** `helpers.ts:214` cho ra `(+84) 0912 345 678` — dùng `+84` thì bỏ số `0` đứng đầu.
+- [x] **Màu hex cứng** — danh sách 5 file ghi ở đây **sai**, quét lại kỹ mới thấy chúng thuộc hai nhóm khác nhau:
+      - Chữ/icon trên nền màu thương hiệu → thêm token `--zl-on-accent` (không có bản ghi đè dark) và trỏ **6** chỗ vào:
+        `_zalo.scss:91` (`button-primary`), `forms/_authForm.scss:80`, `sidebars/index.module.scss:93`,
+        `sidebars/items/index.module.scss:34`, `conversations/index.module.scss:129`, `utils/styles/toast.scss:9`.
+        Hai chỗ cuối lần quét đầu bỏ sót vì chỉ grep file SCSS Module.
+      - Chữ trên scrim `rgba(0,0,0,…)` → **giữ nguyên**: `messages/index.module.scss:210`,
+        `messages/attachments/index.module.scss:52`, `settings/index.module.scss:84,123`. Scrim đen ở cả hai theme
+        nên trắng là đúng, và token hoá mỗi phần chữ mà bỏ phần nền literal ngay bên cạnh là nửa vời.
+      - Ngoài ra `utils/helpers.ts:43-47` còn 3 hex cứng (`#ff0000`, `#FFB800`, `#7c7c7c`) mà lần quét đầu bỏ sót vì
+        nó là file `.ts` chứ không phải `.scss` — đã đổi sang `--zl-danger` / `--zl-gold` / `--zl-text-muted`.
+- [x] **Xoá file chết từ thời Create React App:** `chat-react/src/__tests__/RegisterPage.spec.tsx`, `setupTests.ts`, `reportWebVitals.ts`, `react-app-env.d.ts`. Không có runner nào chạy chúng.
+- [x] **Đồng bộ chính sách mật khẩu.** `CreateUser.dto.ts:20` bắt tối thiểu 8 ký tự, nhưng `seed-data.ts:7` đặt `SEED_PASSWORD = '123456'`. Tài khoản seed không đăng ký lại được qua form.
+- [x] **Chia nhỏ bundle.** Đã làm, nhưng cách khác hẳn dự kiến — xem phần "Task 19 — đã làm / chưa làm" ở đầu file.
+      Tóm tắt: nguyên nhân là `akar-icons` không tree-shake được (304 kB) và cụm WebRTC tải sẵn (142 kB), không phải
+      thiếu `React.lazy`. 878.60 → 434.76 kB.
+- [x] **Tin nhắn bị nuốt im lặng.** `messageSlice.ts:30` — `conversationMessage?.messages.unshift(message)`: nếu hội thoại chưa có trong store thì tin nhắn biến mất không dấu vết. Hoặc `dispatch(fetchMessagesThunk(conversation.id))` để nạp hội thoại, hoặc push một entry mới vào `state.messages`.
 - [ ] **Thêm lint script cho SPA.** `chat-react` không có ESLint, nên `yarn build` (tsc) là lưới an toàn duy nhất — nó không bắt được lỗi rules-of-hooks như Task 8. Thêm `eslint` + `eslint-plugin-react-hooks` và một script `lint`; riêng rule `react-hooks/rules-of-hooks` đã đủ trả về giá trị cho công sức bỏ ra.
 - [ ] **Quyết định về `synchronize: true` trước khi lên production.** `app.module.ts:38` cho TypeORM rewrite schema live mỗi lần boot, không có migration. Chấp nhận được ở dev, nhưng trên production một lần đổi entity có thể drop cột kèm dữ liệu. Trước khi deploy thật: tắt nó đi và sinh migration bằng `typeorm migration:generate`.
 - [ ] **Thêm healthcheck + graceful shutdown cho API.** `docker-compose.yml` có healthcheck cho `mysql` nhưng không cho `api`. Thêm một route `GET /api/health` và gọi `app.enableShutdownHooks()` trong `main.ts` để container orchestrator biết trạng thái thật.
