@@ -56,7 +56,7 @@ Under docker, prefix with `docker compose exec api` / `docker compose exec web`.
 
 | Package | Command | State |
 |---|---|---|
-| chat-nestjs | `yarn lint` | ✅ passes — eslint + prettier, `--fix` is on by default, 22 warnings are expected |
+| chat-nestjs | `yarn lint` | ✅ passes — eslint + prettier, `--fix` is on by default, 0 errors and 9 warnings are expected |
 | chat-nestjs | `yarn build` | ✅ passes — `nest build` |
 | chat-react | `yarn build` | ✅ passes — `tsc -b && vite build`, the only gate in that package |
 | chat-nestjs | `yarn test` | ✅ passes — jest, 11/11 suites |
@@ -73,8 +73,8 @@ than hand-rolling a repository stub per spec.
 `chat-react` runs `strict`, `noUnusedLocals` and `noUnusedParameters`, so an unused import or an unused destructured
 setter fails the build. For a deliberately unused callback parameter, prefix it with `_` rather than deleting it.
 
-`chat-react` has **no test and no lint script**. Do not run `yarn test` there; it will fail. `src/__tests__/RegisterPage.spec.tsx`
-and `setupTests.ts` are leftovers from the pre-Vite Create React App setup — no runner is wired up to them.
+`chat-react` has **no test and no lint script**. Do not run `yarn test` there; it will fail. The Create React App
+leftovers that used to sit in `src/` have been deleted along with their `@testing-library` / `web-vitals` dependencies.
 
 ## How the two halves connect
 

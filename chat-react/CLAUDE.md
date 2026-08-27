@@ -11,9 +11,9 @@ yarn build   # tsc -b && vite build — the only automated check in this package
 yarn serve   # preview a build
 ```
 
-There is **no test runner and no lint script here**. `src/__tests__/RegisterPage.spec.tsx`, `src/setupTests.ts`,
-`src/reportWebVitals.ts` and `src/react-app-env.d.ts` are dead leftovers from Create React App; nothing runs them. Treat
-`yarn build` as the gate, and say so plainly rather than implying tests passed.
+There is **no test runner and no lint script here** — `yarn build` is the only gate. Say so plainly rather than implying
+tests passed. The Create React App leftovers (`__tests__/`, `setupTests.ts`, `reportWebVitals.ts`, `react-app-env.d.ts`)
+and their `@testing-library` / `web-vitals` dependencies are gone; do not restore them without wiring up a real runner.
 
 Env comes from `.env.development` (committed, localhost-only values). Only `VITE_`-prefixed vars reach the browser.
 
@@ -82,14 +82,21 @@ Shared visual language lives in the mixin partial `utils/styles/_zalo.scss` (`@u
 scrollbar, truncate. Reach for a mixin before writing new rules — that is what keeps popups, lists and menus consistent.
 
 Colours are **always** `var(--zl-*)` from `src/index.css`, never literal hex. Dark mode only overrides those variables
-under `:root[data-theme="dark"]`, so a hardcoded colour silently breaks the dark theme. The two exceptions on purpose:
-the theme preview swatches in `components/settings/index.module.scss` and the always-dark call stage in
-`components/calls/index.module.scss`.
+under `:root[data-theme="dark"]`, so a hardcoded colour silently breaks the dark theme. Text or icons sitting on a brand
+colour (`--zl-blue`, `--zl-badge`) use `--zl-on-accent`, which deliberately has no dark override — that surface stays
+saturated in both themes.
+
+Three exceptions on purpose: the theme preview swatches in `components/settings/index.module.scss`, the always-dark call
+stage in `components/calls/index.module.scss`, and white text over an `rgba(0,0,0,…)` scrim (image overlays, the
+lightbox close button) — the scrim is black in both themes, so tokenising only the text would be half a job.
 
 Shared building blocks worth reusing instead of rebuilding: `common/Modal/ZaloModal` (popup shell + footer buttons),
 `common/UserRow` (avatar + name + subtitle + online dot + trailing action), `common/ContextMenu`, `common/Page`.
 
-Icons come from `react-icons` and `akar-icons`; toasts from the `useToast` hook, not `react-toastify` directly.
+Icons come from `react-icons` only; toasts from the `useToast` hook, not `react-toastify` directly. `akar-icons` was
+removed — it ships one CJS file with no `module`/`exports` entry, so nothing tree-shakes it and 8 icons cost 304 kB.
+Its icons map onto Lucide (`react-icons/lu`), which keeps the same stroke style. Import react-icons by subpath
+(`react-icons/md`), never from the package root, or you lose tree-shaking the same way.
 
 ## Gotchas
 
