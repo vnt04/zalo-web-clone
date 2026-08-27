@@ -3,8 +3,10 @@
  * ghi dữ liệu, còn chỗ này là thứ bạn sửa khi muốn thêm người / thêm hội thoại.
  */
 
-// Mọi tài khoản seed dùng chung mật khẩu này.
-export const SEED_PASSWORD = '123456';
+// Mọi tài khoản seed dùng chung mật khẩu này. Phải đạt tối thiểu 8 ký tự cho
+// khớp @MinLength(8) ở CreateUser.dto.ts, không thì tài khoản seed đăng nhập
+// được nhưng đăng ký lại cùng mật khẩu đó qua form thì bị chặn.
+export const SEED_PASSWORD = '12345678';
 
 // Số điện thoại ghi ở dạng người dùng gõ khi đăng nhập. Lúc lưu, seed.ts đẩy
 // qua normalizePhone() để ra dạng 84xxxxxxxxx giống hệt luồng đăng ký thật —
