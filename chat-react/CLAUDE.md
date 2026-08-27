@@ -101,7 +101,10 @@ Its icons map onto Lucide (`react-icons/lu`), which keeps the same stroke style.
 ## Gotchas
 
 - `tsconfig.app.json` has `strict`, `noUnusedLocals` and `noUnusedParameters` on — an unused import fails `yarn build`.
-- Several existing components call hooks after an early `return null`, which breaks the rules of hooks. Do not copy that
-  shape into new components.
+- Never call a hook after an early `return null` — it changes the hook count between renders and tears down the React
+  tree. Components here used to do it; a scan with `react-hooks/rules-of-hooks` now reports zero, so keep it that way.
+- `exhaustive-deps` reports about 36 warnings. Most are `dispatch`, `socket` and `navigate`, which are stable references
+  where the warning is noise. Read a new one before dismissing it though: two real bugs hid in that list — a canvas that
+  never redrew on a new `file`, and a hang-up handler holding a stale `connection`.
 - Indentation is inconsistent across files (tabs in some, spaces in others). Match the file you are editing; do not
   reformat untouched lines.

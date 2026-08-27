@@ -22,5 +22,8 @@ export function useVideoCallHangUp() {
     return () => {
       socket.off('onVideoCallHangUp');
     };
-  }, [call, remoteStream, localStream]);
+    // connection phải nằm trong deps: handler gọi connection.close(), mà
+    // connection vào store sau call nên thiếu nó thì listener giữ giá trị cũ
+    // (undefined) và kết nối dữ liệu peer không bao giờ đóng khi cúp máy.
+  }, [call, connection, remoteStream, localStream]);
 }

@@ -7,8 +7,9 @@ type Props = {
 export const MessageImageCanvas: FC<Props> = ({ file }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
+    const objectUrl = URL.createObjectURL(file);
     const image = new Image();
-    image.src = URL.createObjectURL(file);
+    image.src = objectUrl;
     image.onload = () => {
       const { current: canvas } = canvasRef;
       if (!canvas) return;
@@ -31,7 +32,11 @@ export const MessageImageCanvas: FC<Props> = ({ file }) => {
         image.height * ratio
       );
     };
-  }, []);
+    // createObjectURL giữ file trong bộ nhớ đến khi revoke; thiếu cleanup thì
+    // mỗi ảnh đính kèm rò một lần.
+    return () => URL.revokeObjectURL(objectUrl);
+    // file phải có trong deps: đổi ảnh mà không vẽ lại thì canvas kẹt ở ảnh đầu.
+  }, [file]);
 
   return (
     <canvas
