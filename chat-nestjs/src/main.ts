@@ -64,11 +64,18 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  // Nhận SIGTERM để đóng kết nối DB và socket trước khi thoát. Thiếu dòng này,
+  // orchestrator kill container giữa lúc còn request đang chạy.
+  app.enableShutdownHooks();
+
   const logger = new Logger('Bootstrap');
   try {
     await app.listen(PORT, () => logger.log(`Running on port ${PORT}`));
   } catch (err) {
+    // Thoát khác 0 để orchestrator biết mà restart, thay vì giữ một tiến trình
+    // sống nhưng không nghe cổng nào.
     logger.error('Failed to start the HTTP server', err);
+    process.exit(1);
   }
 }
 bootstrap();

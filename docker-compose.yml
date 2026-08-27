@@ -42,8 +42,6 @@ services:
       CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-}
       CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-}
       CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-}
-      SPACES_KEY: ${SPACES_KEY:-}
-      SPACES_SECRET_KEY: ${SPACES_SECRET_KEY:-}
       # tsc's default watcher misses events on a bind-mounted volume
       TSC_WATCHFILE: DynamicPriorityPolling
       TSC_WATCHDIRECTORY: DynamicPriorityPolling
@@ -52,13 +50,28 @@ services:
     volumes:
       - ./chat-nestjs:/app
       - api-node-modules:/app/node_modules
+    healthcheck:
+      # node instead of curl — the base image has no curl, and node 20 ships fetch.
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:'+process.env.PORT+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      # Generous: the dev target installs and compiles before it ever listens.
+      start_period: 90s
 
   web:
     build:
       context: ./chat-react
       target: development
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     environment:
       WEB_PORT: ${WEB_PORT:-3100}
       CHOKIDAR_USEPOLLING: "true"

@@ -13,6 +13,7 @@ export enum Routes {
   FRIENDS = 'friends',
   FRIEND_REQUESTS = 'friends/requests',
   USER_PRESENCE = 'users/presence',
+  HEALTH = 'health',
 }
 
 export enum Services {
