@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { PersonAdd, PeopleGroup } from 'akar-icons';
+import { LuUserPlus, LuUsers } from 'react-icons/lu';
 import { RootState, AppDispatch } from '../../../store';
 import { toggleSidebar } from '../../../store/groupRecipientsSidebarSlice';
 import { selectGroupById } from '../../../store/groupSlice';
@@ -32,7 +32,7 @@ export const MessagePanelGroupHeader = () => {
               title="Thêm thành viên"
               onClick={() => setShowModal(true)}
             >
-              <PersonAdd size={20} />
+              <LuUserPlus size={20} />
             </button>
           )}
           <button
@@ -40,7 +40,7 @@ export const MessagePanelGroupHeader = () => {
             title="Thành viên nhóm"
             onClick={() => dispatch(toggleSidebar())}
           >
-            <PeopleGroup size={20} />
+            <LuUsers size={20} />
           </button>
         </div>
       </MessagePanelHeaderStyle>

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { PeopleGroup } from "akar-icons";
+import { LuUsers } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLastMessageSentTime } from "../../utils/helpers";
 import { ContextMenuEvent, Group } from "../../utils/types";
@@ -43,7 +43,7 @@ export const GroupSidebarItem: FC<Props> = ({ group, onContextMenu }) => {
         />
       ) : (
         <div className={styles.defaultGroupAvatar}>
-          <PeopleGroup size={24} />
+          <LuUsers size={24} />
         </div>
       )}
       <ConversationSidebarItemDetails>

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CallInitiatePayload, CallType, User } from '../../utils/types';
-import { DataConnection, MediaConnection, Peer } from 'peerjs';
+import type { DataConnection, MediaConnection, Peer } from 'peerjs';
 
 export interface CallState {
   isCalling: boolean;

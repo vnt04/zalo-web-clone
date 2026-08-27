@@ -20,7 +20,6 @@ import { addMessage } from '../store/messages/messageSlice';
 import { BsFillPersonCheckFill } from 'react-icons/bs';
 import { fetchFriendRequestThunk } from '../store/friends/friendsThunk';
 import styles from './index.module.scss';
-import Peer from 'peerjs';
 import { AuthContext } from '../utils/context/AuthContext';
 import {
   setCall,
@@ -90,19 +89,30 @@ export const AppPage = () => {
 
   useEffect(() => {
     if (!user) return;
-    const newPeer = new Peer(user.peer.id, {
-      config: {
-        iceServers: [
-          {
-            url: 'stun:stun.l.google.com:19302',
-          },
-          {
-            url: 'stun:stun1.l.google.com:19302',
-          },
-        ],
-      },
+    // peerjs kéo theo webrtc-adapter và các shim, ~142 kB chỉ phục vụ tính năng
+    // gọi. Nạp động để nó không nằm trong bundle khởi động.
+    let cancelled = false;
+    import('peerjs').then(({ default: Peer }) => {
+      const newPeer = new Peer(user.peer.id, {
+        config: {
+          iceServers: [
+            {
+              url: 'stun:stun.l.google.com:19302',
+            },
+            {
+              url: 'stun:stun1.l.google.com:19302',
+            },
+          ],
+        },
+      });
+      // Rời trang trước khi import xong thì phải huỷ, không sẽ bỏ lại một kết
+      // nối peer không ai tham chiếu.
+      if (cancelled) return newPeer.destroy();
+      dispatch(setPeer(newPeer));
     });
-    dispatch(setPeer(newPeer));
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useFriendRequestReceived();

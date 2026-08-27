@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Crown } from "akar-icons";
+import { LuCrown } from "react-icons/lu";
 import { ContextMenuEvent, Group, User } from "../../../utils/types";
 import { UserRow } from "../../common/UserRow";
 import styles from "../../groups/index.module.scss";
@@ -26,7 +26,7 @@ export const OnlineGroupRecipients: FC<Props> = ({
         action={
           user.id === group?.owner.id ? (
             <span className={styles.ownerBadge} title="Trưởng nhóm">
-              <Crown size={18} />
+              <LuCrown size={18} />
             </span>
           ) : undefined
         }

@@ -1,13 +1,10 @@
 import { format, isSameDay } from "date-fns";
 import {
-  ChatDots,
-  Crown,
-  Minus,
-  PeopleGroup,
-  Person,
-  PersonCross,
-  Gear,
-} from "akar-icons";
+  LuMessageCircle,
+  LuUsers,
+  LuUser,
+  LuSettings,
+} from "react-icons/lu";
 import {
   IoIosPerson,
   IoIosNotifications,
@@ -24,7 +21,6 @@ import {
   Group,
   SettingsSidebarRouteType,
   User,
-  UserContextMenuActionType,
   UserSidebarRouteType,
 } from "./types";
 
@@ -37,34 +33,23 @@ export const getRecipientFromConversation = (
     : conversation?.creator;
 };
 
-export const getUserContextMenuIcon = (type: UserContextMenuActionType) => {
-  switch (type) {
-    case "kick":
-      return { icon: PersonCross, color: "#ff0000" };
-    case "transfer_owner":
-      return { icon: Crown, color: "#FFB800" };
-    default:
-      return { icon: Minus, color: "#7c7c7c" };
-  }
-};
-
 export const isGroupOwner = (user?: User, group?: Group) =>
   user?.id === group?.owner.id;
 
 export const getUserSidebarIcon = (id: UserSidebarRouteType) => {
   switch (id) {
     case "conversations":
-      return ChatDots;
+      return LuMessageCircle;
     case "groups":
-      return PeopleGroup;
+      return LuUsers;
     case "friends":
-      return Person;
+      return LuUser;
     case "settings":
-      return Gear;
+      return LuSettings;
     case "calls":
       return IoMdVideocam;
     default:
-      return ChatDots;
+      return LuMessageCircle;
   }
 };
 

@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { Crown, PersonCross } from "akar-icons";
+import { LuCrown, LuUserX } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { AppDispatch, RootState } from "../../store";
@@ -48,13 +48,13 @@ export const SelectedParticipantContextMenu: FC<Props> = ({ points }) => {
   return (
     <ContextMenu top={points.y} left={points.x}>
       <ContextMenuItem
-        icon={<Crown size={18} color="var(--zl-gold)" />}
+        icon={<LuCrown size={18} color="var(--zl-gold)" />}
         onClick={transferGroupOwner}
       >
         Chuyển quyền trưởng nhóm
       </ContextMenuItem>
       <ContextMenuItem
-        icon={<PersonCross size={18} />}
+        icon={<LuUserX size={18} />}
         danger
         onClick={kickUser}
       >
